@@ -2,7 +2,12 @@
 
 Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT2 Video Platform](https://github.com/campusdomar/PuMuKIT2/blob/2.3.x/README.md).
 
-This bundle adds an API for an Open edX instance to be able to connect to Media Manager.
+This bundle adds an API for an Open edX instance to be able to connect to Media Manager. It is intented to work along with:
+
+- [PuMuKIT2 Video Platform version 2.3.x](https://github.com/campusdomar/PuMuKIT2/blob/2.3.x/README.md)
+- [Open edX version open-release/ficus](https://github.com/edx/edx-platform)
+- [PuMuKIT2 Opencast Video XBlock](https://github.com/teltek/pumukit2-opencast-video-xblock)
+
 
 ## Installation steps
 
