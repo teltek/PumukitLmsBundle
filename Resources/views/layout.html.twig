@@ -1,0 +1,29 @@
+{% extends 'PumukitNewAdminBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.player_overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: #555;
+        pointer-events: none;
+        color: #fff;
+}
+.centered_message {
+    text-align: center;
+    top: 50%;
+    position: relative;
+    padding: 0px 120px;
+}
+</style>
+{% endblock %}
+{% block body_base %}
+<div class="player_overlay">
+<div class="centered_message">
+{% block iframe_content %}{% endblock %}
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+pumukit_open_edx_bundle:
+    resource: "@PumukitOpenEdxBundle/Controller/"
+    type:     annotation
+    prefix:   /openedx
