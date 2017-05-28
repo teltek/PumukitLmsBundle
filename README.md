@@ -13,8 +13,6 @@ This bundle adds an API for an Open edX instance to be able to connect to Media 
 
 ### Requirements
 
-Before installing this bundle, check you have installed and enabled [NotificationBundle](https://github.com/campusdomar/PuMuKIT2/blob/2.4.x/src/Pumukit/NotificationBundle/Resources/doc/AdminGuide.md).
-
 Steps 1 and 2 requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
