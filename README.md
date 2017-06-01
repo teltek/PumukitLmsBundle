@@ -23,7 +23,7 @@ Open a command console, enter your project directory and execute the
 following command to add this repo:
 
 ```bash
-$ composer config repositories.pumukitopenedxbundle vcs https://gitlab.teltek.es/pumukit2/pumukitopenedxbundle.git
+$ composer config repositories.pumukitopenedxbundle vcs https://github.com/teltek/pumukitopenedxbundle.git
 ```
 
 ### Step 2: Download the Bundle
