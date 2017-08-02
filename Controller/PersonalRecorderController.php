@@ -39,6 +39,7 @@ class PersonalRecorderController extends SSOController
         } else {
             $params = '?'.$this->buildParams($i18nTitle, null);
         }
+        $params .= '&showButton=false';
 
         return new RedirectResponse(self::ADMIN_PERSONAL_RECORDER_ROUTE.'/'.$params);
     }
