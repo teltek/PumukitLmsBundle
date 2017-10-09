@@ -24,10 +24,11 @@ class OpenEdxController extends SSOController
         $openEdxLmsHost = $this->container->getParameter('pumukit_openedx.open_edx_lms_host');
         $openEdxCmsHost = $this->container->getParameter('pumukit_openedx.open_edx_cms_host');
 
-        if (!isset($_SERVER['HTTP_REFERER'])) {
+        $refererUrl = $request->headers->get('referer');
+        if (!$refererUrl) {
             return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
         }
-        $refererUrl = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+        $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
         if (($openEdxLmsHost !== $refererUrl) && ($openEdxCmsHost !== $refererUrl)) {
             return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
         }
