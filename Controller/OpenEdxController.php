@@ -18,12 +18,29 @@ class OpenEdxController extends SSOController
      */
     public function iframeAction(Request $request)
     {
+        $locale = $this->getLocale($request->get('lang'));
+        $contactEmail = $this->getParameter('pumukit2.info')['email'];
+
+        $openEdxLmsHost = $this->container->getParameter('pumukit_openedx.open_edx_lms_host');
+        $openEdxCmsHost = $this->container->getParameter('pumukit_openedx.open_edx_cms_host');
+
+        if (!isset($_SERVER['HTTP_REFERER'])) {
+            return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+        }
+        $refererUrl = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+        if (($openEdxLmsHost !== $refererUrl) && ($openEdxCmsHost !== $refererUrl)) {
+            return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+        }
+
+        $ssoService = $this->container->get('pumukit_open_edx.sso');
+        if (!$ssoService->validateHash($request->get('hash'), '')) {
+            return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+        }
+
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
         $mmobjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
         $id = $request->get('id');
-        $locale = $this->getLocale($request->get('lang'));
         $multimediaObject = $mmobjRepo->find($id);
-        $contactEmail = $this->getParameter('pumukit2.info')['email'];
 
         if ($multimediaObject) {
             if ($multimediaObject->containsTagWithCod('PUCHWEBTV') || $multimediaObject->containsTagWithCod('PUCHOPENEDX')) {

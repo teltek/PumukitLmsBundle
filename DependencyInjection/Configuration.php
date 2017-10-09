@@ -54,6 +54,14 @@ class Configuration implements ConfigurationInterface
               ->defaultValue('My Open edX Recordings')
               ->info('Series title for Multimedia Objects recorded from Open edX')
             ->end()
+            ->scalarNode('open_edx_lms_host')
+              ->defaultFalse()
+              ->info('Domain of the Open edX LMS connected to this PuMuKIT')
+            ->end()
+            ->scalarNode('open_edx_cms_host')
+              ->defaultFalse()
+              ->info('Domain of the Open edX CMS connected to this PuMuKIT')
+            ->end()
           ->end()
         ;
 
