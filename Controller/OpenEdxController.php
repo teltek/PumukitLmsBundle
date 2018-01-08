@@ -33,7 +33,7 @@ class OpenEdxController extends SSOController
         $user = $this->getUser();
 
         $multimediaObjectService = $this->get('pumukitschema.multimedia_object');
-        if (!$multimediaObject || !$user || !$multimediaObjectService->isUserOwner($user, $multimediaObject)) {
+        if (!$multimediaObject || !$user || (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$multimediaObjectService->isUserOwner($user, $multimediaObject))) {
             $refererUrl = $request->headers->get('referer');
             if (!$refererUrl) {
                 return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
