@@ -23,25 +23,31 @@ class OpenEdxController extends SSOController
 
         $openEdxLmsHost = $this->container->getParameter('pumukit_openedx.open_edx_lms_host');
         $openEdxCmsHost = $this->container->getParameter('pumukit_openedx.open_edx_cms_host');
-
-        $refererUrl = $request->headers->get('referer');
-        if (!$refererUrl) {
-            return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
-        }
-        $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
-        if (($openEdxLmsHost !== $refererUrl) && ($openEdxCmsHost !== $refererUrl)) {
-            return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
-        }
-
-        $ssoService = $this->container->get('pumukit_open_edx.sso');
-        if (!$ssoService->validateHash($request->get('hash'), '')) {
-            return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
-        }
+        $moodleHost = $this->container->getParameter('pumukit_openedx.moodle_host');
 
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
         $mmobjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
         $id = $request->get('id');
         $multimediaObject = $mmobjRepo->find($id);
+
+        $user = $this->getUser();
+
+        $multimediaObjectService = $this->get('pumukitschema.multimedia_object');
+        if (!$multimediaObject || !$user || !$multimediaObjectService->isUserOwner($user, $multimediaObject)) {
+            $refererUrl = $request->headers->get('referer');
+            if (!$refererUrl) {
+                return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+            }
+            $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
+            if (!in_array($refererUrl, array($openEdxLmsHost, $openEdxCmsHost, $moodleHost))) {
+                return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+            }
+
+            $ssoService = $this->container->get('pumukit_open_edx.sso');
+            if (!$ssoService->validateHash($request->get('hash'), '')) {
+                return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+            }
+        }
 
         if ($multimediaObject) {
             if ($multimediaObject->containsTagWithCod('PUCHWEBTV') || $multimediaObject->containsTagWithCod('PUCHOPENEDX')) {
