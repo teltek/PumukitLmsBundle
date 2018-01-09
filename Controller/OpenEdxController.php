@@ -34,13 +34,16 @@ class OpenEdxController extends SSOController
 
         $multimediaObjectService = $this->get('pumukitschema.multimedia_object');
         if (!$multimediaObject || !$user || (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$multimediaObjectService->isUserOwner($user, $multimediaObject))) {
-            $refererUrl = $request->headers->get('referer');
-            if (!$refererUrl) {
-                return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
-            }
-            $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
-            if (!in_array($refererUrl, array($openEdxLmsHost, $openEdxCmsHost, $moodleHost))) {
-                return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+
+            if('dev' != $this->get('kernel')->getEnvironment()) {
+                $refererUrl = $request->headers->get('referer');
+                if (!$refererUrl) {
+                    return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                }
+                $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
+                if (!in_array($refererUrl, array($openEdxLmsHost, $openEdxCmsHost, $moodleHost))) {
+                    return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                }
             }
 
             $ssoService = $this->container->get('pumukit_open_edx.sso');
