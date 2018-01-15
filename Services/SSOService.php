@@ -185,7 +185,8 @@ class SSOService
         $user->setOrigin(self::USER_ORIGIN);
         $user->setEnabled(true);
 
-        $userService->create($user);
+        $this->userService->create($user);
+        $this->personService->referencePersonIntoUser($user);
 
         return $user;
     }
