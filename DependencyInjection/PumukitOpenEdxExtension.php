@@ -56,5 +56,6 @@ class PumukitOpenEdxExtension extends Extension implements PrependExtensionInter
         $container->setParameter('pumukit_openedx.recording_series_title', $config['recording_series_title']);
         $container->setParameter('pumukit_openedx.open_edx_lms_host', $config['open_edx_lms_host']);
         $container->setParameter('pumukit_openedx.open_edx_cms_host', $config['open_edx_cms_host']);
+        $container->setParameter('pumukit_openedx.moodle_host', $config['moodle_host']);
     }
 }

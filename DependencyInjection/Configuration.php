@@ -62,6 +62,10 @@ class Configuration implements ConfigurationInterface
               ->defaultFalse()
               ->info('Domain of the Open edX CMS connected to this PuMuKIT')
             ->end()
+            ->scalarNode('moodle_host')
+              ->defaultFalse()
+              ->info('Domain of the Moodle connected to this PuMuKIT')
+            ->end()
           ->end()
         ;
 
