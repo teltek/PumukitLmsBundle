@@ -174,7 +174,7 @@ class SSOService
         }
     }
 
-    private function createUserWithInfo($username, $email)
+    public function createUserWithInfo($username, $email)
     {
         $user = new User();
         $user->setUsername($username);

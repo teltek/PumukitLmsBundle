@@ -21,12 +21,12 @@ class SSOController extends Controller
             return $this->genError('The domain "pumukit2.naked_backoffice_domain" is not configured.');
         }
 
-        if ($email) {
-            $type = 'email';
-            $value = $email;
-        } elseif ($username) {
+        if ($username) {
             $type = 'username';
             $value = $username;
+        } elseif ($email) {
+            $type = 'email';
+            $value = $email;
         } else {
             return $this->genError('Not email or username parameter.');
         }
@@ -59,6 +59,10 @@ class SSOController extends Controller
                 $ssoService->promoteUser($user);
             }
         } catch (\Exception $e) {
+            if ($this->getParameter('pumukit_open_edx.allow_create_users_from_req') && $email && $username) {
+                return $this->createUserWithInfo($username, $email);
+            }
+
             return $this->genError($e->getMessage());
         }
 
