@@ -45,7 +45,11 @@ $ cd /path/to/pumukit2/
 $ php app/console pumukit:install:bundle Pumukit/OpenEdxBundle/PumukitOpenEdxBundle
 ```
 
-### Step 4: Install Open edX Publication Channel
+### Step 4: Configure Bundle
+
+Go to [Resources/doc/Configuration.md](Resources/doc/Configuration.md)
+
+### Step 5: Install Open edX Publication Channel
 
 Install the Open edX Publication Channel with tag code PUCHOPENEDX.
 
@@ -54,7 +58,7 @@ $ cd /path/to/pumukit2/
 $ php app/console openedx:init:pubchannel
 ```
 
-### Step 5: Add the PUCHOPENEDX tag code to the desire encoder profiles
+### Step 6: Add the PUCHOPENEDX tag code to the desire encoder profiles
 
 Edit your `app/config/encoder.yml` profile to add the PUCHOPENEDX tag code to the desire encoder profiles,
 so in case a multimedia object has this Tag, the Tracks with those profiles will be genereated.
@@ -72,6 +76,3 @@ pumukit_encoder:
 
 ```
 
-## Configuration and use
-
-Go to [Resources/doc/Configuration.md](Resources/doc/Configuration.md)
