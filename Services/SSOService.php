@@ -138,7 +138,7 @@ class SSOService
         $username = $info[self::LDAP_ID_KEY][0];
         $email = $info['mail'][0];
 
-        $user = $this->createUserFromInfo($username, $email);
+        $user = $this->createUserWithInfo($username, $email);
         $group = $this->getGroup($info[self::GROUP_KEY][0]);
         $this->userService->addGroup($group, $user, true, false);
 
