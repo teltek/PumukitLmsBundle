@@ -60,7 +60,7 @@ class SSOController extends Controller
             }
         } catch (\Exception $e) {
             if ($this->getParameter('pumukit_open_edx.allow_create_users_from_req') && $email && $username) {
-                return $this->createUserWithInfo($username, $email);
+                return $ssoService->createUserWithInfo($username, $email);
             }
 
             return $this->genError($e->getMessage());
