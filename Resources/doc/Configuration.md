@@ -3,6 +3,8 @@
 1.- Add the configuration to your `app/config/parameters_deploy.yml` or `app/config/parameters.yml` file:
 
 ```
+parameters:
+    pumukit2.naked_backoffice_domain: pumukit2-naked.example.com
 pumukit_open_edx:
     password: 'ThisIsASecretPasswordChangeMe'
     role: 'owner'
@@ -17,6 +19,7 @@ pumukit_open_edx:
 ```
 
 
+* `pumukit2.naked_backoffice_domain`: Naked URL of PuMuKIT
 * `password`: Shared secret between Open edX and Pumukit
 * `role`: Role used to filter persons in multimedia object
 * `naked_backoffice_domain`: Domain or subdomain used to access into the naked backoffice
