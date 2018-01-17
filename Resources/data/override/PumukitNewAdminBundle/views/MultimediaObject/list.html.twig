@@ -41,7 +41,7 @@
         </td>
         {% endif %}
         <td>
-          <a class="moodlepr-add" href="#" onclick="parent.window.postMessage({'mmId': '{{ mm.id }}'}, '*'); return false;" /><i class="mdi-editor-insert-photo"></i></a>
+          <a class="moodlepr-add" href="#" title="{% trans %}Publish to Moodle{% endtrans %}" onclick="parent.window.postMessage({'mmId': '{{ mm.id }}'}, '*'); return false;" /><i class="mdi-editor-insert-photo"></i></a>
         </td>
         <td>
           {% include 'PumukitNewAdminBundle:MultimediaObject:updatemenu.html.twig' with {'mm': mm} %}
