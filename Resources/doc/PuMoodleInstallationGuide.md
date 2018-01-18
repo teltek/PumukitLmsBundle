@@ -63,20 +63,11 @@ A message will be shown indicating the successful result of the installation.
 
 * Click on “Continue”. The Module Configuration will be loaded.
 
-### Modules configuration
-
-To configure each module we need to set up the following parameters:
-- Pumukit URL: Pumukit server address followed by “/pumoodle/searchmultimediaobjects”
-(http://URL/pumoodle/searchmultimediaobjects)
-- Modal dialog title: Add eduOER video
-
-Then click on “Save changes”. The module will be ready to use.
-
 ### Enable module
 
 * Go to *Administration -> Site Administration -> Plugins -> Text editors -> Atto HTML editor* and enable the PuMuKIT (Atto) Plugin for all courses in *Toolbar config*:
 ```
-files = image, media, managefiles, pumukit
+files = image, media, managefiles, pumukitpr
 ```
 
 ### Installation check
