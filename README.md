@@ -76,3 +76,7 @@ pumukit_encoder:
 
 ```
 
+## Documentation
+
+1.- [Configuration](Resources/doc/Configuration.md)
+2.- [PuMoodle Installation Guide](Resources/doc/PuMoodleInstallationGuide.md)

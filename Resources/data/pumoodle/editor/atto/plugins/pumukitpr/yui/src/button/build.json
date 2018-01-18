@@ -1,0 +1,10 @@
+{
+  "name": "moodle-atto_pumukitpr-button",
+  "builds": {
+    "moodle-atto_pumukitpr-button": {
+      "jsfiles": [
+        "button.js"
+      ]
+    }
+  }
+}
