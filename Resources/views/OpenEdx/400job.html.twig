@@ -1,9 +1,9 @@
 {% extends 'PumukitOpenEdxBundle::layout.html.twig' %}
 {% block iframe_content %}
-<p>{{ "The video is being transcoded. Status of transcoding: %statusText%"|trans({"%id%": id, "%statusText%":job.getStatusText()}, "messages", openedx_locale) }}</p>
-<p></p>
 <p>
-{% if job.status == constant('Pumukit\\EncoderBundle\\Document\\Job::STATUS_FINISHED') %}
+{% if not job %}
+{{ "Creating transcoding..." }}
+{% elseif job.status == constant('Pumukit\\EncoderBundle\\Document\\Job::STATUS_FINISHED') %}
 {{ "Reload page and you will see the iframe with the video."|trans({}, "messages", openedx_locale) }}
 {% elseif job.status == constant('Pumukit\\EncoderBundle\\Document\\Job::STATUS_EXECUTING') %}
 {{ "Wait for the transcoding job to finish. The longer the video the more time it will take the transcoder. Reload the page aftter a while and you will see the iframe with the video or another status."|trans({}, "messages", openedx_locale) }}
@@ -13,6 +13,10 @@
 {{ "The video is waiting for being transcoded. Wait for the transcoding job to start. Reload page and you will see the iframe with the video."|trans({}, "messages", openedx_locale) }}
 {% elseif job.status == constant('Pumukit\\EncoderBundle\\Document\\Job::STATUS_PAUSED') %}
 {{ "The transcoding job of the video is paused. Wait for the transcoding job to start. Reload page and you will see the iframe with the video."|trans({}, "messages", openedx_locale) }}
-{% endif %}
+  {% endif %}
 </p>
+<script>
+  setTimeout(function(){ window.location.reload() }, 5000);
+</script>
+
 {% endblock %}
