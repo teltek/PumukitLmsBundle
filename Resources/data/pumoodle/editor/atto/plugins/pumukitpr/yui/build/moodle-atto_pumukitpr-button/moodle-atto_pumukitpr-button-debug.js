@@ -62,7 +62,7 @@ var TEMPLATE = '' +
         '</li>' +
         '<li class="nav-item">' +
             '<a class="nav-link" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
-                'Manager' +
+                'My Videos' +
             '</a>' +
         '</li>' +
     '</ul>' +
