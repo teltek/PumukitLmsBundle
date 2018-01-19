@@ -49,7 +49,7 @@ var CSS = {
 var TEMPLATE = '' +
     '<ul class="root nav nav-tabs" role="tablist">' +
         '<li class="nav-item">' +
-            '<a class="nav-link active" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
+            '<a class="nav-link" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
                 'Upload' +
             '</a>' +
         '</li>' +
@@ -59,13 +59,13 @@ var TEMPLATE = '' +
             '</a>' +
         '</li>' +
         '<li class="nav-item">' +
-            '<a class="nav-link" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
+            '<a class="nav-link active" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
                 'My Videos' +
             '</a>' +
         '</li>' +
     '</ul>' +
     '<div class="root tab-content">' +
-        '<div class="tab-pane active" id="{{elementid}}_upload">' +
+        '<div class="tab-pane" id="{{elementid}}_upload">' +
 
             '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
                     'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
@@ -80,7 +80,7 @@ var TEMPLATE = '' +
 
 
         '</div>' +
-        '<div class="tab-pane" id="{{elementid}}_manager">' +
+        '<div class="tab-pane active" id="{{elementid}}_manager">' +
 
             '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
                     'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
