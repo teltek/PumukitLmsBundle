@@ -76,7 +76,7 @@ var TEMPLATE = '' +
         '</div>' +
         '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
 
-            '<iframe src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+            '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
                     'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
            '</iframe>' +
 
@@ -253,6 +253,9 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         this.getDialogue({
             focusAfterHide: null
         }).hide();
+
+        var sharedWindow = document.getElementById('pumukitpr_iframe_recorder');
+        sharedWindow.parentNode.removeChild(sharedWindow);
 
         // If no file is there to insert, don't do it.
         if (!e.data.mmId){
