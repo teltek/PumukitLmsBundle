@@ -21,6 +21,7 @@ class FilterListener
         $req = $event->getRequest();
         $routeParams = $req->attributes->get('_route_params');
 
+        /* TO-DO: Review - Multimedia Object not found
         if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST
             && (false !== strpos($req->attributes->get('_controller'), 'OpenEdxBundle'))
             && (!isset($routeParams['filter']) || $routeParams['filter'])) {
@@ -29,5 +30,6 @@ class FilterListener
             $filter->setParameter('status', MultimediaObject::STATUS_PUBLISHED);
             $filter->setParameter('display_track_tag', 'display');
         }
+        */
     }
 }
