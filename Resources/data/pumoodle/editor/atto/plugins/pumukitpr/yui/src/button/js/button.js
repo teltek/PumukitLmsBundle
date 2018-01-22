@@ -49,7 +49,7 @@ var CSS = {
 var TEMPLATE = '' +
     '<ul class="root nav nav-tabs" role="tablist">' +
         '<li class="nav-item">' +
-            '<a class="nav-link active" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
+            '<a class="nav-link" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
                 'Upload' +
             '</a>' +
         '</li>' +
@@ -59,13 +59,13 @@ var TEMPLATE = '' +
             '</a>' +
         '</li>' +
         '<li class="nav-item">' +
-            '<a class="nav-link" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
+            '<a class="nav-link active" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
                 'My Videos' +
             '</a>' +
         '</li>' +
     '</ul>' +
     '<div class="root tab-content">' +
-        '<div class="tab-pane active" id="{{elementid}}_upload">' +
+        '<div class="tab-pane" id="{{elementid}}_upload">' +
 
             '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
                     'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
@@ -74,13 +74,13 @@ var TEMPLATE = '' +
         '</div>' +
         '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
 
-            '<iframe src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+            '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
                     'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
            '</iframe>' +
 
 
         '</div>' +
-        '<div class="tab-pane" id="{{elementid}}_manager">' +
+        '<div class="tab-pane active" id="{{elementid}}_manager">' +
 
             '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
                     'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
@@ -186,6 +186,12 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         dialogue.set('bodyContent', bodycontent);
         dialogue.show();
         this.markUpdated();
+
+        // Add listen event to close on.
+        var clickButton = document.getElementsByClassName('closebutton');
+        if (clickButton[0]) {
+            clickButton[0].addEventListener('click', this._closeSharedWindow);
+        }
     },
 
 
@@ -253,6 +259,8 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             focusAfterHide: null
         }).hide();
 
+        this._closeSharedWindow(e);
+
         // If no file is there to insert, don't do it.
         if (!e.data.mmId){
             Y.log('No URL from pumukitpr value could be found.', 'warn', LOGNAME);
@@ -265,9 +273,16 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + event.data.mmId;
         var iframe = '<iframe src="' + url +
-            '" style="border:0px #FFFFFF none;" scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';
+            '" style="border:0px #FFFFFF none;box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);"' +
+            ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';
         this.get('host').insertContentAtFocusPoint(iframe);
         this.markUpdated();
+    },
+
+
+    _closeSharedWindow : function(e){
+        var sharedWindow = document.getElementById('pumukitpr_iframe_recorder');
+        sharedWindow.parentNode.removeChild(sharedWindow);
     }
 }, {
     ATTRS: {
