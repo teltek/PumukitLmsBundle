@@ -186,6 +186,12 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         dialogue.set('bodyContent', bodycontent);
         dialogue.show();
         this.markUpdated();
+
+        // Add listen event to close on.
+        var clickButton = document.getElementsByClassName('closebutton');
+        if (clickButton[0]) {
+            clickButton[0].addEventListener('click', this._closeSharedWindow);
+        }
     },
 
 
@@ -253,8 +259,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             focusAfterHide: null
         }).hide();
 
-        var sharedWindow = document.getElementById('pumukitpr_iframe_recorder');
-        sharedWindow.parentNode.removeChild(sharedWindow);
+        this._closeSharedWindow(e);
 
         // If no file is there to insert, don't do it.
         if (!e.data.mmId){
@@ -272,6 +277,12 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';
         this.get('host').insertContentAtFocusPoint(iframe);
         this.markUpdated();
+    },
+
+
+    _closeSharedWindow : function(e){
+        var sharedWindow = document.getElementById('pumukitpr_iframe_recorder');
+        sharedWindow.parentNode.removeChild(sharedWindow);
     }
 }, {
     ATTRS: {
