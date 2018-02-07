@@ -75,7 +75,7 @@ var TEMPLATE = '' +
         '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
 
             '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
-                    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+                    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
            '</iframe>' +
 
 
@@ -132,6 +132,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
                 this.get('hash') + "&username=" +
                 this.get('username') + "&email="+
                 this.get('email') + "&lang=en";
+            iframe.allow = "microphone; camera";
             document.getElementsByTagName('body')[0].appendChild(iframe);
         }
 
