@@ -79,7 +79,7 @@ pumukit_encoder:
 For PuMuKIT latest version of 2.3.x and 2.4.x, add this configuration to `encoder.yml` as well:
 
 ``` bash
-pumukit_encoder
+pumukit_encoder:
     target_default_profiles:
         PUCHOPENEDX:
             video: "video_h264"
