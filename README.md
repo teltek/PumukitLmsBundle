@@ -76,6 +76,16 @@ pumukit_encoder:
 
 ```
 
+### Step 7: (Optional) Set the permissions
+
+Add the "Init Multimedia Objects in published status" role to those users with a
+permission profiele with personal scope, if you want them to publish their own
+videos immediately. Example for "Auto Publisher" permission profile:
+
+```bash
+php app/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBLISHED
+```
+
 ## Documentation
 
 1.- [Configuration](Resources/doc/Configuration.md)
