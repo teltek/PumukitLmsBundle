@@ -76,6 +76,15 @@ pumukit_encoder:
 
 ```
 
+For PuMuKIT latest version of 2.3.x and 2.4.x, add this configuration to `encoder.yml` as well:
+
+``` bash
+pumukit_encoder
+    target_default_profiles:
+        PUCHOPENEDX:
+            video: "video_h264"
+```
+
 ### Step 7: (Optional) Set the permissions
 
 Add the "Init Multimedia Objects in published status" role to those users with a
