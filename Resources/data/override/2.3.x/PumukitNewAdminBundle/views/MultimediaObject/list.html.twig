@@ -10,7 +10,7 @@
             </label>
           </div>
         </th>
-        <th colspan="{{ is_naked() ? 5 : 6 }}" width="5%"></th>
+        <th colspan="{{ is_naked() ? 4 : 5 }}" width="5%"></th>
         <th width="1%">{% trans %}Audio/Video{% endtrans %}</th>
         <th width="1%">{% trans %}Img{% endtrans %}</th>
         <th>{% trans %}Title{% endtrans %}</th>
@@ -42,7 +42,7 @@
         {% endif %}
         <td>
           {% if is_naked() and mm.containsTagWithCod('PUCHOPENEDX') %}
-          <a class="moodlepr-add" href="#" title="{% trans %}Publish to Moodle{% endtrans %}" onclick="parent.window.postMessage({'mmId': '{{ mm.id }}'}, '*'); return false;"><i class="mdi-editor-insert-photo"></i></a>
+          <a class="moodlepr-add" href="#" title="{% trans %}Publish to LMS{% endtrans %}" onclick="parent.window.postMessage({'mmId': '{{ mm.id }}'}, '*'); return false;"><i class="mdi-editor-insert-photo"></i></a>
           {% endif %}
         </td>
         <td>
@@ -74,10 +74,10 @@
           {{ mm.getTitle() }}
         </td>
         <td class="text-nowrap" onclick="click_fila_edit_urls('mm', this, '{{ path('pumukitnewadmin_mms_show', {'id': mm.id}) }}', '{{ path('pumukitnewadmin_mms_edit', {'id': mm.id}) }}')" ondblclick="dblclick_preview_mm('{{ mm.id }}')">
-            {% if mm.duration == mmobj_duration(mm) %}
-              {{ mm.duration| duration_string }}
+            {% if mm.duration == mm.getRealDuration() %}
+              {{ mm.getRealDuration()| duration_string }}
             {% else %}
-              {{ mm.duration| duration_string }}
+              {{ mm.getRealDuration()| duration_string }}
               <i class="mdi-content-content-cut" data-toggle="tooltip" data-placement="left" title="{{ mmobj_duration(mm) | duration_string }}"></i>
             {% endif %}
         </td>

@@ -95,6 +95,26 @@ videos immediately. Example for "Auto Publisher" permission profile:
 php app/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBLISHED
 ```
 
+### Step 8: Override `PumukitNewAdminBundle:MultimediaObject:list.html.twig` template
+
+If your server has PuMuKIT 2.3.x installed, execute:
+
+```bash
+php app/console openedx:init:resources 2.3.x
+```
+
+If your server has PuMuKIT 2.4.x installed, execute:
+
+```bash
+php app/console openedx:init:resources 2.4.x
+```
+
+Clear cache:
+
+```bash
+php app/console cache:clear && php app/console cache:clear --env=prod
+```
+
 ## Documentation
 
 1.- [Configuration](Resources/doc/Configuration.md)
