@@ -54,9 +54,10 @@ class OpenEdxController extends SSOController
         }
 
         $jobRepo = $dm->getRepository('PumukitEncoderBundle:Job');
-        $profileService = $this->get('pumukitencoder.profile');
-        $displayProfiles = $profileService->getProfiles(true);
-        $profileNames = array_keys($displayProfiles);
+        //$profileService = $this->get('pumukitencoder.profile');
+        //$displayProfiles = $profileService->getProfiles(true);
+        //$profileNames = array_keys($displayProfiles);
+        $profileNames = array('master_webm_camera', 'master_webm_screen'); //TODO check if is published and not the jobs.
 
         $job = $jobRepo->findOneBy(array('mm_id' => $id, 'profile' => array('$in' => $profileNames)));
 
