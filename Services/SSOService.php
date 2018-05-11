@@ -116,7 +116,7 @@ class SSOService
         if (!$this->ldapService) {
             throw new \Exception('LDAP Service not enabled.');
         }
-        if (!$this->ldapService->isEnabled()) {
+        if (!$this->ldapService->isConfigured()) {
             throw new \Exception('LDAP Service not enabled.');
         }
 

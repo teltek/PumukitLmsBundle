@@ -57,6 +57,16 @@ class OpenEdxController extends SSOController
         $profileService = $this->get('pumukitencoder.profile');
         $displayProfiles = $profileService->getProfiles(true);
         $profileNames = array_keys($displayProfiles);
+        
+        // Review no wait for recode_webm_screen and recode_webm_camera.
+        $key = array_search('recode_webm_screen', $profileNames, true);
+        if ($key !== false) {
+            unset($profileNames[$key]);
+        }
+        $key = array_search('recode_webm_camera', $profileNames, true);
+        if ($key !== false) {
+            unset($profileNames[$key]);
+        }
 
         $job = $jobRepo->findOneBy(array('mm_id' => $id, 'profile' => array('$in' => $profileNames)));
 
