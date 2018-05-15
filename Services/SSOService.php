@@ -179,6 +179,7 @@ class SSOService
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
+        $user->setFullname($username);
 
         $permissionProfile = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
         $user->setPermissionProfile($permissionProfile);
