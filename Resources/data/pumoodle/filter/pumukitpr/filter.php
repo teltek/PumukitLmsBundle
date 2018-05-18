@@ -70,7 +70,7 @@ function filter_pumukitpr_openedx_callback($link) {
     $link_params = array();
     parse_str(html_entity_decode(parse_url($link[1], PHP_URL_QUERY)), $link_params);
     //Initialized needed arguments.
-    $opencast = isset($link_params['opencast']) ? ($link_params['opencast'] == '1') : false;
+    $multistream = isset($link_params['multistream']) ? ($link_params['multistream'] == '1') : false;
     $mm_id = isset($link_params['id']) ? $link_params['id'] : null;
     $email =  isset($link_params['email']) ? $link_params['email'] : null;
     //Prepare new parameters.
@@ -106,7 +106,7 @@ function filter_pumukitpr_callback($link) {
     $link_params = array();
     parse_str(html_entity_decode(parse_url($link[1], PHP_URL_QUERY)), $link_params);
     //Initialized needed arguments.
-    $opencast = isset($link_params['opencast']) ? ($link_params['opencast'] == '1') : false;
+    $multistream = isset($link_params['multistream']) ? ($link_params['multistream'] == '1') : false;
     $mm_id = isset($link_params['id']) ? $link_params['id'] : null;
     $email =  isset($link_params['email']) ? $link_params['email'] : null;
     //Prepare new parameters.
@@ -118,7 +118,7 @@ function filter_pumukitpr_callback($link) {
     //Create new url with ticket and correct email.
     $url = preg_replace("/(\?.*)/i", $new_url_arguments, $link[1]);
     //Prepare and return iframe with correct sizes to embed on webpage.
-    if($opencast) {
+    if($multistream) {
         $iframe_width = $CFG->iframe_multivideo_width?:'100%';
         $iframe_height = $CFG->iframe_multivideo_height?:'333px';
     }
