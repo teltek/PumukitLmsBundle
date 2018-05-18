@@ -52,7 +52,13 @@ class SSOController extends Controller
 
         //Find User
         try {
-            $user = $repo->findOneBy(array($type => $value));
+            $user = null;
+            if ($username) {
+                $user = $repo->findOneBy(array('username' => $username));
+            }
+            if (!$user && $email) {
+                $user = $repo->findOneBy(array('email' => $email));
+            }
             if (!$user) {
                 $user = $ssoService->createUser(array($type => $value));
             } else {
