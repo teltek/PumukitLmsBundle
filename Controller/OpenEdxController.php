@@ -14,6 +14,10 @@ use Pumukit\EncoderBundle\Document\Job;
 class OpenEdxController extends SSOController
 {
     /**
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @Route("/embed", name="pumukit_openedx_openedx_embed")
      * @Route("/embed/", name="pumukit_openedx_openedx_embed")
      */
@@ -22,9 +26,7 @@ class OpenEdxController extends SSOController
         $locale = $this->getLocale($request->get('lang'));
         $contactEmail = $this->getParameter('pumukit2.info')['email'];
 
-        $openEdxLmsHost = $this->container->getParameter('pumukit_openedx.open_edx_lms_host');
-        $openEdxCmsHost = $this->container->getParameter('pumukit_openedx.open_edx_cms_host');
-        $moodleHost = $this->container->getParameter('pumukit_openedx.moodle_host');
+        $listHosts = $this->container->getParameter('pumukit_openedx.list_hosts');
 
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
         $mmobjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
@@ -35,14 +37,14 @@ class OpenEdxController extends SSOController
 
         $multimediaObjectService = $this->get('pumukitschema.multimedia_object');
         if (!$multimediaObject || !$user || (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$multimediaObjectService->isUserOwner($user, $multimediaObject))) {
-
-            if('dev' != $this->get('kernel')->getEnvironment()) {
+            if ('dev' != $this->get('kernel')->getEnvironment()) {
                 $refererUrl = $request->headers->get('referer');
                 if (!$refererUrl) {
                     return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
                 }
                 $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
-                if (!in_array($refererUrl, array($openEdxLmsHost, $openEdxCmsHost, $moodleHost))) {
+
+                if (!in_array($refererUrl, $listHosts)) {
                     return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
                 }
             }
@@ -57,14 +59,14 @@ class OpenEdxController extends SSOController
         $profileService = $this->get('pumukitencoder.profile');
         $displayProfiles = $profileService->getProfiles(true);
         $profileNames = array_keys($displayProfiles);
-        
+
         // Review no wait for recode_webm_screen and recode_webm_camera.
         $key = array_search('recode_webm_screen', $profileNames, true);
-        if ($key !== false) {
+        if (false !== $key) {
             unset($profileNames[$key]);
         }
         $key = array_search('recode_webm_camera', $profileNames, true);
-        if ($key !== false) {
+        if (false !== $key) {
             unset($profileNames[$key]);
         }
 
@@ -72,8 +74,7 @@ class OpenEdxController extends SSOController
 
         if ($multimediaObject) {
             if ($multimediaObject->containsTagWithCod('PUCHWEBTV') || $multimediaObject->containsTagWithCod('PUCHOPENEDX')) {
-
-                if (!$job || ($job && $job->getStatus() !== Job::STATUS_FINISHED)) {
+                if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
                     return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:400job.html.twig', array('id' => $id, 'job' => $job, 'email' => $contactEmail, 'openedx_locale' => $locale)), 400);
                 } else {
                     return $this->renderIframe($multimediaObject, $request);
@@ -92,6 +93,11 @@ class OpenEdxController extends SSOController
 
     /**
      * Render iframe.
+     *
+     * @param MultimediaObject $multimediaObject
+     * @param Request          $request
+     *
+     * @return Response
      */
     protected function renderIframe(MultimediaObject $multimediaObject, Request $request)
     {
