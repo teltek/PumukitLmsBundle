@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\Controller;
+namespace Pumukit\LmsBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,15 +18,15 @@ class OpenEdxController extends SSOController
      *
      * @return Response
      *
-     * @Route("/embed", name="pumukit_openedx_openedx_embed")
-     * @Route("/embed/", name="pumukit_openedx_openedx_embed")
+     * @Route("/embed", name="pumukit_lms_openedx_embed")
+     * @Route("/embed/", name="pumukit_lms_openedx_embed")
      */
     public function iframeAction(Request $request)
     {
         $locale = $this->getLocale($request->get('lang'));
         $contactEmail = $this->getParameter('pumukit2.info')['email'];
 
-        $listHosts = $this->container->getParameter('pumukit_openedx.list_hosts');
+        $listHosts = $this->container->getParameter('pumukit_lms.list_hosts');
 
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
         $mmobjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
@@ -40,18 +40,18 @@ class OpenEdxController extends SSOController
             if ('dev' != $this->get('kernel')->getEnvironment()) {
                 $refererUrl = $request->headers->get('referer');
                 if (!$refererUrl) {
-                    return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                    return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
                 }
                 $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
 
                 if (!in_array($refererUrl, $listHosts)) {
-                    return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                    return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
                 }
             }
 
             $ssoService = $this->container->get('pumukit_open_edx.sso');
             if (!$ssoService->validateHash($request->get('hash'), '')) {
-                return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
         }
 
@@ -75,18 +75,18 @@ class OpenEdxController extends SSOController
         if ($multimediaObject) {
             if ($multimediaObject->containsTagWithCod('PUCHWEBTV') || $multimediaObject->containsTagWithCod('PUCHOPENEDX')) {
                 if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
-                    return new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:400job.html.twig', array('id' => $id, 'job' => $job, 'email' => $contactEmail, 'openedx_locale' => $locale)), 400);
+                    return new Response($this->renderView('PumukitLmsBundle:OpenEdx:400job.html.twig', array('id' => $id, 'job' => $job, 'email' => $contactEmail, 'openedx_locale' => $locale)), 400);
                 } else {
                     return $this->renderIframe($multimediaObject, $request);
                 }
             } else {
-                $response = new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                $response = new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
 
                 return $response;
             }
         }
 
-        $response = new Response($this->renderView('PumukitOpenEdxBundle:OpenEdx:404notfound.html.twig', array('id' => $id, 'openedx_locale' => $locale)), 404);
+        $response = new Response($this->renderView('PumukitLmsBundle:OpenEdx:404notfound.html.twig', array('id' => $id, 'openedx_locale' => $locale)), 404);
 
         return $response;
     }

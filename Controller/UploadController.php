@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\Controller;
+namespace Pumukit\LmsBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,7 +19,11 @@ class UploadController extends SSOController
      *   - email or username
      *   - hash.
      *
-     * @Route("/upload", name="pumukit_openedx_sso_upload")
+     * @param Request $request
+     *
+     * @return null|RedirectResponse|Response
+     *
+     * @Route("/upload", name="pumukit_lms_sso_upload")
      */
     public function upload(Request $request)
     {
@@ -30,7 +34,7 @@ class UploadController extends SSOController
 
         $this->login($user, $request);
 
-        $titleParam = $this->getParameter('pumukit_openedx.upload_series_title');
+        $titleParam = $this->getParameter('pumukit_lms.upload_series_title');
         $locales = $this->getParameter('pumukit2.locales');
         $i18nTitle = $this->buildI18nTitle($titleParam, $locales);
         $series = $this->getSeries($i18nTitle);

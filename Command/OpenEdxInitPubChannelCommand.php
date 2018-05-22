@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\Command;
+namespace Pumukit\LmsBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,6 +23,13 @@ EOT
         );
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int|null
+     * @throws \Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->dm = $this->getContainer()->get('doctrine_mongodb')->getManager();
@@ -38,6 +45,15 @@ EOT
         return 0;
     }
 
+    /**
+     * @param      $code
+     * @param      $title
+     * @param null $tagParentCode
+     * @param bool $metatag
+     *
+     * @return Tag
+     * @throws \Exception
+     */
     private function createTagWithCode($code, $title, $tagParentCode = null, $metatag = false)
     {
         if ($tag = $this->tagRepo->findOneByCod($code)) {

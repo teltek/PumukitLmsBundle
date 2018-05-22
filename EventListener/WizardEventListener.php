@@ -1,9 +1,9 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\EventListener;
+namespace Pumukit\LmsBundle\EventListener;
 
 use Pumukit\WizardBundle\Event\FormEvent;
-use Pumukit\OpenEdxBundle\Services\OpenEdxService;
+use Pumukit\LmsBundle\Services\OpenEdxService;
 
 class WizardEventListener
 {

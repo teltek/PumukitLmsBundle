@@ -1,14 +1,16 @@
 {
-  "name": "teltek/pmk2-openedx-bundle",
+  "name": "teltek/pmk2-lms-bundle",
   "type": "symfony-bundle",
-  "description": "Open edX Bundle.",
+  "description": "Pumukit2 Lms Bundle.",
   "keywords": [
+    "lms",
     "openedx",
+    "moodle",
     "symfony2",
     "bundle",
     "pumukit"
   ],
-  "homepage": "https://github.com/teltek/PuMuKIT2-open-edx-bundle",
+  "homepage": "https://github.com/teltek/PuMuKIT2-lms-bundle.git",
   "license": "proprietary",
   "authors": [
     {
@@ -24,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Pumukit\\OpenEdxBundle\\": ""
+      "Pumukit\\LmsBundle\\": ""
     }
   }
 }

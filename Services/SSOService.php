@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\Services;
+namespace Pumukit\LmsBundle\Services;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\SchemaBundle\Services\PermissionProfileService;

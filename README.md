@@ -1,4 +1,4 @@
-# PumukitOpenEdxBundle
+# PumukitLmsBundle
 
 Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT2 Video Platform](https://github.com/campusdomar/PuMuKIT2/blob/2.3.x/README.md).
 
@@ -23,7 +23,7 @@ Open a command console, enter your project directory and execute the
 following command to add this repo:
 
 ```bash
-$ composer config repositories.pumukitopenedxbundle vcs https://github.com/teltek/PuMuKIT2-open-edx-bundle.git
+$ composer config repositories.pumukitlmsbundle vcs https://github.com/teltek/PuMuKIT2-lms-bundle.git
 ```
 
 ### Step 2: Download the Bundle
@@ -32,7 +32,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```bash
-$ composer require teltek/pmk2-openedx-bundle dev-master
+$ composer require teltek/pmk2-lms-bundle dev-master
 ```
 
 ### Step 3: Install the Bundle
@@ -42,7 +42,7 @@ s.
 
 ```bash
 $ cd /path/to/pumukit2/
-$ php app/console pumukit:install:bundle Pumukit/OpenEdxBundle/PumukitOpenEdxBundle
+$ php app/console pumukit:install:bundle Pumukit/LmsBundle/PumukitLmsBundle
 ```
 
 ### Step 4: Configure Bundle

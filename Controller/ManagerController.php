@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\Controller;
+namespace Pumukit\LmsBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,11 +15,15 @@ class ManagerController extends SSOController
     const ADMIN_SERIES_ROUTE = '/admin/series';
 
     /**
-     * Parameters:
+     *   Parameters:
      *   - email or username
      *   - hash.
      *
-     * @Route("/manager", name="pumukit_openedx_sso_manager")
+     * @param Request $request
+     *
+     * @return null|RedirectResponse|Response
+     *
+     * @Route("/manager", name="pumukit_lms_sso_manager")
      */
     public function manager(Request $request)
     {

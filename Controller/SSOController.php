@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\Controller;
+namespace Pumukit\LmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,6 +15,15 @@ use Pumukit\SchemaBundle\Document\User;
  */
 class SSOController extends Controller
 {
+    /**
+     * @param $email
+     * @param $username
+     * @param $host
+     * @param $hash
+     * @param $isSecure
+     *
+     * @return null|Response
+     */
     protected function getAndValidateUser($email, $username, $host, $hash, $isSecure)
     {
         if (!$this->container->hasParameter('pumukit2.naked_backoffice_domain')) {
@@ -75,6 +84,10 @@ class SSOController extends Controller
         return $user;
     }
 
+    /**
+     * @param         $user
+     * @param Request $request
+     */
     protected function login($user, Request $request)
     {
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'public', $user->getRoles());
@@ -83,14 +96,27 @@ class SSOController extends Controller
         $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
     }
 
+    /**
+     * @param string $message
+     * @param int    $status
+     *
+     * @return Response
+     */
     protected function genError($message = 'Not Found', $status = 404)
     {
         return new Response(
-            $this->renderView('PumukitOpenEdxBundle:SSO:error.html.twig', array('message' => $message)),
+            $this->renderView('PumukitLmsBundle:SSO:error.html.twig', array('message' => $message)),
             $status
         );
     }
 
+    /**
+     * @param        $object
+     * @param        $lang
+     * @param string $format
+     *
+     * @return Response
+     */
     protected function serializeObject($object, $lang, $format = 'json')
     {
         $serializer = $this->get('serializer');
@@ -99,6 +125,12 @@ class SSOController extends Controller
         return new Response($data);
     }
 
+    /**
+     * @param $titleParam
+     * @param $locales
+     *
+     * @return array
+     */
     protected function buildI18nTitle($titleParam, $locales)
     {
         $title = array();
@@ -109,6 +141,11 @@ class SSOController extends Controller
         return $title;
     }
 
+    /**
+     * @param $i18nTitle
+     *
+     * @return mixed
+     */
     protected function getSeries($i18nTitle)
     {
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
@@ -117,6 +154,12 @@ class SSOController extends Controller
         return $repo->findOneBy(array('title' => $i18nTitle));
     }
 
+    /**
+     * @param $i18nTitle
+     * @param $seriesId
+     *
+     * @return string
+     */
     protected function buildParams($i18nTitle, $seriesId)
     {
         $data = array();

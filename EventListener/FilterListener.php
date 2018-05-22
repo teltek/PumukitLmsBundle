@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\EventListener;
+namespace Pumukit\LmsBundle\EventListener;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -23,7 +23,7 @@ class FilterListener
 
         /* TO-DO: Review - Multimedia Object not found
         if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST
-            && (false !== strpos($req->attributes->get('_controller'), 'OpenEdxBundle'))
+            && (false !== strpos($req->attributes->get('_controller'), 'LmsBundle'))
             && (!isset($routeParams['filter']) || $routeParams['filter'])) {
             $filter = $this->dm->getFilterCollection()->enable('frontend');
             $filter->setParameter('pub_channel_tag', array('$in' => array('PUCHWEBTV', 'PUCHOPENEDX')));

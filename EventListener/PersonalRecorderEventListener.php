@@ -1,9 +1,9 @@
 <?php
 
-namespace Pumukit\OpenEdxBundle\EventListener;
+namespace Pumukit\LmsBundle\EventListener;
 
 use Pumukit\PersonalRecorderBundle\Event\CreateEvent;
-use Pumukit\OpenEdxBundle\Services\OpenEdxService;
+use Pumukit\LmsBundle\Services\OpenEdxService;
 
 class PersonalRecorderEventListener
 {

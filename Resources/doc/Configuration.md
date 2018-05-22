@@ -5,7 +5,7 @@
 ```
 parameters:
     pumukit2.naked_backoffice_domain: pumukit2-naked.example.com
-pumukit_open_edx:
+pumukit_lms:
     password: 'ThisIsASecretPasswordChangeMe'
     role: 'owner'
     naked_backoffice_domain: false
@@ -14,13 +14,10 @@ pumukit_open_edx:
     naked_custom_css_url: null
     upload_series_title: 'My Open edX Uploads'
     recording_series_title: 'My Open edX Recordings'
-    open_edx_hosts: 
-        - 
-            lms: lms.myopenedx.com
-            cms: cms.myopenedx.com
-        - 
-            lms: lms2.myopenedx.com
-            cms: cms2.myopenedx.com
+    list_hosts: 
+        - lms.myopenedx.com
+        - cms.myopenedx.com
+        - test.moodle.com
 ```
 
 
@@ -33,8 +30,7 @@ pumukit_open_edx:
 * `naked_custom_css_url`: Custom CSS URL
 * `upload_series_title`: Series title for Multimedia Objects uploaded from Open edX
 * `recording_series_title`: Series title for Multimedia Objects recorded from Open edX
-* `open_edx_lms_host`: Domains of the Open edX LMS connected to this PuMuKIT
-* `open_edx_cms_host`: Domains of the Open edX CMS connected to this PuMuKIT
+* `list_hosts`: Domains of the platforms connected to this PuMuKIT
 
 
 2.- Clear cache
