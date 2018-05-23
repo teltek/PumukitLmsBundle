@@ -26,7 +26,7 @@ class OpenEdxController extends SSOController
         $locale = $this->getLocale($request->get('lang'));
         $contactEmail = $this->getParameter('pumukit2.info')['email'];
 
-        $listHosts = $this->container->getParameter('pumukit_lms.list_hosts');
+        $listHosts = $this->container->getParameter('pumukit_lms.domains');
 
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
         $mmobjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
