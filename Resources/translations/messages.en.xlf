@@ -5,13 +5,13 @@
             <tool tool-id="symfony" tool-name="Symfony"/>
         </header>
         <body>
-            <trans-unit id="793bf1445ff311e89c2dfa7ae01bbebc" resname="Personal Recorder disabled">
-                <source>Personal Recorder disabled</source>
-                <target>Personal Recorder disabled</target>
+            <trans-unit id="793bf1445ff311e89c2dfa7ae01bbebc" resname="Personal Recorder not available">
+                <source>Personal Recorder not available</source>
+                <target>Personal Recorder not available</target>
             </trans-unit>
             <trans-unit id="793bf3ec5ff311e89c2dfa7ae01bbebc" resname="If you want to enjoy the Galicaster Personal Recorder, please keep in touch with">
-                <source>If you want to enjoy the Galicaster Personal Recorder, please keep in touch with</source>
-                <target>If you want to enjoy the Galicaster Personal Recorder, please keep in touch with</target>
+                <source>If you want to enjoy the Galicaster Personal Recorder, please keep in touch with your support</source>
+                <target>If you want to enjoy the Galicaster Personal Recorder, please keep in touch with your support</target>
             </trans-unit>
         </body>
     </file>
