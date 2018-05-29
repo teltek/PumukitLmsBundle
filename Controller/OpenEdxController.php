@@ -67,6 +67,9 @@ class OpenEdxController extends SSOController
         if ($key !== false) {
             unset($profileNames[$key]);
         }
+        if ($profileNames) {
+            $profileNames = array_values($profileNames);
+        }
 
         $job = $jobRepo->findOneBy(array('mm_id' => $id, 'profile' => array('$in' => $profileNames)));
 
