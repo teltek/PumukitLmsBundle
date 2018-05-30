@@ -27,7 +27,7 @@ class OpenEdxService
     public function addPublicationChannelToMultimediaObject(User $user, MultimediaObject $multimediaObject, $externalData)
     {
         if ($multimediaObject->getProperty('openedx')) {
-            $this->tagService->addTagByCodToMultimediaObject($multimediaObject, 'PUCHOPENEDX');
+            $this->tagService->addTagByCodToMultimediaObject($multimediaObject, 'PUCHLMS');
         }
     }
 }

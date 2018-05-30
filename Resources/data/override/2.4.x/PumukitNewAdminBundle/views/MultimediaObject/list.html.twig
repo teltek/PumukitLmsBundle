@@ -42,7 +42,7 @@
         </td>
         {% endif %}
         <td headers="th-icons">
-          {% if is_naked() and mm.containsTagWithCod('PUCHOPENEDX') %}
+          {% if is_naked() and mm.containsTagWithCod('PUCHLMS') %}
           <a class="moodlepr-add" href="#" title="{% trans %}Publish to LMS{% endtrans %}" onclick="parent.window.postMessage({'mmId': '{{ mm.id }}'}, '*'); return false;"><i class="mdi-editor-insert-photo"></i></a>
           {% endif %}
         </td>

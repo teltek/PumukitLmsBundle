@@ -7,7 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Pumukit\SchemaBundle\Document\Tag;
 
-class OpenEdxInitPubChannelCommand extends ContainerAwareCommand
+class LmsInitPubChannelCommand extends ContainerAwareCommand
 {
     private $dm = null;
     private $tagRepo = null;
@@ -15,10 +15,10 @@ class OpenEdxInitPubChannelCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-          ->setName('openedx:init:pubchannel')
-          ->setDescription('Loads the Open edX pubchannel to your database')
+          ->setName('lms:init:pubchannel')
+          ->setDescription('Loads the LMS pubchannel to your database')
           ->setHelp(<<<'EOT'
-Command to load the PUCHOPENEDX pubchannel to the db. Required to publish objects exclusively on the OpenEdx platform.
+Command to load the PUCHLMS pubchannel to the db. Required to publish objects exclusively on the LMS platform.
 EOT
         );
     }
@@ -35,12 +35,12 @@ EOT
         $this->dm = $this->getContainer()->get('doctrine_mongodb')->getManager();
         $this->tagRepo = $this->dm->getRepository('PumukitSchemaBundle:Tag');
 
-        $openedxPublicationChannelTag = $this->createTagWithCode('PUCHOPENEDX', 'OpenEdx', 'PUBCHANNELS', false);
-        $openedxPublicationChannelTag->setProperty('modal_path', 'pumukitopenedx_modal_index');
-        $this->dm->persist($openedxPublicationChannelTag);
+        $lmsPublicationChannelTag = $this->createTagWithCode('PUCHLMS', 'Lms', 'PUBCHANNELS', false);
+        $lmsPublicationChannelTag->setProperty('modal_path', 'pumukitopenedx_modal_index');
+        $this->dm->persist($lmsPublicationChannelTag);
         $this->dm->flush();
 
-        $output->writeln('Tag persisted - new id: '.$openedxPublicationChannelTag->getId().' cod: '.$openedxPublicationChannelTag->getCod());
+        $output->writeln('Tag persisted - new id: '.$lmsPublicationChannelTag->getId().' cod: '.$lmsPublicationChannelTag->getCod());
 
         return 0;
     }
