@@ -1,43 +1,37 @@
 <?xml version="1.0" ?>
 
-<container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
         <parameter key="pumukit_open_edx.allow_create_users_from_req">true</parameter>
     </parameters>
 
-  <services>
-    <service id="pumukit_open_edx.sso" class="Pumukit\LmsBundle\Services\SSOService">
-      <argument type="service" id="doctrine_mongodb.odm.document_manager" />
-      <argument type="service" id="pumukitschema.permissionprofile" />
-      <argument type="service" id="pumukitschema.user" />
-      <argument type="service" id="pumukitschema.person" />
-      <argument type="service" id="pumukitschema.group" />
-      <argument>%pumukit_lms.password%</argument>
-      <argument>%pumukit2.naked_backoffice_domain%</argument>
-      <argument type="service" id="pumukit_ldap.ldap" on-invalid="null"/>
-      <!-- <call method="setLDAPService"> -->
-      <!--   <argument type="service" id="pumukit_ldap.ldap" on-invalid="ignore"/> -->
-      <!-- </call> -->
-    </service>
-    <service id="pumukit_open_edx.open_edx" class="Pumukit\LmsBundle\Services\OpenEdxService">
-      <argument type="service" id="doctrine_mongodb.odm.document_manager" />
-      <argument type="service" id="pumukitschema.tag" />
-    </service>
-    <service id="pumukit_open_edx.personal_recorder_listener" class="Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener">
-      <argument type="service" id="pumukit_open_edx.open_edx"/>
-      <tag name="kernel.event_listener" event="personalrecorder.create" method="postCreateMultimediaObject" />
-    </service>
-    <service id="pumukit_open_edx.wizard_listener" class="Pumukit\LmsBundle\EventListener\WizardEventListener">
-      <argument type="service" id="pumukit_open_edx.open_edx"/>
-      <tag name="kernel.event_listener" event="wizard.form.submit" method="postCreateMultimediaObject" />
-    </service>
-    <service id="pumukit_open_edx.filter" class="Pumukit\LmsBundle\EventListener\FilterListener">
-      <argument type="service" id="doctrine_mongodb.odm.document_manager" />
-      <tag name="kernel.event_listener" event="kernel.request" />
-    </service>
-  </services>
+    <services>
+        <service id="pumukit_open_edx.sso" class="Pumukit\LmsBundle\Services\SSOService">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <argument type="service" id="pumukitschema.permissionprofile" />
+            <argument type="service" id="pumukitschema.user" />
+            <argument type="service" id="pumukitschema.person" />
+            <argument type="service" id="pumukitschema.group" />
+            <argument>%pumukit_lms.password%</argument>
+            <argument>%pumukit2.naked_backoffice_domain%</argument>
+            <argument type="service" id="pumukit_ldap.ldap" on-invalid="null" />
+        </service>
+        <service id="pumukit_open_edx.open_edx" class="Pumukit\LmsBundle\Services\OpenEdxService">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <argument type="service" id="pumukitschema.tag" />
+        </service>
+        <service id="pumukit_open_edx.personal_recorder_listener" class="Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener">
+            <argument type="service" id="pumukit_open_edx.open_edx" />
+            <tag name="kernel.event_listener" event="personalrecorder.create" method="postCreateMultimediaObject" />
+        </service>
+        <service id="pumukit_open_edx.wizard_listener" class="Pumukit\LmsBundle\EventListener\WizardEventListener">
+            <argument type="service" id="pumukit_open_edx.open_edx" />
+            <tag name="kernel.event_listener" event="wizard.form.submit" method="postCreateMultimediaObject" />
+        </service>
+        <service id="pumukit_open_edx.filter" class="Pumukit\LmsBundle\EventListener\FilterListener">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <tag name="kernel.event_listener" event="kernel.request" />
+        </service>
+    </services>
 </container>
