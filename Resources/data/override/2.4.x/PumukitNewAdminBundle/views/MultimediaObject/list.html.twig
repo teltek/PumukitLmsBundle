@@ -26,6 +26,11 @@
                         </td>
                     {% endif %}
                     <td headers="th-icons">
+                      {% if is_naked() and mm.containsTagWithCod('PUCHOPENEDX') %}
+                      <a class="moodlepr-add" href="#" title="{% trans %}Publish to LMS{% endtrans %}" onclick="parent.window.postMessage({'mmId': '{{ mm.id }}'}, '*'); return false;"><i class="mdi-editor-insert-photo"></i></a>
+                      {% endif %}
+                    </td>
+                    <td headers="th-icons">
                         {% include 'PumukitNewAdminBundle:MultimediaObject:updatemenu.html.twig' with {'mm': mm} %}
                     </td>
                     {% if series.sorting == constant('SORT_MANUAL', series) %}
@@ -73,6 +78,7 @@
             {% for i in range %}
                 <tr>
                     <td headers="th-checkbox">&nbsp;</td>
+                    <td headers="th-icons">&nbsp;</td>
                     <td headers="th-icons">&nbsp;</td>
                     {% if not is_naked() %}
                         <td headers="th-icons">&nbsp;</td>
