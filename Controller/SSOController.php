@@ -40,7 +40,7 @@ class SSOController extends Controller
             return $this->genError('Not email or username parameter.');
         }
 
-        $ssoService = $this->container->get('pumukit_open_edx.sso');
+        $ssoService = $this->container->get('pumukit_lms.sso');
 
         if (!$ssoService->validateDomain($host)) {
             return $this->genError('Invalid Domain!');
@@ -74,7 +74,7 @@ class SSOController extends Controller
                 $ssoService->promoteUser($user);
             }
         } catch (\Exception $e) {
-            if ($this->getParameter('pumukit_open_edx.allow_create_users_from_req') && $email && $username) {
+            if ($this->getParameter('pumukit_lms.allow_create_users_from_req') && $email && $username) {
                 return $ssoService->createUserWithInfo($username, $email);
             }
 

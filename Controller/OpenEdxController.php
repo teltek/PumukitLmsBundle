@@ -49,7 +49,7 @@ class OpenEdxController extends SSOController
                 }
             }
 
-            $ssoService = $this->container->get('pumukit_open_edx.sso');
+            $ssoService = $this->container->get('pumukit_lms.sso');
             if (!$ssoService->validateHash($request->get('hash'), '')) {
                 return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
