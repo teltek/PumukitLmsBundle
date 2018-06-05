@@ -49,7 +49,7 @@ class OpenEdxController extends SSOController
                 }
             }
 
-            $ssoService = $this->container->get('pumukit_open_edx.sso');
+            $ssoService = $this->container->get('pumukit_lms.sso');
             if (!$ssoService->validateHash($request->get('hash'), '')) {
                 return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
@@ -76,7 +76,7 @@ class OpenEdxController extends SSOController
         $job = $jobRepo->findOneBy(array('mm_id' => $id, 'profile' => array('$in' => $profileNames)));
 
         if ($multimediaObject) {
-            if ($multimediaObject->containsTagWithCod('PUCHWEBTV') || $multimediaObject->containsTagWithCod('PUCHOPENEDX')) {
+            if ($multimediaObject->containsTagWithCod('PUCHWEBTV') || $multimediaObject->containsTagWithCod('PUCHLMS')) {
                 if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
                     return new Response($this->renderView('PumukitLmsBundle:OpenEdx:400job.html.twig', array('id' => $id, 'job' => $job, 'email' => $contactEmail, 'openedx_locale' => $locale)), 400);
                 } else {

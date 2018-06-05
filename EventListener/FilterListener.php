@@ -26,7 +26,7 @@ class FilterListener
             && (false !== strpos($req->attributes->get('_controller'), 'LmsBundle'))
             && (!isset($routeParams['filter']) || $routeParams['filter'])) {
             $filter = $this->dm->getFilterCollection()->enable('frontend');
-            $filter->setParameter('pub_channel_tag', array('$in' => array('PUCHWEBTV', 'PUCHOPENEDX')));
+            $filter->setParameter('pub_channel_tag', array('$in' => array('PUCHWEBTV', 'PUCHLMS')));
             $filter->setParameter('status', MultimediaObject::STATUS_PUBLISHED);
             $filter->setParameter('display_track_tag', 'display');
         }
