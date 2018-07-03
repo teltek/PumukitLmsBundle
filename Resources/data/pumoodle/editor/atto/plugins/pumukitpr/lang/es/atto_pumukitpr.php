@@ -15,15 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto text editor integration version file.
+ * Strings for component 'atto_pumukitpr', language 'en'.
  *
  * @package    atto_pumukitpr
  * @copyright  2013 Damyon Wiese  <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2018070300;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2016112900;        // Requires this Moodle version.
-$plugin->component = 'atto_pumukitpr';  // Full name of the plugin (used for diagnostics).
+$string['pluginname'] = 'PuMuKIT PersonalRecorder (Atto)';
+$string['settings'] = 'PuMuKIT PersonalRecorder (Atto)';
+$string['dialogtitle'] = 'Título del diálogo de la modal';
+$string['dialogtitledesc'] = 'Título del diálogo de la modal';
+$string['dialogtitledefval'] = 'Añadir vídeo de PersonalRecorder';
+$string['password'] = 'Contraseña';
+$string['passworddesc'] = 'Secreto compartido entre Moodle y Pumukit';
+$string['passworddefval'] = 'ThisIsASecretPasswordChangeMe';
+$string['pumukitprurl'] = 'URL de Pumukit';
+$string['pumukitprurldesc'] = 'URL de Pumukit, como https://pumukitpr.host/pumoodle/searchmultimediaobjects';
+$string['button_upload'] = 'Subir';
+$string['button_pr'] = 'Personal Recorder';
+$string['button_myvideos'] = 'Mis Vídeos';

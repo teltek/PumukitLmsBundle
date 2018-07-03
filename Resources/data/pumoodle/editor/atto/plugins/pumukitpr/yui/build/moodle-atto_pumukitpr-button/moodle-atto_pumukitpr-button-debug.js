@@ -52,17 +52,17 @@ var TEMPLATE = '' +
     '<ul class="root nav nav-tabs" role="tablist">' +
         '<li class="nav-item">' +
             '<a class="nav-link" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
-                'Upload' +
+                '{{button_upload}}' +
             '</a>' +
         '</li>' +
         '<li class="nav-item">' +
             '<a class="nav-link" href="#{{elementid}}_personal_recorder" role="tab" data-toggle="tab">' +
-                'Personal Recorder' +
+                '{{button_pr}}' +
             '</a>' +
         '</li>' +
         '<li class="nav-item">' +
             '<a class="nav-link active" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
-                'My Videos' +
+                '{{button_myvideos}}' +
             '</a>' +
         '</li>' +
     '</ul>' +
@@ -217,7 +217,10 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
                 USERNAME: this.get('username'),
                 component: COMPONENTNAME,
                 defaultflavor: this.get('defaultflavor'),
-                clickedicon: clickedicon
+                clickedicon: clickedicon,
+                button_upload: M.util.get_string('button_upload', COMPONENTNAME),
+                button_pr: M.util.get_string('button_pr', COMPONENTNAME),
+                button_myvideos: M.util.get_string('button_myvideos', COMPONENTNAME)
             }));
 
         this._form = content;
