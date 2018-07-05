@@ -32,6 +32,9 @@ function atto_pumukitpr_strings_for_js() {
 
     $strings = array(
         'dialogtitle',
+        'button_upload',
+        'button_pr',
+        'button_myvideos'
     );
 
     $PAGE->requires->strings_for_js($strings, 'atto_pumukitpr');

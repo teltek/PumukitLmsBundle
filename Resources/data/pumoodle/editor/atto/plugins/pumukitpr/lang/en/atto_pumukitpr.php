@@ -32,3 +32,6 @@ $string['passworddesc'] = 'Shared secret between Moodle and Pumukit';
 $string['passworddefval'] = 'ThisIsASecretPasswordChangeMe';
 $string['pumukitprurl'] = 'Pumukit URL';
 $string['pumukitprurldesc'] = 'Pumukit URL, like https://pumukitpr.host/pumoodle/searchmultimediaobjects';
+$string['button_upload'] = 'Upload';
+$string['button_pr'] = 'Personal Recorder';
+$string['button_myvideos'] = 'My vídeos';
