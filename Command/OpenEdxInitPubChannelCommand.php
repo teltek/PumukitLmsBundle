@@ -36,6 +36,7 @@ EOT
         $this->tagRepo = $this->dm->getRepository('PumukitSchemaBundle:Tag');
 
         $openedxPublicationChannelTag = $this->createTagWithCode('PUCHOPENEDX', 'OpenEdx', 'PUBCHANNELS', false);
+        $openedxPublicationChannelTag = $this->createTagWithCode('PUCHLMS', 'LMS', 'PUBCHANNELS', false);
         $openedxPublicationChannelTag->setProperty('modal_path', 'pumukitopenedx_modal_index');
         $this->dm->persist($openedxPublicationChannelTag);
         $this->dm->flush();
