@@ -58,7 +58,7 @@ $ cd /path/to/pumukit2/
 $ php app/console openedx:init:pubchannel
 ```
 
-### Step 6: Add the PUCHOPENEDX tag code to the desire encoder profiles
+### Step 6: Add the PUCHLMS tag code to the desire encoder profiles
 
 Edit your `app/config/encoder.yml` profile to add the PUCHOPENEDX tag code to the desire encoder profiles,
 so in case a multimedia object has this Tag, the Tracks with those profiles will be genereated.
@@ -72,7 +72,7 @@ pumukit_encoder:
     profiles:
         video_h264:
 	    ...
-            target: PUCHWEBTV PUCHPODCAST PUCHOPENEDX
+            target: PUCHWEBTV PUCHPODCAST PUCHOPENEDX PUCHLMS
 
 ```
 
@@ -81,7 +81,7 @@ For PuMuKIT latest version of 2.3.x and 2.4.x, add this configuration to `encode
 ``` bash
 pumukit_encoder:
     target_default_profiles:
-        PUCHOPENEDX:
+        PUCHLMS:
             video: "video_h264"
 ```
 
