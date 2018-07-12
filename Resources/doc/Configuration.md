@@ -14,7 +14,7 @@ pumukit_lms:
     naked_custom_css_url: null
     upload_series_title: 'My Open edX Uploads'
     recording_series_title: 'My Open edX Recordings'
-    list_hosts: 
+    domains: 
         - lms.myopenedx.com
         - cms.myopenedx.com
         - test.moodle.com
@@ -30,7 +30,7 @@ pumukit_lms:
 * `naked_custom_css_url`: Custom CSS URL
 * `upload_series_title`: Series title for Multimedia Objects uploaded from Open edX
 * `recording_series_title`: Series title for Multimedia Objects recorded from Open edX
-* `list_hosts`: Domains of the platforms connected to this PuMuKIT
+* `domains`: Domains of the platforms connected to this PuMuKIT
 
 
 2.- Clear cache

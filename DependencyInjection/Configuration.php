@@ -54,7 +54,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('My Recordings')
                     ->info('Series title for Multimedia Objects recorded from Open edX')
                 ->end()
-                ->arrayNode('list_hosts')
+                ->arrayNode('domains')
                     ->info('Domains to connected to this PuMuKIT')
                     ->prototype('scalar')->end()
                     ->defaultValue(array())

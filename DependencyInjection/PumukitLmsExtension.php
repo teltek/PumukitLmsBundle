@@ -54,6 +54,6 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('pumukit_lms.upload_series_title', $config['upload_series_title']);
         $container->setParameter('pumukit_lms.recording_series_title', $config['recording_series_title']);
-        $container->setParameter('pumukit_lms.list_hosts', $config['list_hosts']);
+        $container->setParameter('pumukit_lms.domains', $config['domains']);
     }
 }

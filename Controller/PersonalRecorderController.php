@@ -27,6 +27,11 @@ class PersonalRecorderController extends SSOController
      */
     public function personalRecorder(Request $request)
     {
+        $activeBundles = $this->container->getParameter('kernel.bundles');
+        if (!array_key_exists('PumukitPersonalRecorderBundle', $activeBundles)) {
+            return new Response($this->renderView('PumukitLmsBundle:PersonalRecorder:not_found.html.twig'), 403);
+        }
+
         $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->getHost(), $request->get('hash'), $request->isSecure());
         if ($user instanceof Response) {
             return $user;

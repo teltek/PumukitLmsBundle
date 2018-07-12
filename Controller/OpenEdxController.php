@@ -26,7 +26,7 @@ class OpenEdxController extends SSOController
         $locale = $this->getLocale($request->get('lang'));
         $contactEmail = $this->getParameter('pumukit2.info')['email'];
 
-        $listHosts = $this->container->getParameter('pumukit_lms.list_hosts');
+        $listHosts = $this->container->getParameter('pumukit_lms.domains');
 
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
         $mmobjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
@@ -49,7 +49,7 @@ class OpenEdxController extends SSOController
                 }
             }
 
-            $ssoService = $this->container->get('pumukit_open_edx.sso');
+            $ssoService = $this->container->get('pumukit_lms.sso');
             if (!$ssoService->validateHash($request->get('hash'), '')) {
                 return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
