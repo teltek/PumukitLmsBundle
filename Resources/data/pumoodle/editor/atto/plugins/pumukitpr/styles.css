@@ -69,6 +69,22 @@
 }
 /*rtl:end:ignore*/
 
-.atto_pumukitpr_button_pumukitpr {
+.atto_pumukitpr_button_pumukitpr, div.editor_atto_toolbar button.atto_pumukitpr_button_pumukitpr .icon {
     color: red;
+}
+
+#id_introeditor_manager iframe,
+#id_introeditor_upload iframe,
+#id_introeditor_personal_recorder iframe {
+  min-width: 800px;
+}
+
+#id_introeditor_manager,
+#id_introeditor_upload,
+#id_introeditor_personal_recorder {
+  overflow-x: auto;
+}
+
+div.moodle-dialogue.moodle-has-zindex.yui3-panel {
+  min-width: 836px;
 }
