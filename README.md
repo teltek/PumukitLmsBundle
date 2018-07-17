@@ -2,12 +2,19 @@
 
 Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT2 Video Platform](https://github.com/campusdomar/PuMuKIT2/blob/2.3.x/README.md).
 
-This bundle adds an API for an Open edX instance to be able to connect to Media Manager. It is intented to work along with:
+The goal of this bundle is to merge the common APIs between the [Moodle bundle](https://github.com/teltek/PuMuKIT2-moodle-bundle) and the [OpenEDX bundle](https://github.com/teltek/PuMuKIT2-open-edx-bundle) into single generic bundle.
 
-- [PuMuKIT2 Video Platform version 2.3.x](https://github.com/campusdomar/PuMuKIT2/blob/2.3.x/README.md)
-- [Open edX version open-release/ficus](https://github.com/edx/edx-platform)
+This code includes:
+* An Atto Editor integration for Moodle (/Resources/data/pumoodle/editor/atto/plugins)
+* A common API and endpoints that are shared for OpenEDX and Moodle
+
+For the OpenEDX integration, an XBlock is also needed:
 - [PuMuKIT2 Opencast Video XBlock](https://github.com/teltek/pumukit2-opencast-video-xblock)
 
+The new Atto Editor integration for Moodle is meant to replace the classical integracion through a mix of repository/filter/block plugins [here](https://github.com/teltek/PuMuKIT2-moodle-bundle)
+At the moment, there are a couple of missing features:
+* Moodle Playlists support
+* Search and publish public videos (published on the WebTV channel)
 
 ## Installation steps
 
