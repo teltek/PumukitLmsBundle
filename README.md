@@ -62,7 +62,7 @@ Install the Open edX Publication Channel with tag code PUCHLMS.
 
 ```bash
 $ cd /path/to/pumukit2/
-$ php app/console openedx:init:pubchannel
+$ php app/console lms:init:pubchannel
 ```
 
 ### Step 6: Add the PUCHLMS tag code to the desire encoder profiles
@@ -107,13 +107,13 @@ php app/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBL
 If your server has PuMuKIT 2.3.x installed, execute:
 
 ```bash
-php app/console openedx:init:resources 2.3.x
+php app/console lms:init:resources 2.3.x
 ```
 
 If your server has PuMuKIT 2.4.x installed, execute:
 
 ```bash
-php app/console openedx:init:resources 2.4.x
+php app/console lms:init:resources 2.4.x
 ```
 
 Clear cache:
