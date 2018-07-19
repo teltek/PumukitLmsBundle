@@ -134,6 +134,23 @@
     {% endif %}
 </div>
 
+{# Prevents the LMS add button to appear in views that don't support it #}
+<style>
+  .moodlepr-add {
+  display: none;
+  }
+</style>
+<script>
+ $(function(){
+ parent.postMessage('enableMoodlePRAdd?', '*');
+ window.addEventListener('message', function(e){
+   if(e.data.moodlepradd != 'OK'){
+     return;
+   }
+   $('.moodlepr-add').show();
+ });
+ });
+</script>
 {# TODO variables
 
 {% if reload_pub_channel %}
