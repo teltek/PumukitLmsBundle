@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -17,37 +18,37 @@
 /**
  * Atto text editor integration version file.
  *
- * @package    atto_pumukitpr
  * @copyright  2013 Damyon Wiese  <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Initialise the strings required for js
+ * Initialise the strings required for js.
  */
-function atto_pumukitpr_strings_for_js() {
+function atto_pumukitpr_strings_for_js()
+{
     global $PAGE;
 
     $strings = array(
         'dialogtitle',
         'button_upload',
         'button_pr',
-        'button_myvideos'
+        'button_myvideos',
     );
 
     $PAGE->requires->strings_for_js($strings, 'atto_pumukitpr');
 }
 
-
 /**
  * Return the js params required for this module.
- * @return array of additional params to pass to javascript init function for this module.
+ *
+ * @return array of additional params to pass to javascript init function for this module
  */
-function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions) {
+function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
+{
     global $USER;
-    
+
     $params = array();
 
     $params['pumukitprurl'] = get_config('atto_pumukitpr', 'pumukitprurl');

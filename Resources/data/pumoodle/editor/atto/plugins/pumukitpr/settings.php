@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -17,12 +18,9 @@
 /**
  * pumukitpr settings.
  *
- * @package   atto_pumukitpr
  * @copyright COPYRIGHTINFO
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
 defined('MOODLE_INTERNAL') || die();
 
 $ADMIN->add('editoratto', new admin_category('atto_pumukitpr', new lang_string('pluginname', 'atto_pumukitpr')));

@@ -28,6 +28,7 @@ EOT
      * @param OutputInterface $output
      *
      * @return int|null
+     *
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -52,6 +53,7 @@ EOT
      * @param bool $metatag
      *
      * @return Tag
+     *
      * @throws \Exception
      */
     private function createTagWithCode($code, $title, $tagParentCode = null, $metatag = false)

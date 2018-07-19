@@ -76,7 +76,7 @@ class OpenEdxController extends SSOController
         $job = $jobRepo->findOneBy(array('mm_id' => $id, 'profile' => array('$in' => $profileNames)));
 
         if ($multimediaObject) {
-            if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV','PUCHOPENEDX','PUCHMOODLE','PUCHLMS'])) {
+            if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', 'PUCHOPENEDX', 'PUCHMOODLE', 'PUCHLMS'])) {
                 if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
                     return new Response($this->renderView('PumukitLmsBundle:OpenEdx:400job.html.twig', array('id' => $id, 'job' => $job, 'email' => $contactEmail, 'openedx_locale' => $locale)), 400);
                 } else {

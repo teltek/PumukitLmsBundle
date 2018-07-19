@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,26 +19,25 @@
  * Administration settings definitions for the pumukitpr filter.
  * Settings can be accessed from:
  * Site Administration block -> Plugins -> Filters -> Pumukitpr filter
- * This form stores general settings into the site wide $CFG object
+ * This form stores general settings into the site wide $CFG object.
  *
- * @package    filter
- * @subpackage pumukitpr
  * @copyright  2016
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die;
 
-if(!class_exists('admin_setting_configtext_sizecss')) {
+if (!class_exists('admin_setting_configtext_sizecss')) {
     class admin_setting_configtext_sizecss extends admin_setting_configtext
     {
         public function validate($data)
         {
-            if($data == 'auto')
+            if ($data == 'auto') {
                 return true;
+            }
             //Format: Number ending on 'px', 'em', or '%'
-            if(preg_match('/^\d*(px|em|%)/', $data))
+            if (preg_match('/^\d*(px|em|%)/', $data)) {
                 return true;
+            }
 
             return get_string('css_notvalid', 'filter_pumukitpr');
         }
@@ -51,16 +51,16 @@ if ($ADMIN->fulltree) {
     );
 
     $settings->add(new admin_setting_configtext_sizecss('iframe_singlevideo_width',
-                                                get_string('iframe_singlevideo_width','filter_pumukitpr'),
+                                                get_string('iframe_singlevideo_width', 'filter_pumukitpr'),
                                                 '', '592px', PARAM_INT));
     $settings->add(new admin_setting_configtext_sizecss('iframe_singlevideo_height',
-                                                get_string('iframe_singlevideo_height','filter_pumukitpr'),
+                                                get_string('iframe_singlevideo_height', 'filter_pumukitpr'),
                                                 '', '333px', PARAM_INT));
 
     $settings->add(new admin_setting_configtext_sizecss('iframe_multivideo_width',
-                                                get_string('iframe_multivideo_width','filter_pumukitpr'),
+                                                get_string('iframe_multivideo_width', 'filter_pumukitpr'),
                                                 '', '592px', PARAM_INT));
     $settings->add(new admin_setting_configtext_sizecss('iframe_multivideo_height',
-                                                get_string('iframe_multivideo_height','filter_pumukitpr'),
+                                                get_string('iframe_multivideo_height', 'filter_pumukitpr'),
                                                 '', '333px', PARAM_INT));
 }
