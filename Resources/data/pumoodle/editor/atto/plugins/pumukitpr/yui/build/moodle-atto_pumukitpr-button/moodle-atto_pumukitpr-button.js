@@ -255,7 +255,12 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
 
     _receiveMessage : function(e){
-        if (!('mmId' in event.data)) {
+        // window.addEventListener('message', function(e){
+        if(e.data === 'enableMoodlePRAdd?'){
+            e.source.postMessage({'moodlepradd':'OK'}, '*');
+        }
+        // });
+        if (!e.data.mmId) {
             return;
         }
 
