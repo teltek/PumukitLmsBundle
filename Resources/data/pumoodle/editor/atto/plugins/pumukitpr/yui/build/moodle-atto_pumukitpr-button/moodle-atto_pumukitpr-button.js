@@ -280,7 +280,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         this.editor.focus();
 
-        var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + event.data.mmId;
+        var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + e.data.mmId;
         var iframe = '<iframe src="' + url +
             '" style="border:0px #FFFFFF none;box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);"' +
             ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';
