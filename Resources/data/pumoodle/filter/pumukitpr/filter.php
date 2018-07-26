@@ -28,7 +28,7 @@ class filter_pumukitpr extends moodle_text_filter
 
         if (stripos($text, '<iframe') !== false) {
             // Look for '/pumoodle/embed', replace the entire <a... </a> tag and send the url as $link[1]
-            $search = '/<iframe.*?src=\"(https:\\/\\/.*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
+            $search = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
             $newtext = preg_replace_callback($search, 'filter_pumukitpr_openedx_callback', $text);
 
             if (empty($newtext) or $newtext === $text) {
