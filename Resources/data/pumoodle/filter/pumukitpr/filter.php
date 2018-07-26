@@ -26,34 +26,28 @@ class filter_pumukitpr extends moodle_text_filter
             return $text;
         }
 
-        if (stripos($text, '<iframe') !== false) {
+        if (stripos($text, '<iframe') === false && stripos($text, '<a') === false) {
+            return $text;
+        }
+
+        if (stripos($text, '<iframe') !== false){
             // Look for '/pumoodle/embed', replace the entire <a... </a> tag and send the url as $link[1]
             $search = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
             $newtext = preg_replace_callback($search, 'filter_pumukitpr_openedx_callback', $text);
-
-            if (empty($newtext) or $newtext === $text) {
-                // error or not filtered
-                unset($newtext);
-
-                return $text;
-            }
-
-            return $newtext;
         }
 
-        if (stripos($text, '<a') === false) {
+        if (!empty($newtext) && $newtext !== $text) {
+            $text = $newtext;
+        }
+
+        if (stripos($text, '<a') !== false) {
             // Look for '/pumoodle/embed', replace the entire <a... </a> tag and send the url as $link[1]
             $search = '/<a\\s[^>]*href=\"(https?:\\/\\/[^>]*?\\/pumoodle\\/embed.*?)\">.*?<\\/a>/is';
             $newtext = preg_replace_callback($search, 'filter_pumukitpr_callback', $text);
+        }
 
-            if (empty($newtext) or $newtext === $text) {
-                // error or not filtered
-                unset($newtext);
-
-                return $text;
-            }
-
-            return $newtext;
+        if (!empty($newtext) && $newtext !== $text) {
+            $text = $newtext;
         }
 
         return $text;
