@@ -54,8 +54,7 @@ class MultimediaObjectVoter extends Voter
     {
         $req = $this->requestStack->getMasterRequest();
 
-        /* Legacy code */
-        if (!$this->mmobjService->isHidden($multimediaObject, 'PUCHMLS')) {
+        if (!$this->mmobjService->isHidden($multimediaObject, 'PUCHLMS')) {
             return false;
         }
 
