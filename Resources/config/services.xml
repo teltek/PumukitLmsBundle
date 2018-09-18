@@ -33,10 +33,11 @@
             <argument type="service" id="doctrine_mongodb.odm.document_manager" />
             <tag name="kernel.event_listener" event="kernel.request" />
         </service>
-        <service id="pumukitschema.multimedia_object_voter" class="Pumukit\LmsBundle\Services\MultimediaObjectVoter">
+        <service id="pumukit_lms.multimedia_object_voter" class="Pumukit\LmsBundle\Services\MultimediaObjectVoter">
             <argument type="service" id="pumukitschema.multimedia_object"/>
             <argument type="service" id="request_stack"/>
-            <argument>%pumukit_lms.domains%</argument>            
+            <argument>%pumukit_lms.domains%</argument>
+            <tag name="security.voter" />
         </service>
     </services>
 </container>
