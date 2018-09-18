@@ -36,7 +36,7 @@
         <service id="pumukit_lms.multimedia_object_voter" class="Pumukit\LmsBundle\Services\MultimediaObjectVoter">
             <argument type="service" id="pumukitschema.multimedia_object"/>
             <argument type="service" id="request_stack"/>
-            <argument>%pumukit_lms.domains%</argument>
+            <argument type="service" id="pumukit_lms.sso"/>
             <tag name="security.voter" />
         </service>
     </services>

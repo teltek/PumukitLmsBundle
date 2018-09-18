@@ -14,13 +14,13 @@ class MultimediaObjectVoter extends Voter
 
     private $mmobjService;
     private $requestStack;
-    private $domains;
+    private $ssoService;
 
-    public function __construct(MultimediaObjectService $mmobjService, RequestStack $requestStack, array $domains)
+    public function __construct(MultimediaObjectService $mmobjService, RequestStack $requestStack, SSOService $ssoService)
     {
         $this->mmobjService = $mmobjService;
         $this->requestStack = $requestStack;
-        $this->domains = $domains;
+        $this->ssoService = $ssoService;
     }
 
     protected function supports($attribute, $subject)
@@ -64,11 +64,21 @@ class MultimediaObjectVoter extends Voter
             return false;
         }
 
-        $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
-        if (in_array($refererUrl, $this->domains)) {
-            return true;
+        $refererQuery = parse_url($refererUrl, PHP_URL_QUERY);
+        if (!$refererQuery) {
+            return false;
         }
 
-        return false;
+        parse_str($refererQuery, $query);
+        if (!isset($query['hash'])) {
+            return false;
+        }
+
+        $hash = $query['hash'];
+        if (!$this->ssoService->validateHash($hash, '')) {
+            return false;
+        }
+
+        return true;
     }
 }
