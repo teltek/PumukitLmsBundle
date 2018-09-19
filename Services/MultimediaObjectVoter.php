@@ -75,6 +75,7 @@ class MultimediaObjectVoter extends Voter
         }
 
         $hash = $query['hash'];
+        //Check TTK-16603 use multimediaObject.id
         if (!$this->ssoService->validateHash($hash, '')) {
             return false;
         }

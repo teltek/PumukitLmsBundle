@@ -37,6 +37,7 @@ class OpenEdxController extends SSOController
 
         $multimediaObjectService = $this->get('pumukitschema.multimedia_object');
         if (!$multimediaObject || !$user || (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$multimediaObjectService->isUserOwner($user, $multimediaObject))) {
+            //Check TTK-16603
             if ('dev' != $this->get('kernel')->getEnvironment()) {
                 $refererUrl = $request->headers->get('referer');
                 if (!$refererUrl) {
