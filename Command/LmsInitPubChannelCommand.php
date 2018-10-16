@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Pumukit\LmsBundle\Command;
@@ -37,7 +38,6 @@ EOT
         $this->tagRepo = $this->dm->getRepository('PumukitSchemaBundle:Tag');
 
         $lmsPublicationChannelTag = $this->createTagWithCode('PUCHLMS', 'LMS', 'PUBCHANNELS', false);
-        $lmsPublicationChannelTag->setProperty('modal_path', 'pumukitopenedx_modal_index');
         $this->dm->persist($lmsPublicationChannelTag);
         $this->dm->flush();
 
