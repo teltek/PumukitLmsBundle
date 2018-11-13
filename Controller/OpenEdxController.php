@@ -25,6 +25,7 @@ class OpenEdxController extends SSOController
      */
     public function iframeAction(Request $request)
     {
+        dump($request->get('hash'));
         $locale = $this->getLocale($request->get('lang'));
         $contactEmail = $this->getParameter('pumukit2.info')['email'];
 
@@ -121,14 +122,14 @@ class OpenEdxController extends SSOController
             if (!in_array($refererUrl, $listHosts)) {
                 return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
+
+            $ssoService = $this->container->get('pumukit_lms.sso');
+            if (!$ssoService->validateHash($request->get('hash'), '')) {
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+            }
         }
 
-        $id = $request->get('playlist');
-
-        $ssoService = $this->container->get('pumukit_lms.sso');
-        if (!$ssoService->validateHash($request->get('hash'), '')) {
-            return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
-        }
+        $id = $request->get('id');
 
         return $this->forward('PumukitBasePlayerBundle:BasePlaylist:index', array('request' => $request, 'id' => $id));
     }
