@@ -14,12 +14,14 @@ use Pumukit\EncoderBundle\Document\Job;
 class OpenEdxController extends SSOController
 {
     /**
+     * @Route("/embed", name="pumukit_lms_openedx_embed")
+     * @Route("/embed/", name="pumukit_lms_openedx_embed")
+     *
      * @param Request $request
      *
      * @return Response
-     *
-     * @Route("/embed", name="pumukit_lms_openedx_embed")
-     * @Route("/embed/", name="pumukit_lms_openedx_embed")
+     * @throws \Doctrine\ODM\MongoDB\LockException
+     * @throws \Doctrine\ODM\MongoDB\Mapping\MappingException
      */
     public function iframeAction(Request $request)
     {
@@ -93,6 +95,42 @@ class OpenEdxController extends SSOController
         $response = new Response($this->renderView('PumukitLmsBundle:OpenEdx:404notfound.html.twig', array('id' => $id, 'openedx_locale' => $locale)), 404);
 
         return $response;
+    }
+
+    /**
+     * @Route("/playlist/embed", name="pumukit_lms_openedx_playlist_embed")
+     * @Route("/playlist/embed/", name="pumukit_lms_openedx_playlist_embed")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function iFramePlaylistAction(Request $request)
+    {
+        $locale = $this->getLocale($request->get('lang'));
+        $contactEmail = $this->getParameter('pumukit2.info')['email'];
+
+        if ('dev' != $this->get('kernel')->getEnvironment()) {
+            $refererUrl = $request->headers->get('referer');
+            if (!$refererUrl) {
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+            }
+            $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
+
+            $listHosts = $this->container->getParameter('pumukit_lms.domains');
+            if (!in_array($refererUrl, $listHosts)) {
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+            }
+        }
+
+        $id = $request->get('playlist');
+
+        $ssoService = $this->container->get('pumukit_lms.sso');
+        if (!$ssoService->validateHash($request->get('hash'), '')) {
+            return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+        }
+
+        return $this->forward('PumukitBasePlayerBundle:BasePlaylist:index', array('request' => $request, 'id' => $id));
     }
 
     /**

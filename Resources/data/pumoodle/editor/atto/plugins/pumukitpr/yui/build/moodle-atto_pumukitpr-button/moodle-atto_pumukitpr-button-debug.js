@@ -261,9 +261,10 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             e.source.postMessage({'moodlepradd':'OK'}, '*');
         }
         // });
-        if (!e.data.mmId) {
+        if (!e.data.mmId && !e.data.playlist) {
             return;
         }
+
 
         e.preventDefault();
         this.getDialogue({
@@ -273,7 +274,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         this._closeSharedWindow(e);
 
         // If no file is there to insert, don't do it.
-        if (!e.data.mmId){
+        if (!e.data.mmId && !e.data.playlist){
             Y.log('No URL from pumukitpr value could be found.', 'warn', LOGNAME);
             return;
         }
@@ -282,7 +283,12 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         this.editor.focus();
 
-        var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + e.data.mmId;
+        if(e.data.playlist) {
+            var url = this.get('pumukitprurl') + '/openedx/openedx/playlist/embed/?id=' + e.data.playlist;
+        } else {
+            var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + e.data.mmId;
+        }
+
         var iframe = '<iframe src="' + url +
             '" style="border:0px #FFFFFF none;box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);"' +
             ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';

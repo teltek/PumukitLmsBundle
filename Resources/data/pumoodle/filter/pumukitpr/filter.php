@@ -26,28 +26,32 @@ class filter_pumukitpr extends moodle_text_filter
             return $text;
         }
 
-        if (stripos($text, '<iframe') === false && stripos($text, '<a') === false) {
+        if (false === stripos($text, '<iframe') && false === stripos($text, '<a')) {
             return $text;
         }
 
-        if (stripos($text, '<iframe') !== false){
+        if (false !== stripos($text, '<iframe')) {
             // Look for '/pumoodle/embed', replace the entire <a... </a> tag and send the url as $link[1]
-            $search = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
-            $newtext = preg_replace_callback($search, 'filter_pumukitpr_openedx_callback', $text);
+            if (false !== stripos($text, 'openedx/playlist/embed/')) {
+                $search = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/playlist\\/embed.*?)".*?>.*?<\\/iframe>/is';
+            } else {
+                $search = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
+            }
+            $newText = preg_replace_callback($search, 'filter_pumukitpr_openedx_callback', $text);
         }
 
-        if (!empty($newtext) && $newtext !== $text) {
-            $text = $newtext;
+        if (!empty($newText) && $newText !== $text) {
+            $text = $newText;
         }
 
-        if (stripos($text, '<a') !== false) {
+        if (false !== stripos($text, '<a')) {
             // Look for '/pumoodle/embed', replace the entire <a... </a> tag and send the url as $link[1]
             $search = '/<a\\s[^>]*href=\"(https?:\\/\\/[^>]*?\\/pumoodle\\/embed.*?)\">.*?<\\/a>/is';
-            $newtext = preg_replace_callback($search, 'filter_pumukitpr_callback', $text);
+            $newText = preg_replace_callback($search, 'filter_pumukitpr_callback', $text);
         }
 
-        if (!empty($newtext) && $newtext !== $text) {
-            $text = $newtext;
+        if (!empty($newText) && $newText !== $text) {
+            $text = $newText;
         }
 
         return $text;
@@ -62,7 +66,7 @@ function filter_pumukitpr_openedx_callback($link)
     $link_params = array();
     parse_str(html_entity_decode(parse_url($link[1], PHP_URL_QUERY)), $link_params);
     //Initialized needed arguments.
-    $multistream = isset($link_params['multistream']) ? ($link_params['multistream'] == '1') : false;
+    $multistream = isset($link_params['multistream']) ? ('1' == $link_params['multistream']) : false;
     $mm_id = isset($link_params['id']) ? $link_params['id'] : null;
     $email = isset($link_params['email']) ? $link_params['email'] : null;
     //Prepare new parameters.
@@ -100,7 +104,7 @@ function filter_pumukitpr_callback($link)
     $link_params = array();
     parse_str(html_entity_decode(parse_url($link[1], PHP_URL_QUERY)), $link_params);
     //Initialized needed arguments.
-    $multistream = isset($link_params['multistream']) ? ($link_params['multistream'] == '1') : false;
+    $multistream = isset($link_params['multistream']) ? ('1' == $link_params['multistream']) : false;
     $mm_id = isset($link_params['id']) ? $link_params['id'] : null;
     $email = isset($link_params['email']) ? $link_params['email'] : null;
     //Prepare new parameters.
