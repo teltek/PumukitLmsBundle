@@ -2,6 +2,7 @@
 
 namespace Pumukit\LmsBundle\Controller;
 
+use Pumukit\SchemaBundle\Document\Series;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,12 +21,12 @@ class OpenEdxController extends SSOController
      * @param Request $request
      *
      * @return Response
+     *
      * @throws \Doctrine\ODM\MongoDB\LockException
      * @throws \Doctrine\ODM\MongoDB\Mapping\MappingException
      */
     public function iframeAction(Request $request)
     {
-        dump($request->get('hash'));
         $locale = $this->getLocale($request->get('lang'));
         $contactEmail = $this->getParameter('pumukit2.info')['email'];
 
@@ -130,8 +131,10 @@ class OpenEdxController extends SSOController
         }
 
         $id = $request->get('id');
+        $dm = $this->get('doctrine_mongodb.odm.document_manager');
+        $series = $dm->getRepository('PumukitSchemaBundle:Series')->findOneBy(array('_id' => new \MongoId($id)));
 
-        return $this->forward('PumukitBasePlayerBundle:BasePlaylist:index', array('request' => $request, 'id' => $id));
+        return $this->renderPlaylistIframe($series, $request);
     }
 
     /**
@@ -145,6 +148,23 @@ class OpenEdxController extends SSOController
     protected function renderIframe(MultimediaObject $multimediaObject, Request $request)
     {
         return $this->forward('PumukitBasePlayerBundle:BasePlayer:index', array('request' => $request, 'multimediaObject' => $multimediaObject));
+    }
+
+    /**
+     * @param Series  $series
+     * @param Request $request
+     *
+     * @return Response
+     */
+    protected function renderPlaylistIframe(Series $series, Request $request)
+    {
+        return $this->forward(
+            'PumukitBasePlayerBundle:BasePlaylist:index',
+            array(
+                'request' => $request,
+                'series' => $series,
+            )
+        );
     }
 
     private function getLocale($queryLocale)
