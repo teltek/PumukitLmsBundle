@@ -10,6 +10,20 @@
     <script src="{{ asset('bundles/pumukitwebtv/js/moment-with-locales.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/pumukitwebtv/js/bootstrap-datetimepicker.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/pumukitwebtv/js/modernizr-custom.js') }}" type="text/javascript"></script>
+
+    <script>
+        $(function(){
+            $('.search-form').find('a:last').hide(); // hide 'Search by series'
+            $('.pumukit_mmobj').on('click', function(e) {
+                e.preventDefault();
+                if (window.parent && e.currentTarget.parentElement.href) {
+                    var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
+                    console.log(url);
+                    window.parent.postMessage({url: url}, '*');
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block body_base %}
