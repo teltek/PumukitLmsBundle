@@ -147,7 +147,13 @@ class OpenEdxController extends SSOController
      */
     protected function renderIframe(MultimediaObject $multimediaObject, Request $request)
     {
-        return $this->forward('PumukitBasePlayerBundle:BasePlayer:index', array('request' => $request, 'multimediaObject' => $multimediaObject));
+        return $this->forward(
+            'PumukitBasePlayerBundle:BasePlayer:index',
+            array(
+                'request' => $request,
+                'multimediaObject' => $multimediaObject,
+            )
+        );
     }
 
     /**
