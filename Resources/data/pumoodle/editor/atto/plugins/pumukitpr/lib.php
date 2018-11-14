@@ -35,6 +35,7 @@ function atto_pumukitpr_strings_for_js()
         'button_upload',
         'button_pr',
         'button_myvideos',
+        'button_publicvideos',
     );
 
     $PAGE->requires->strings_for_js($strings, 'atto_pumukitpr');
