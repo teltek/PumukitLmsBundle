@@ -63,6 +63,11 @@ var TEMPLATE = '' +
                 '{{button_myvideos}}' +
             '</a>' +
         '</li>' +
+        '<li class="nav-item">' +
+            '<a class="nav-link" href="#{{elementid}}_public" role="tab" data-toggle="tab">' +
+                '{{button_publicvideos}}' +
+            '</a>' +
+        '</li>' +
     '</ul>' +
     '<div class="root tab-content">' +
         '<div class="tab-pane" id="{{elementid}}_upload">' +
@@ -87,9 +92,10 @@ var TEMPLATE = '' +
            '</iframe>' +
 
         '</div>' +
+        '<div class="tab-pane" id="{{elementid}}_public">' +
+            '<iframe src="{{PUMUKITURL}}/openedx/search/public/multimediaobjects" frameborder="0" allowfullscreen style="width:100%;height:80vh"></iframe>' +
+        '</div>' +
     '</div>' +
-
-
 
     '<form class="atto_form">' +
         '<input class="{{CSS.FLAVORCONTROL}}" id="{{elementid}}_{{FLAVORCONTROL}}" ' +
@@ -218,7 +224,8 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
                 clickedicon: clickedicon,
                 button_upload: M.util.get_string('button_upload', COMPONENTNAME),
                 button_pr: M.util.get_string('button_pr', COMPONENTNAME),
-                button_myvideos: M.util.get_string('button_myvideos', COMPONENTNAME)
+                button_myvideos: M.util.get_string('button_myvideos', COMPONENTNAME),
+                button_publicvideos: M.util.get_string('button_publicvideos', COMPONENTNAME)
             }));
 
         this._form = content;
@@ -259,7 +266,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             e.source.postMessage({'moodlepradd':'OK'}, '*');
         }
         // });
-        if (!e.data.mmId) {
+        if (!e.data.mmId && !e.data.playlist && !e.data.url) {
             return;
         }
 
@@ -271,7 +278,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         this._closeSharedWindow(e);
 
         // If no file is there to insert, don't do it.
-        if (!e.data.mmId){
+        if (!e.data.mmId && !e.data.playlist && !e.data.url){
             Y.log('No URL from pumukitpr value could be found.', 'warn', LOGNAME);
             return;
         }
@@ -280,7 +287,16 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         this.editor.focus();
 
-        var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + e.data.mmId;
+        console.log(e.data);
+        var url = '';
+        if(e.data.playlist) {
+            url = this.get('pumukitprurl') + '/openedx/openedx/playlist/embed/?id=' + e.data.playlist;
+        } else if(e.data.url){
+            url = e.data.url;
+        } else {
+            url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + e.data.mmId;
+        }
+
         var iframe = '<iframe src="' + url +
             '" style="border:0px #FFFFFF none;box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);"' +
             ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';

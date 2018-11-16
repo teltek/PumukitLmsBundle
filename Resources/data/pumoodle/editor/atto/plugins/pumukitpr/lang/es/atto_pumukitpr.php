@@ -34,3 +34,4 @@ $string['pumukitprurldesc'] = 'URL de Pumukit, como https://pumukitpr.host/pumoo
 $string['button_upload'] = 'Subir';
 $string['button_pr'] = 'Personal Recorder';
 $string['button_myvideos'] = 'Mis Vídeos';
+$string['button_publicvideos'] = 'Vídeos públicos';
