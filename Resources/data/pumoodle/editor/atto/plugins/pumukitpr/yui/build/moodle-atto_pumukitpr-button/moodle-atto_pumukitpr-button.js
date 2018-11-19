@@ -48,6 +48,7 @@ var CSS = {
         FLAVORCONTROL: '.flavorcontrol'
     };
 
+
 var TEMPLATE = '<ul class="root nav nav-tabs" role="tablist">';
 var TEMPLATE_TABCONTENT = '<div class="root tab-content">';
 
@@ -234,36 +235,39 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
      */
     _getFormContent: function(clickedicon) {
 
+         var TARGET_TEMPLATE = TEMPLATE;
+         var TARGET_TEMPLATE_CONTENT = TEMPLATE_TABCONTENT;
+
          if(this.get('showpr') !== "0") {
-             TEMPLATE = TEMPLATE + ITEM_PERSONAL_RECORDER;
-             TEMPLATE_TABCONTENT = TEMPLATE_TABCONTENT + TABCONTENT_PERSONALRECORDER;
+             TARGET_TEMPLATE = TARGET_TEMPLATE + ITEM_PERSONAL_RECORDER;
+             TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_PERSONALRECORDER;
          }
 
-         TEMPLATE = TEMPLATE + TEMPLATE_MANAGER;
-         TEMPLATE_TABCONTENT = TEMPLATE_TABCONTENT + TABCONTENT_MANAGERSERIES;
+         TARGET_TEMPLATE = TARGET_TEMPLATE + TEMPLATE_MANAGER;
+         TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_MANAGERSERIES;
 
          if (this.get('showplaylist') !== "0") {
-             TEMPLATE = TEMPLATE + TEMPLATE_PLAYLIST;
-             TEMPLATE_TABCONTENT = TEMPLATE_TABCONTENT + TABCONTENT_MANAGERPLAYLIST;
+             TARGET_TEMPLATE = TARGET_TEMPLATE + TEMPLATE_PLAYLIST;
+             TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_MANAGERPLAYLIST;
          }
 
          if(this.get('showsharedvideos') !== "0") {
-             TEMPLATE = TEMPLATE + TEMPLATE_SHAREDVIDEOS;
-             TEMPLATE_TABCONTENT = TEMPLATE_TABCONTENT + TABCONTENT_SHAREDVIDEOS;
+             TARGET_TEMPLATE = TARGET_TEMPLATE + TEMPLATE_SHAREDVIDEOS;
+             TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_SHAREDVIDEOS;
          }
 
          /* Complete general html */
-         TEMPLATE = TEMPLATE + "</ul>";
-         TEMPLATE_TABCONTENT = TEMPLATE_TABCONTENT + '</div>' +
+         TARGET_TEMPLATE = TARGET_TEMPLATE + "</ul>";
+         TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + '</div>' +
              '<form class="atto_form">' +
              '<input class="{{CSS.FLAVORCONTROL}}" id="{{elementid}}_{{FLAVORCONTROL}}" ' +
              'name="{{elementid}}_{{FLAVORCONTROL}}" value="{{defaultflavor}}" ' +
              'type="hidden" />' +
              '</form>';
 
-         TEMPLATE = TEMPLATE + TEMPLATE_TABCONTENT;
+         TARGET_TEMPLATE = TARGET_TEMPLATE + TARGET_TEMPLATE_CONTENT;
 
-        var template = Y.Handlebars.compile(TEMPLATE),
+        var template = Y.Handlebars.compile(TARGET_TEMPLATE),
             content = Y.Node.create(template({
                 elementid: this.get('host').get('elementid'),
                 CSS: CSS,

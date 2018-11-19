@@ -20,12 +20,36 @@
 
     <script>
         $(function(){
+            var timer;
+            var status = 1;
+
             $('.search-form').find('a:last').hide(); // hide 'Search by series'
             $('.pumukit_mmobj').on('click', function(e) {
                 e.preventDefault();
+                status = 1;
+                timer = setTimeout(function() {
+                    if (status == 1) {
+                        if (window.parent && e.currentTarget.parentElement.href) {
+                            var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
+                            window.parent.postMessage({url: url}, '*');
+                        }
+                    }
+                }, 500);
+
+            });
+
+            $('.pumukit_mmobj').on('dblclick', function(e) {
+                e.preventDefault();
+                clearTimeout(timer);
+                status = 0;
                 if (window.parent && e.currentTarget.parentElement.href) {
                     var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
-                    window.parent.postMessage({url: url}, '*');
+                    $('.modal-body-shared-videos').html(
+                        '<div class="embed-responsive embed-responsive-16by9">' +
+                        '<iframe src="' + url + '" frameborder="0" border="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
+                        '</div>'
+                    );
+                    $('#sharedVideosModal').modal('show');
                 }
             });
         });
@@ -33,33 +57,52 @@
 {% endblock %}
 
 {% block body_base %}
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="row">
-                <div class="col-xs-12">
-                    {% if blocked_tag is defined and blocked_tag is not null %}
-                        <h3 class="moodle_title">{{ blocked_tag.title }}</h3>
-                    {% else %}
-                        <h3 class="moodle_title">
-                            {% if template_title is defined %}
-                                {{ "Search shared videos" |trans }}
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12">
+                {% if blocked_tag is defined and blocked_tag is not null %}
+                    <h3 class="moodle_title">{{ blocked_tag.title }}</h3>
+                {% else %}
+                    <h3 class="moodle_title">
+                        {% if template_title is defined %}
+                            {{ "Search shared videos" |trans }}
+                        {% else %}
+                            {% if type == "series" %}
+                                {% trans %}Series search{% endtrans %}
                             {% else %}
-                                {% if type == "series" %}
-                                    {% trans %}Series search{% endtrans %}
-                                {% else %}
-                                    {% trans %}Multimedia objects search{% endtrans %}
-                                {% endif %}
+                                {% trans %}Multimedia objects search{% endtrans %}
                             {% endif %}
-                        </h3>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row">
-                {% include 'PumukitWebTVBundle:Search:list.html.twig' %}
-            </div>
-            <div class="row">
-                {% include 'PumukitWebTVBundle:Misc:pager.html.twig' %}
+                        {% endif %}
+                    </h3>
+                {% endif %}
             </div>
         </div>
+        <div class="row">
+            {% include 'PumukitWebTVBundle:Search:list.html.twig' %}
+        </div>
+        <div class="row">
+            {% include 'PumukitWebTVBundle:Misc:pager.html.twig' %}
+        </div>
+
+        <div class="pmk-modal modal fade" id="sharedVideosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content ">
+                    <div class="modal-header" style="border-bottom:transparent">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h3 class="moodle_title modal-title pumukitnewadmin-modal-title-margin" id="myModalLabel">Vista previa del objeto multimedia</h3>
+                    </div>
+                    <div class="modal-body modal-body-shared-videos">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-raised" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
+
 {% endblock %}
