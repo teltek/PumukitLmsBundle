@@ -36,4 +36,13 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configtext('atto_pumukitpr/password',
         get_string('password', 'atto_pumukitpr'), get_string('passworddesc', 'atto_pumukitpr'), get_string('passworddefval', 'atto_pumukitpr'), PARAM_TEXT));
+
+    $settings->add(new admin_setting_configcheckbox('atto_pumukitpr/showpr',
+        get_string('showprtext', 'atto_pumukitpr'), get_string('showprdesc', 'atto_pumukitpr'), 1));
+
+    $settings->add(new admin_setting_configcheckbox('atto_pumukitpr/showplaylist',
+        get_string('showplaylisttext', 'atto_pumukitpr'), get_string('showplaylistdesc', 'atto_pumukitpr'), 0));
+
+    $settings->add(new admin_setting_configcheckbox('atto_pumukitpr/showsharedvideos',
+        get_string('showsharedvideostext', 'atto_pumukitpr'), get_string('showsharedvideosdesc', 'atto_pumukitpr'), 1));
 }

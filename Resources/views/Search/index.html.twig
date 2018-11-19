@@ -3,6 +3,13 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/pumukitwebtv/css/bootstrap-datetimepicker.min.css') }}" type="text/css" rel="stylesheet" media="screen"/>
+
+    <style>
+        .moodle_title {
+            font-family: RobotoDraft,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+            font-weight: 300;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
@@ -18,7 +25,6 @@
                 e.preventDefault();
                 if (window.parent && e.currentTarget.parentElement.href) {
                     var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
-                    console.log(url);
                     window.parent.postMessage({url: url}, '*');
                 }
             });
@@ -32,11 +38,11 @@
             <div class="row">
                 <div class="col-xs-12">
                     {% if blocked_tag is defined and blocked_tag is not null %}
-                        <h1>{{ blocked_tag.title }}</h1>
+                        <h3 class="moodle_title">{{ blocked_tag.title }}</h3>
                     {% else %}
-                        <h1>
+                        <h3 class="moodle_title">
                             {% if template_title is defined %}
-                                {{ template_title |trans }}
+                                {{ "Search shared videos" |trans }}
                             {% else %}
                                 {% if type == "series" %}
                                     {% trans %}Series search{% endtrans %}
@@ -44,7 +50,7 @@
                                     {% trans %}Multimedia objects search{% endtrans %}
                                 {% endif %}
                             {% endif %}
-                        </h1>
+                        </h3>
                     {% endif %}
                 </div>
             </div>

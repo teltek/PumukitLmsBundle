@@ -35,7 +35,8 @@ function atto_pumukitpr_strings_for_js()
         'button_upload',
         'button_pr',
         'button_myvideos',
-        'button_publicvideos',
+        'button_playlists',
+        'button_sharevideos',
     );
 
     $PAGE->requires->strings_for_js($strings, 'atto_pumukitpr');
@@ -56,6 +57,9 @@ function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
     $params['dialogtitle'] = get_config('atto_pumukitpr', 'dialogtitle');
     $params['username'] = $USER->username;
     $params['email'] = $USER->email;
+    $params['showpr'] = get_config('atto_pumukitpr', 'showpr');
+    $params['showplaylist'] =  get_config('atto_pumukitpr', 'showplaylist');
+    $params['showsharedvideos'] =  get_config('atto_pumukitpr', 'showsharedvideos');
 
     $date = date('d/m/Y');
     $password = get_config('atto_pumukitpr', 'password');
