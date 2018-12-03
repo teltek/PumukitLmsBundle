@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ManagerController extends SSOController
 {
     const ADMIN_SERIES_ROUTE = '/admin/series';
+    const ADMIN_PLAYLIST_ROUTE = '/admin/playlist';
 
     /**
      *   Parameters:
@@ -33,6 +34,10 @@ class ManagerController extends SSOController
         }
 
         $this->login($user, $request);
+
+        if ($request->get('playlist')) {
+            return new RedirectResponse(self::ADMIN_PLAYLIST_ROUTE);
+        }
 
         return new RedirectResponse(self::ADMIN_SERIES_ROUTE);
     }

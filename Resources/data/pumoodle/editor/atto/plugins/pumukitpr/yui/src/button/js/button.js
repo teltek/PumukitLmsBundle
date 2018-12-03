@@ -46,62 +46,83 @@ var CSS = {
         FLAVORCONTROL: '.flavorcontrol'
     };
 
-var TEMPLATE = '' +
-    '<ul class="root nav nav-tabs" role="tablist">' +
-        '<li class="nav-item">' +
-            '<a class="nav-link" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
-                '{{button_upload}}' +
-            '</a>' +
-        '</li>' +
-        '<li class="nav-item">' +
-            '<a class="nav-link" href="#{{elementid}}_personal_recorder" role="tab" data-toggle="tab">' +
-                '{{button_pr}}' +
-            '</a>' +
-        '</li>' +
+
+var TEMPLATE = '<ul class="root nav nav-tabs" role="tablist">';
+var TEMPLATE_TABCONTENT = '<div class="root tab-content">';
+
+/* Upload action */
+var ITEM_UPLOAD = '<li class="nav-item">' +
+                        '<a class="nav-link" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
+                            '{{button_upload}}' +
+                        '</a>' +
+                  '</li>';
+
+var TABCONTENT_UPLOAD =
+    '<div class="tab-pane" id="{{elementid}}_upload">' +
+        '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" frameborder="0" allowfullscreen style="width:100%;height:80vh"></iframe>' +
+    '</div>';
+
+TEMPLATE = TEMPLATE + ITEM_UPLOAD;
+TEMPLATE_TABCONTENT = TEMPLATE_TABCONTENT + TABCONTENT_UPLOAD;
+
+/* Personal recorder action */
+var ITEM_PERSONAL_RECORDER =
+    '<li class="nav-item">' +
+    '<a class="nav-link" href="#{{elementid}}_personal_recorder" role="tab" data-toggle="tab">' +
+    '{{button_pr}}' +
+    '</a>' +
+    '</li>';
+
+var TABCONTENT_PERSONALRECORDER =
+    '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
+    '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
+    '</iframe>' +
+    '</div>';
+
+/* Manager series action */
+var TEMPLATE_MANAGER =
         '<li class="nav-item">' +
             '<a class="nav-link active" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
                 '{{button_myvideos}}' +
             '</a>' +
-        '</li>' +
-        '<li class="nav-item">' +
-            '<a class="nav-link" href="#{{elementid}}_public" role="tab" data-toggle="tab">' +
-                '{{button_publicvideos}}' +
-            '</a>' +
-        '</li>' +
-    '</ul>' +
-    '<div class="root tab-content">' +
-        '<div class="tab-pane" id="{{elementid}}_upload">' +
+        '</li>';
 
-            '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
-                    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
-           '</iframe>' +
+var TABCONTENT_MANAGERSERIES = '<div class="tab-pane active" id="{{elementid}}_manager">' +
 
-        '</div>' +
-        '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
+    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+    '</iframe>' +
 
-            '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
-                    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
-           '</iframe>' +
+    '</div>';
+
+/* Manager playlist action */
+var TEMPLATE_PLAYLIST =
+    '<li class="nav-item">' +
+    '<a class="nav-link" href="#{{elementid}}_playlists" role="tab" data-toggle="tab">' +
+    '{{button_playlists}}' +
+    '</a>' +
+    '</li>';
+
+var TABCONTENT_MANAGERPLAYLIST = '<div class="tab-pane" id="{{elementid}}_playlists">' +
+
+    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en&playlist=true" ' +
+    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+    '</iframe>' +
+
+    '</div>';
 
 
-        '</div>' +
-        '<div class="tab-pane active" id="{{elementid}}_manager">' +
+var TEMPLATE_SHAREDVIDEOS =
+    '<li class="nav-item">' +
+    '<a class="nav-link" href="#{{elementid}}_public" role="tab" data-toggle="tab">' +
+    '{{button_sharevideos}}' +
+    '</a>' +
+    '</li>';
 
-            '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
-                    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
-           '</iframe>' +
-
-        '</div>' +
-        '<div class="tab-pane" id="{{elementid}}_public">' +
-            '<iframe src="{{PUMUKITURL}}/openedx/search/public/multimediaobjects" frameborder="0" allowfullscreen style="width:100%;height:80vh"></iframe>' +
-        '</div>' +
-    '</div>' +
-
-    '<form class="atto_form">' +
-        '<input class="{{CSS.FLAVORCONTROL}}" id="{{elementid}}_{{FLAVORCONTROL}}" ' +
-            'name="{{elementid}}_{{FLAVORCONTROL}}" value="{{defaultflavor}}" ' +
-            'type="hidden" />' +
-    '</form>';
+var TABCONTENT_SHAREDVIDEOS = '<div class="tab-pane" id="{{elementid}}_public">' +
+    '<iframe src="{{PUMUKITURL}}/openedx/search/public/multimediaobjects" frameborder="0" allowfullscreen style="width:100%;height:80vh"></iframe>' +
+    '</div>';
 
 Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
 
@@ -211,7 +232,40 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
      * @private
      */
     _getFormContent: function(clickedicon) {
-        var template = Y.Handlebars.compile(TEMPLATE),
+
+         var TARGET_TEMPLATE = TEMPLATE;
+         var TARGET_TEMPLATE_CONTENT = TEMPLATE_TABCONTENT;
+
+         if(this.get('showpr') !== "0") {
+             TARGET_TEMPLATE = TARGET_TEMPLATE + ITEM_PERSONAL_RECORDER;
+             TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_PERSONALRECORDER;
+         }
+
+         TARGET_TEMPLATE = TARGET_TEMPLATE + TEMPLATE_MANAGER;
+         TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_MANAGERSERIES;
+
+         if (this.get('showplaylist') !== "0") {
+             TARGET_TEMPLATE = TARGET_TEMPLATE + TEMPLATE_PLAYLIST;
+             TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_MANAGERPLAYLIST;
+         }
+
+         if(this.get('showsharedvideos') !== "0") {
+             TARGET_TEMPLATE = TARGET_TEMPLATE + TEMPLATE_SHAREDVIDEOS;
+             TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_SHAREDVIDEOS;
+         }
+
+         /* Complete general html */
+         TARGET_TEMPLATE = TARGET_TEMPLATE + "</ul>";
+         TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + '</div>' +
+             '<form class="atto_form">' +
+             '<input class="{{CSS.FLAVORCONTROL}}" id="{{elementid}}_{{FLAVORCONTROL}}" ' +
+             'name="{{elementid}}_{{FLAVORCONTROL}}" value="{{defaultflavor}}" ' +
+             'type="hidden" />' +
+             '</form>';
+
+         TARGET_TEMPLATE = TARGET_TEMPLATE + TARGET_TEMPLATE_CONTENT;
+
+        var template = Y.Handlebars.compile(TARGET_TEMPLATE),
             content = Y.Node.create(template({
                 elementid: this.get('host').get('elementid'),
                 CSS: CSS,
@@ -225,7 +279,8 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
                 button_upload: M.util.get_string('button_upload', COMPONENTNAME),
                 button_pr: M.util.get_string('button_pr', COMPONENTNAME),
                 button_myvideos: M.util.get_string('button_myvideos', COMPONENTNAME),
-                button_publicvideos: M.util.get_string('button_publicvideos', COMPONENTNAME)
+                button_playlists: M.util.get_string('button_playlists', COMPONENTNAME),
+                button_sharevideos: M.util.get_string('button_sharevideos', COMPONENTNAME)
             }));
 
         this._form = content;
@@ -287,7 +342,6 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         this.editor.focus();
 
-        console.log(e.data);
         var url = '';
         if(e.data.playlist) {
             url = this.get('pumukitprurl') + '/openedx/openedx/playlist/embed/?id=' + e.data.playlist;
@@ -325,6 +379,15 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         },
         dialogtitle: {
             value: ''
-        }
+        },
+        showpr: {
+            value: ''
+        },
+        showplaylist: {
+            value: ''
+        },
+        showsharedvideos: {
+            value: ''
+        },
     }
 });
