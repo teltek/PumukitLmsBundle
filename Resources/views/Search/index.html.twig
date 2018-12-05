@@ -20,34 +20,30 @@
 
     <script>
         $(function(){
-            var timer;
-            var status = 1;
 
             $('.search-form').find('a:last').hide(); // hide 'Search by series'
-            $('.pumukit_mmobj').on('click', function(e) {
+            $(document).on('click', '#btn-pumukit', function(e) {
                 e.preventDefault();
-                status = 1;
-                timer = setTimeout(function() {
-                    if (status == 1) {
-                        if (window.parent && e.currentTarget.parentElement.href) {
-                            var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
-                            window.parent.postMessage({url: url}, '*');
-                        }
-                    }
-                }, 500);
-
+                if (window.parent && $(this).data('url')) {
+                    var url = $(this).data('url').replace('/video/', '/iframe/');
+                    window.parent.postMessage({url: url}, '*');
+                }
             });
 
-            $('.pumukit_mmobj').on('dblclick', function(e) {
+            $('.pumukit_mmobj').on('click', function(e) {
                 e.preventDefault();
-                clearTimeout(timer);
-                status = 0;
                 if (window.parent && e.currentTarget.parentElement.href) {
                     var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
                     $('.modal-body-shared-videos').html(
                         '<div class="embed-responsive embed-responsive-16by9">' +
-                        '<iframe src="' + url + '" frameborder="0" border="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
+                        '<iframe id="pmk-iframe" src="' + url + '" frameborder="0" border="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
                         '</div>'
+                    );
+
+                    $('.modal-footer').html(
+                        '<button type="button" class="btn btn-default btn-raised" data-dismiss="modal">Cerrar</button>'
+                        +
+                        '<button type="button" id="btn-pumukit" data-url="' + url + '" class="btn btn-pumukit btn-raised" data-dismiss="modal">Publish</button>'
                     );
                     $('#sharedVideosModal').modal('show');
                 }
@@ -95,7 +91,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-raised" data-dismiss="modal">Cerrar</button>
+
                     </div>
                 </div>
             </div>
