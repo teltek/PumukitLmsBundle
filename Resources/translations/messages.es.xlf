@@ -13,9 +13,9 @@
                 <source>If you want to enjoy the Galicaster Personal Recorder, please keep in touch with your support</source>
                 <target>Si quieres disfrutar del Galicaster Personal Recorder, por favor, ponte en contacto con su administrador</target>
             </trans-unit>
-            <trans-unit id="43913a68ec0c11e88eb2f2801f1b9fd1" resname="Search shared videos">
-                <source>Search shared videos</source>
-                <target>Búsqueda de vídeos compartidos</target>
+            <trans-unit id="43913a68ec0c11e88eb2f2801f1b9fd1" resname="Search all videos">
+                <source>Search all videos</source>
+                <target>Búsqueda de todos los vídeos</target>
             </trans-unit>
         </body>
     </file>
