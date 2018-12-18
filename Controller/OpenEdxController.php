@@ -164,13 +164,7 @@ class OpenEdxController extends SSOController
      */
     protected function renderPlaylistIframe(Series $series, Request $request)
     {
-        return $this->forward(
-            'PumukitBasePlayerBundle:BasePlaylist:index',
-            array(
-                'request' => $request,
-                'series' => $series,
-            )
-        );
+        return $this->redirectToRoute('pumukit_playlistplayer_index', array('request' => $request, 'id' => $series->getId()));
     }
 
     private function getLocale($queryLocale)
