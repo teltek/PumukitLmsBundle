@@ -61,7 +61,7 @@ var ITEM_UPLOAD = '<li class="nav-item">' +
 
 var TABCONTENT_UPLOAD =
     '<div class="tab-pane" id="{{elementid}}_upload">' +
-        '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" frameborder="0" allowfullscreen style="width:100%;height:80vh"></iframe>' +
+        '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera"></iframe>' +
     '</div>';
 
 TEMPLATE = TEMPLATE + ITEM_UPLOAD;
@@ -93,7 +93,7 @@ var TEMPLATE_MANAGER =
 var TABCONTENT_MANAGERSERIES = '<div class="tab-pane active" id="{{elementid}}_manager">' +
 
     '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
-    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
     '</iframe>' +
 
     '</div>';
@@ -109,7 +109,7 @@ var TEMPLATE_PLAYLIST =
 var TABCONTENT_MANAGERPLAYLIST = '<div class="tab-pane" id="{{elementid}}_playlists">' +
 
     '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en&playlist=true" ' +
-    'frameborder="0" allowfullscreen style="width:100%;height:80vh">' +
+    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
     '</iframe>' +
 
     '</div>';
@@ -123,7 +123,7 @@ var TEMPLATE_SHAREDVIDEOS =
     '</li>';
 
 var TABCONTENT_SHAREDVIDEOS = '<div class="tab-pane" id="{{elementid}}_public">' +
-    '<iframe src="{{PUMUKITURL}}/openedx/search/public/multimediaobjects" frameborder="0" allowfullscreen style="width:100%;height:80vh"></iframe>' +
+    '<iframe src="{{PUMUKITURL}}/openedx/search/public/multimediaobjects" frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera"></iframe>' +
     '</div>';
 
 Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
@@ -355,7 +355,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         var iframe = '<iframe src="' + url +
             '" style="border:0px #FFFFFF none;box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);"' +
-            ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen></iframe>';
+            ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen allow="microphone; camera"></iframe>';
         this.get('host').insertContentAtFocusPoint(iframe);
         this.markUpdated();
     },
