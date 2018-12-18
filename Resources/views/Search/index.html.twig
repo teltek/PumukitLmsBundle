@@ -24,10 +24,15 @@
             $('.search-form').find('a:last').hide(); // hide 'Search by series'
             $(document).on('click', '#btn-pumukit', function(e) {
                 e.preventDefault();
+                $('.modal-body-shared-videos').html('');
                 if (window.parent && $(this).data('url')) {
                     var url = $(this).data('url').replace('/video/', '/iframe/');
                     window.parent.postMessage({url: url}, '*');
                 }
+            });
+
+            $(document).on('click', '.close-modal', function(e) {
+                $('.modal-body-shared-videos').html('');
             });
 
             $('.pumukit_mmobj').on('click', function(e) {
@@ -36,18 +41,20 @@
                     var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
                     $('.modal-body-shared-videos').html(
                         '<div class="embed-responsive embed-responsive-16by9">' +
-                        '<iframe id="pmk-iframe" src="' + url + '" frameborder="0" border="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
+                        '<iframe id="pmk-iframe" src="' + url + '" frameborder="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
                         '</div>'
                     );
 
                     $('.modal-footer').html(
-                        '<button type="button" class="btn btn-default btn-raised" data-dismiss="modal">Cerrar</button>'
+                        '<button type="button" class="btn btn-default btn-raised close-modal" data-dismiss="modal">{{ "Close"|trans }}</button>'
                         +
-                        '<button type="button" id="btn-pumukit" data-url="' + url + '" class="btn btn-pumukit btn-raised" data-dismiss="modal">Publish</button>'
+                        '<button type="button" id="btn-pumukit" data-url="' + url + '" class="btn btn-pumukit btn-raised" data-dismiss="modal">{{ "Publish"|trans }}</button>'
                     );
+
                     $('#sharedVideosModal').modal('show');
                 }
             });
+
         });
     </script>
 {% endblock %}
@@ -84,8 +91,8 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content ">
                     <div class="modal-header" style="border-bottom:transparent">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h3 class="moodle_title modal-title pumukitnewadmin-modal-title-margin" id="myModalLabel">Vista previa del objeto multimedia</h3>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h3 class="moodle_title modal-title pumukitnewadmin-modal-title-margin" id="myModalLabel">{% trans %}Multimedia object preview{% endtrans %}</h3>
                     </div>
                     <div class="modal-body modal-body-shared-videos">
 

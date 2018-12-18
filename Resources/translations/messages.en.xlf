@@ -17,6 +17,10 @@
                 <source>Search all videos</source>
                 <target>Search all videos</target>
             </trans-unit>
+            <trans-unit id="9c2203e602ce11e98eb2f2801f1b9fd1" resname="Publish">
+                <source>Publish</source>
+                <target>Publish</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
