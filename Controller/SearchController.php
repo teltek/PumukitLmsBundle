@@ -24,6 +24,7 @@ class SearchController extends BaseSearchController
      */
     public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, $useTagAsGeneral = false)
     {
+        $request->attributes->set('only_public', true);
         $response = parent::multimediaObjectsAction($request, $blockedTag, $useTagAsGeneral);
 
         return $response;
