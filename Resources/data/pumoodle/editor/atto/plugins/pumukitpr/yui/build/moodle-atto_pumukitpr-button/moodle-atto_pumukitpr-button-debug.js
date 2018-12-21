@@ -355,7 +355,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         var iframe = '<iframe src="' + url +
             '" style="border:0px #FFFFFF none;box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);"' +
-            ' scrolling="no" frameborder="1" height="270" width="480" allowfullscreen allow="microphone; camera"></iframe>';
+            ' scrolling="no" frameborder="1" height="315" width="560" allowfullscreen allow="microphone; camera"></iframe>';
         this.get('host').insertContentAtFocusPoint(iframe);
         this.markUpdated();
     },
