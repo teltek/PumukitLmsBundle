@@ -75,7 +75,7 @@ var ITEM_PERSONAL_RECORDER =
 
 var TABCONTENT_PERSONALRECORDER =
     '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
-    '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+    '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" ' +
     'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
     '</iframe>' +
     '</div>';
@@ -90,7 +90,7 @@ var TEMPLATE_MANAGER =
 
 var TABCONTENT_MANAGERSERIES = '<div class="tab-pane active" id="{{elementid}}_manager">' +
 
-    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en" ' +
+    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" ' +
     'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
     '</iframe>' +
 
@@ -106,7 +106,7 @@ var TEMPLATE_PLAYLIST =
 
 var TABCONTENT_MANAGERPLAYLIST = '<div class="tab-pane" id="{{elementid}}_playlists">' +
 
-    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&lang=en&playlist=true" ' +
+    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en&playlist=true" ' +
     'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
     '</iframe>' +
 
@@ -273,6 +273,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
                 PUMUKITURL: this.get('pumukitprurl'),
                 HASH: this.get('hash'),
                 USERNAME: this.get('username'),
+                EMAIL: this.get('email'),
                 component: COMPONENTNAME,
                 defaultflavor: this.get('defaultflavor'),
                 clickedicon: clickedicon,
