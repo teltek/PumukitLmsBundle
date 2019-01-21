@@ -61,7 +61,7 @@ var ITEM_UPLOAD = '<li class="nav-item">' +
 
 var TABCONTENT_UPLOAD =
     '<div class="tab-pane" id="{{elementid}}_upload">' +
-        '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&lang=en" frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera"></iframe>' +
+    '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera"></iframe>' +
     '</div>';
 
 TEMPLATE = TEMPLATE + ITEM_UPLOAD;
