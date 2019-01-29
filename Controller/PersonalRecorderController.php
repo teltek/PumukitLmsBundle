@@ -32,12 +32,13 @@ class PersonalRecorderController extends SSOController
             return new Response($this->renderView('PumukitLmsBundle:PersonalRecorder:not_found.html.twig'), 403);
         }
 
-        $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->getHost(), $request->get('hash'), $request->isSecure());
-        if ($user instanceof Response) {
-            return $user;
+        if (!$this->isGranted(PermissionProfile::SCOPE_PERSONAL) && !$this->isGranted(PermissionProfile::SCOPE_GLOBAL)) {
+            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->getHost(), $request->get('hash'), $request->isSecure());
+            if ($user instanceof Response) {
+                return $user;
+            }
+            $this->login($user, $request);
         }
-
-        $this->login($user, $request);
 
         $titleParam = $this->getParameter('pumukit_lms.recording_series_title');
         $locales = $this->getParameter('pumukit2.locales');

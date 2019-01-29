@@ -28,12 +28,14 @@ class ManagerController extends SSOController
      */
     public function manager(Request $request)
     {
-        $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->getHost(), $request->get('hash'), $request->isSecure());
-        if ($user instanceof Response) {
-            return $user;
-        }
+        if (!$this->isGranted(PermissionProfile::SCOPE_PERSONAL) && !$this->isGranted(PermissionProfile::SCOPE_GLOBAL)) {
+            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->getHost(), $request->get('hash'), $request->isSecure());
+            if ($user instanceof Response) {
+                return $user;
+            }
 
-        $this->login($user, $request);
+            $this->login($user, $request);
+        }
 
         if ($request->get('playlist')) {
             return new RedirectResponse(self::ADMIN_PLAYLIST_ROUTE);
