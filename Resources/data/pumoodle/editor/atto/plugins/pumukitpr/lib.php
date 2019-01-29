@@ -58,8 +58,8 @@ function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
     $params['username'] = $USER->username;
     $params['email'] = $USER->email;
     $params['showpr'] = get_config('atto_pumukitpr', 'showpr');
-    $params['showplaylist'] =  get_config('atto_pumukitpr', 'showplaylist');
-    $params['showsharedvideos'] =  get_config('atto_pumukitpr', 'showsharedvideos');
+    $params['showplaylist'] = get_config('atto_pumukitpr', 'showplaylist');
+    $params['showsharedvideos'] = get_config('atto_pumukitpr', 'showsharedvideos');
 
     $date = date('d/m/Y');
     $password = get_config('atto_pumukitpr', 'password');

@@ -68,7 +68,7 @@ function filter_pumukitpr_openedx_callback($link)
     //Initialized needed arguments.
     $multistream = isset($link_params['multistream']) ? ('1' == $link_params['multistream']) : false;
     $mm_id = isset($link_params['id']) ? $link_params['id'] : null;
-    if(!$mm_id) {
+    if (!$mm_id) {
         $mm_id = isset($link_params['playlist']) ? $link_params['playlist'] : null;
     }
     $email = isset($link_params['email']) ? $link_params['email'] : null;
