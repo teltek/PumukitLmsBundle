@@ -28,7 +28,18 @@ class ManagerController extends SSOController
      */
     public function manager(Request $request)
     {
+        $forceReLogin = false;
+
+        $user = $this->getUser();
+        if (!$user || $user->getEmail() !== $request->get('email') || $user->getUsername() !== $request->get('username')) {
+            $forceReLogin = true;
+        }
+
         if (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$this->isGranted('ROLE_SCOPE_PERSONAL')) {
+            $forceReLogin = true;
+        }
+
+        if ($forceReLogin) {
             $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->getHost(), $request->get('hash'), $request->isSecure());
             if ($user instanceof Response) {
                 return $user;
