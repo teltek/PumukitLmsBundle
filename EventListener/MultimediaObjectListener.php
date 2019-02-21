@@ -53,11 +53,9 @@ class MultimediaObjectListener
      */
     public function onMultimediaObjectCreate(MultimediaObjectEvent $multimediaObjectEvent)
     {
-        $referer = $this->getRefererFromMasterRequest();
+        $refererUrl = $this->getRefererFromMasterRequest();
 
         $multimediaObject = $multimediaObjectEvent->getMultimediaObject();
-
-        $refererUrl = $this->getOrigin($referer);
 
         $this->saveOriginMultimediaObject($multimediaObject, $refererUrl);
     }
@@ -74,32 +72,13 @@ class MultimediaObjectListener
     }
 
     /**
-     * @param $referer
-     *
-     * @return mixed
-     */
-    private function getOrigin($referer)
-    {
-        $refererUrl = parse_url($referer, PHP_URL_HOST);
-        if (!$referer) {
-            return null;
-        }
-
-        if (!in_array($refererUrl, $this->allowedDomains)) {
-            return null;
-        }
-
-        return $refererUrl;
-    }
-
-    /**
      * @param MultimediaObject $multimediaObject
      * @param                  $referer
      */
     private function saveOriginMultimediaObject(MultimediaObject $multimediaObject, $referer)
     {
         if (!$referer) {
-            $referer = $this->defaultHost;
+            $referer = 'none';
         }
 
         $multimediaObject->setProperty('origin', $referer);
