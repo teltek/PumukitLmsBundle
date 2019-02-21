@@ -28,22 +28,24 @@ class SSOService
     private $groupService;
     private $password;
     private $domain;
+    private $allowedDomains;
     private $ldapService = null;
     private $groupRepo;
 
     /**
-     * Constructor.
+     * SSOService constructor.
      *
      * @param DocumentManager          $dm
      * @param PermissionProfileService $permissionProfileService
      * @param UserService              $userService
      * @param PersonService            $personService
      * @param GroupService             $groupService
-     * @param string                   $password
-     * @param string                   $domain
-     * @param LDAPService|null         $ldapService
+     * @param                          $password
+     * @param                          $domain
+     * @param                          $allowedDomains
+     * @param                          $ldapService
      */
-    public function __construct(DocumentManager $dm, PermissionProfileService $permissionProfileService, UserService $userService, PersonService $personService, GroupService $groupService, $password, $domain, $ldapService = null)
+    public function __construct(DocumentManager $dm, PermissionProfileService $permissionProfileService, UserService $userService, PersonService $personService, GroupService $groupService, $password, $domain, $allowedDomains, $ldapService = null)
     {
         $this->dm = $dm;
         $this->permissionProfileService = $permissionProfileService;
@@ -52,6 +54,7 @@ class SSOService
         $this->groupService = $groupService;
         $this->password = $password;
         $this->domain = $domain;
+        $this->allowedDomains = $allowedDomains;
         $this->ldapService = $ldapService;
         $this->groupRepo = $this->dm->getRepository('PumukitSchemaBundle:Group');
     }
@@ -85,11 +88,15 @@ class SSOService
      *
      * @param string $domain
      *
-     * @return bool TRUE if $domain is equals to the given domain, FALSE otherwise
+     * @return bool FALSE if $domain isn't allowed domains, TRUE otherwise
      */
     public function validateDomain($domain)
     {
-        return $domain === $this->domain;
+        if (!in_array($domain, $this->allowedDomains)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
