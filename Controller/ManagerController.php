@@ -40,7 +40,8 @@ class ManagerController extends SSOController
         }
 
         if ($forceReLogin) {
-            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->getHost(), $request->get('hash'), $request->isSecure());
+            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->headers->get('referer'), $request->get('hash'), $request->isSecure());            
+
             if ($user instanceof Response) {
                 return $user;
             }

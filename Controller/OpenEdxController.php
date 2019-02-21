@@ -49,6 +49,7 @@ class OpenEdxController extends SSOController
                 }
                 $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
 
+                //TODO use SSOService::validateDomain
                 if (!in_array($refererUrl, $listHosts)) {
                     return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
                 }
