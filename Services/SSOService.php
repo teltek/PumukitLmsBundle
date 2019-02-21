@@ -86,12 +86,14 @@ class SSOService
     /**
      * Validate domain.
      *
-     * @param string $domain
+     * @param string $referer
      *
-     * @return bool FALSE if $domain isn't allowed domains, TRUE otherwise
+     * @return bool FALSE if $referer isn't allowed domains, TRUE otherwise
      */
-    public function validateDomain($domain)
+    public function validateDomain($referer)
     {
+        $domain = parse_url($referer, PHP_URL_HOST);
+
         if (!in_array($domain, $this->allowedDomains)) {
             return false;
         }
