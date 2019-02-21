@@ -15,6 +15,7 @@
             <argument type="service" id="pumukitschema.group" />
             <argument>%pumukit_lms.password%</argument>
             <argument>%pumukit2.naked_backoffice_domain%</argument>
+            <argument>%pumukit_lms.domains%%</argument>
             <argument type="service" id="pumukit_ldap.ldap" on-invalid="null" />
         </service>
         <service id="pumukit_lms.open_edx" class="Pumukit\LmsBundle\Services\OpenEdxService">
