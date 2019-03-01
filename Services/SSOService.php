@@ -3,6 +3,7 @@
 namespace Pumukit\LmsBundle\Services;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Pumukit\SchemaBundle\Services\PermissionProfileService;
 use Pumukit\SchemaBundle\Services\UserService;
 use Pumukit\SchemaBundle\Services\PersonService;
@@ -31,6 +32,7 @@ class SSOService
     private $allowedDomains;
     private $ldapService = null;
     private $groupRepo;
+    private $requestStack;
 
     /**
      * SSOService constructor.
@@ -45,7 +47,7 @@ class SSOService
      * @param                          $allowedDomains
      * @param                          $ldapService
      */
-    public function __construct(DocumentManager $dm, PermissionProfileService $permissionProfileService, UserService $userService, PersonService $personService, GroupService $groupService, $password, $domain, $allowedDomains, $ldapService = null)
+    public function __construct(DocumentManager $dm, PermissionProfileService $permissionProfileService, UserService $userService, PersonService $personService, GroupService $groupService, $password, $domain, $allowedDomains, $ldapService = null, RequestStack $requestStack = null)
     {
         $this->dm = $dm;
         $this->permissionProfileService = $permissionProfileService;
@@ -56,6 +58,7 @@ class SSOService
         $this->domain = $domain;
         $this->allowedDomains = $allowedDomains;
         $this->ldapService = $ldapService;
+        $this->requestStack = $requestStack;
         $this->groupRepo = $this->dm->getRepository('PumukitSchemaBundle:Group');
     }
 
@@ -194,6 +197,10 @@ class SSOService
         $user->setPermissionProfile($permissionProfile);
         $user->setOrigin(self::USER_ORIGIN);
         $user->setEnabled(true);
+
+        if ($this->requestStack && ($req = $this->requestStack->getMasterRequest())) {
+            $user->setProperties('lms_origin', $req->headers->get('referer'));
+        }
 
         $this->userService->create($user);
         $this->personService->referencePersonIntoUser($user);
