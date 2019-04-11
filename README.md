@@ -104,17 +104,13 @@ php app/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBL
 
 ### Step 8: Override `PumukitNewAdminBundle:MultimediaObject:list.html.twig` template
 
-If your server has PuMuKIT 2.3.x installed, execute:
-
+Run the lms:init:resources command the branch corresponding to your PuMuKIT version:
+e.g If your server has PuMuKIT 2.6.x installed, execute:
 ```bash
-php app/console lms:init:resources 2.3.x
+php app/console lms:init:resources 2.6.x
 ```
 
-If your server has PuMuKIT 2.4.x installed, execute:
-
-```bash
-php app/console lms:init:resources 2.4.x
-```
+If your current version gives an error, please open an issue on Github.
 
 Clear cache:
 

@@ -1,6 +1,7 @@
 # Configuration
 
 1.- Add the configuration to your `app/config/parameters_deploy.yml` or `app/config/parameters.yml` file:
+Make sure to add the domain of your LMS instance (like test.moodle.com) to the domains list:
 
 ```
 parameters:
@@ -39,3 +40,4 @@ pumukit_lms:
 php app/console cache:clear
 php app/console cache:clear --env=prod
 ```
+

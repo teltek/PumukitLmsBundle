@@ -45,19 +45,19 @@ class OpenEdxController extends SSOController
             if ('dev' != $this->get('kernel')->getEnvironment()) {
                 $refererUrl = $request->headers->get('referer');
                 if (!$refererUrl) {
-                    return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                    return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('error_code' => '0001', 'openedx_locale' => $locale, 'email' => $contactEmail)), 403);
                 }
                 $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
 
                 //TODO use SSOService::validateDomain
                 if (!in_array($refererUrl, $listHosts)) {
-                    return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                    return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('error_code' => '0002', 'openedx_locale' => $locale, 'email' => $contactEmail)), 403);
                 }
             }
 
             $ssoService = $this->container->get('pumukit_lms.sso');
             if (!$ssoService->validateHash($request->get('hash'), '')) {
-                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('error_code' => '0003', 'openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
         }
 
@@ -89,7 +89,7 @@ class OpenEdxController extends SSOController
                     return $this->renderIframe($multimediaObject, $request);
                 }
             } else {
-                $response = new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                $response = new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('error_code' => '0004', 'openedx_locale' => $locale, 'email' => $contactEmail)), 403);
 
                 return $response;
             }
@@ -116,18 +116,18 @@ class OpenEdxController extends SSOController
         if ('dev' != $this->get('kernel')->getEnvironment()) {
             $refererUrl = $request->headers->get('referer');
             if (!$refererUrl) {
-                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('error_code' => '0001', 'openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
             $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
 
             $listHosts = $this->container->getParameter('pumukit_lms.domains');
             if (!in_array($refererUrl, $listHosts)) {
-                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('error_code' => '0002', 'openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
 
             $ssoService = $this->container->get('pumukit_lms.sso');
             if (!$ssoService->validateHash($request->get('hash'), '')) {
-                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('openedx_locale' => $locale, 'email' => $contactEmail)), 403);
+                return new Response($this->renderView('PumukitLmsBundle:OpenEdx:403forbidden.html.twig', array('error_code' => '0003', 'openedx_locale' => $locale, 'email' => $contactEmail)), 403);
             }
         }
 
