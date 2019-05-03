@@ -40,12 +40,12 @@ class SSOController extends Controller
             return $this->genError('Not email or username parameter.');
         }
 
-        $ssoService = $this->container->get('pumukit_lms.sso');
-
-        if (!$ssoService->validateDomain($host)) {
+        $lmsService = $this->container->get('pumukit_lms.lms');
+        if (!$lmsService->validateAccessDomain($host)) {
             return $this->genError('Invalid Domain!');
         }
 
+        $ssoService = $this->container->get('pumukit_lms.sso');
         if (!$ssoService->validateHash($hash, $value)) {
             return $this->genError('The hash is not valid.');
         }

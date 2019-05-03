@@ -2,29 +2,37 @@
 
 namespace Pumukit\LmsBundle\EventListener;
 
+use Pumukit\LmsBundle\Services\LmsService;
 use Pumukit\WizardBundle\Event\FormEvent;
-use Pumukit\LmsBundle\Services\OpenEdxService;
 
 class WizardEventListener
 {
-    private $openEdxService;
+    /**
+     * @var LmsService
+     */
+    private $lmsService;
 
-    public function __construct(OpenEdxService $openEdxService)
+    /**
+     * WizardEventListener constructor.
+     *
+     * @param LmsService $lmsService
+     */
+    public function __construct(LmsService $lmsService)
     {
-        $this->openEdxService = $openEdxService;
+        $this->lmsService = $lmsService;
     }
 
+    /**
+     * @param FormEvent $event
+     *
+     * @throws \Exception
+     */
     public function postCreateMultimediaObject(FormEvent $event)
     {
-        $user = $event->getUser();
         $form = $event->getForm();
-        $externalData = array();
-        if (isset($form['externalData'])) {
-            $externalData = $form['externalData'];
-        }
         $multimediaObject = $event->getMultimediaObject();
         if (isset($form['simple']) && $form['simple']) {
-            $this->openEdxService->addPublicationChannelToMultimediaObject($user, $multimediaObject, $externalData);
+            $this->lmsService->addPublicationChannelToMultimediaObject($multimediaObject);
         }
     }
 }

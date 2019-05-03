@@ -18,16 +18,19 @@
             <argument>%pumukit_lms.domains%</argument>
             <argument type="service" id="pumukit_ldap.ldap" on-invalid="null" />
         </service>
-        <service id="pumukit_lms.open_edx" class="Pumukit\LmsBundle\Services\OpenEdxService">
+        <service id="pumukit_lms.lms" class="Pumukit\LmsBundle\Services\LmsService">
             <argument type="service" id="doctrine_mongodb.odm.document_manager" />
             <argument type="service" id="pumukitschema.tag" />
+            <argument>%pumukit_lms.domains%</argument>
+            <argument>%pumukit2.locales%</argument>
+            <argument>%locale%</argument>
         </service>
         <service id="pumukit_lms.personal_recorder_listener" class="Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener">
-            <argument type="service" id="pumukit_lms.open_edx" />
+            <argument type="service" id="pumukit_lms.lms" />
             <tag name="kernel.event_listener" event="personalrecorder.create" method="postCreateMultimediaObject" />
         </service>
         <service id="pumukit_lms.wizard_listener" class="Pumukit\LmsBundle\EventListener\WizardEventListener">
-            <argument type="service" id="pumukit_lms.open_edx" />
+            <argument type="service" id="pumukit_lms.lms" />
             <tag name="kernel.event_listener" event="wizard.form.submit" method="postCreateMultimediaObject" />
         </service>
         <service id="pumukit_lms.filter" class="Pumukit\LmsBundle\EventListener\FilterListener">

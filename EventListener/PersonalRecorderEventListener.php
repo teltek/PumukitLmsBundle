@@ -2,25 +2,37 @@
 
 namespace Pumukit\LmsBundle\EventListener;
 
+use Pumukit\LmsBundle\Services\LmsService;
 use Pumukit\PersonalRecorderBundle\Event\CreateEvent;
-use Pumukit\LmsBundle\Services\OpenEdxService;
 
 class PersonalRecorderEventListener
 {
-    private $openEdxService;
+    /**
+     * @var LmsService
+     */
+    private $lmsService;
 
-    public function __construct(OpenEdxService $openEdxService)
+    /**
+     * PersonalRecorderEventListener constructor.
+     *
+     * @param LmsService $lmsService
+     */
+    public function __construct(LmsService $lmsService)
     {
-        $this->openEdxService = $openEdxService;
+        $this->lmsService = $lmsService;
     }
 
+    /**
+     * @param CreateEvent $event
+     *
+     * @throws \Exception
+     */
     public function postCreateMultimediaObject(CreateEvent $event)
     {
         $user = $event->getUser();
-        $externalData = $event->getExternalData();
         $multimediaObject = $event->getMultimediaObject();
         if (!$user->hasRole('ROLE_TAG_DEFAULT_PUCHWEBTV')) {
-            $this->openEdxService->addPublicationChannelToMultimediaObject($user, $multimediaObject, $externalData);
+            $this->lmsService->addPublicationChannelToMultimediaObject($multimediaObject);
         }
     }
 }

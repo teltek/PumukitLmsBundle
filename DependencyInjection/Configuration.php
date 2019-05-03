@@ -59,8 +59,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->defaultValue(array())
                 ->end()
-          ->end()
-        ;
+          ->end();
 
         return $treeBuilder;
     }
