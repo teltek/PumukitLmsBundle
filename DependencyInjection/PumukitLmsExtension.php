@@ -37,19 +37,19 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('pumukit_lms.role', $config['role']);
 
         if ($config['naked_backoffice_domain']) {
-            $container->setParameter('pumukit2.naked_backoffice_domain', $config['naked_backoffice_domain']);
+            $container->setParameter('pumukit.naked_backoffice_domain', $config['naked_backoffice_domain']);
         }
 
         if ($config['naked_backoffice_background']) {
-            $container->setParameter('pumukit2.naked_backoffice_background', $config['naked_backoffice_background']);
+            $container->setParameter('pumukit.naked_backoffice_background', $config['naked_backoffice_background']);
         }
 
         if ($config['naked_backoffice_color']) {
-            $container->setParameter('pumukit2.naked_backoffice_color', $config['naked_backoffice_color']);
+            $container->setParameter('pumukit.naked_backoffice_color', $config['naked_backoffice_color']);
         }
 
         if ($config['naked_custom_css_url']) {
-            $container->setParameter('pumukit2.naked_custom_css_url', $config['naked_custom_css_url']);
+            $container->setParameter('pumukit.naked_custom_css_url', $config['naked_custom_css_url']);
         }
 
         $container->setParameter('pumukit_lms.upload_series_title', $config['upload_series_title']);

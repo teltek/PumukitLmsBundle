@@ -31,7 +31,7 @@ if (!class_exists('admin_setting_configtext_sizecss')) {
     {
         public function validate($data)
         {
-            if ($data == 'auto') {
+            if ('auto' == $data) {
                 return true;
             }
             //Format: Number ending on 'px', 'em', or '%'

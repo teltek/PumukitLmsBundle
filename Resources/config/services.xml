@@ -14,7 +14,7 @@
             <argument type="service" id="pumukitschema.person" />
             <argument type="service" id="pumukitschema.group" />
             <argument>%pumukit_lms.password%</argument>
-            <argument>%pumukit2.naked_backoffice_domain%</argument>
+            <argument>%pumukit.naked_backoffice_domain%</argument>
             <argument>%pumukit_lms.domains%</argument>
             <argument type="service" id="pumukit_ldap.ldap" on-invalid="null" />
         </service>
@@ -22,7 +22,7 @@
             <argument type="service" id="doctrine_mongodb.odm.document_manager" />
             <argument type="service" id="pumukitschema.tag" />
             <argument>%pumukit_lms.domains%</argument>
-            <argument>%pumukit2.locales%</argument>
+            <argument>%pumukit.locales%</argument>
             <argument>%locale%</argument>
         </service>
         <service id="pumukit_lms.personal_recorder_listener" class="Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener">

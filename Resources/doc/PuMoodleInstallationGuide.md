@@ -1,6 +1,6 @@
 # PuMoodle PR Installation Guide
 
-*This page is updated to the PuMuKIT2-open-edx-bundle master and to the PuMuKIT 2.3.0*
+*This page is updated to the PuMuKIT-open-edx-bundle master and to the PuMuKIT 2.3.0*
 
 ## Contents
 

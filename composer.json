@@ -1,16 +1,16 @@
 {
-  "name": "teltek/pmk2-lms-bundle",
+  "name": "teltek/pumukit-lms-bundle",
   "type": "symfony-bundle",
-  "description": "Pumukit2 Lms Bundle.",
+  "description": "Pumukit Lms Bundle.",
   "keywords": [
     "lms",
     "openedx",
     "moodle",
-    "symfony2",
+    "symfony",
     "bundle",
     "pumukit"
   ],
-  "homepage": "https://github.com/teltek/PuMuKIT2-lms-bundle.git",
+  "homepage": "https://github.com/teltek/PumukitLmsBundle",
   "license": "proprietary",
   "authors": [
     {
@@ -19,10 +19,8 @@
     }
   ],
   "require": {
-    "php": ">=5.5.9",
-    "symfony/framework-bundle": "~2.0",
-    "twig/twig": "~1.5",
-    "pumukit/pumukit2": ">=2.2"
+    "php": ">=7.2",
+    "pumukit/pumukit": ">=3.0"
   },
   "autoload": {
     "psr-4": {

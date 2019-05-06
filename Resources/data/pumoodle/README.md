@@ -29,5 +29,5 @@ Or by executing script:
 
 NOTE: `/path/to/pumoodle` location:
 * In this Bundle: `Resources/data/pumoodle/`
-* In a PuMuKIT2 installation: `/path/to/pumukit2/vendor/teltek/pmk2-moodle-bundle/Resources/data/pumoodle/`
+* In a PuMuKIT installation: `/path/to/pumukit/vendor/teltek/pmk2-moodle-bundle/Resources/data/pumoodle/`
 

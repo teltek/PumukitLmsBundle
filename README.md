@@ -1,6 +1,6 @@
 # PumukitLmsBundle
 
-Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT2 Video Platform](https://github.com/campusdomar/PuMuKIT2/blob/2.3.x/README.md).
+Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT Video Platform](https://github.com/campusdomar/PuMuKIT/blob/2.3.x/README.md).
 
 The goal of this bundle is to merge the common APIs between the [Moodle bundle](https://github.com/teltek/PuMuKIT2-moodle-bundle) and the [OpenEDX bundle](https://github.com/teltek/PuMuKIT2-open-edx-bundle) into single generic bundle.
 
@@ -48,7 +48,7 @@ Install the bundle by executing the following line command. This command updates
 s.
 
 ```bash
-$ cd /path/to/pumukit2/
+$ cd /path/to/pumukit/
 $ php app/console pumukit:install:bundle Pumukit/LmsBundle/PumukitLmsBundle
 ```
 
@@ -61,7 +61,7 @@ Go to [Resources/doc/Configuration.md](Resources/doc/Configuration.md)
 Install the Open edX Publication Channel with tag code PUCHLMS.
 
 ```bash
-$ cd /path/to/pumukit2/
+$ cd /path/to/pumukit/
 $ php app/console lms:init:pubchannel
 ```
 

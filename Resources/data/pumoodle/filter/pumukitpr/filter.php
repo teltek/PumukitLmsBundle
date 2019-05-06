@@ -30,7 +30,7 @@ class filter_pumukitpr extends moodle_text_filter
             return $text;
         }
 
-        if (stripos($text, '<iframe') !== false) {
+        if (false !== stripos($text, '<iframe')) {
             // Look for '/pumoodle/embed', replace the entire <a... </a> tag and send the url as $link[1]
             if (false !== stripos($text, 'openedx/playlist/embed/')) {
                 $search = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/playlist\\/embed.*?)".*?>.*?<\\/iframe>/is';

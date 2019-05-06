@@ -22,7 +22,7 @@ class ManagerController extends SSOController
      *
      * @param Request $request
      *
-     * @return null|RedirectResponse|Response
+     * @return RedirectResponse|Response|null
      *
      * @Route("/manager", name="pumukit_lms_sso_manager")
      */
@@ -40,7 +40,7 @@ class ManagerController extends SSOController
         }
 
         if ($forceReLogin) {
-            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->headers->get('referer'), $request->get('hash'), $request->isSecure());            
+            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->headers->get('referer'), $request->get('hash'), $request->isSecure());
 
             if ($user instanceof Response) {
                 return $user;

@@ -21,7 +21,7 @@ class PersonalRecorderController extends SSOController
      *
      * @param Request $request
      *
-     * @return null|RedirectResponse|Response
+     * @return RedirectResponse|Response|null
      *
      * @Route("/personal_recorder", name="pumukit_lms_sso_personalrecorder")
      */
@@ -41,7 +41,7 @@ class PersonalRecorderController extends SSOController
         }
 
         $titleParam = $this->getParameter('pumukit_lms.recording_series_title');
-        $locales = $this->getParameter('pumukit2.locales');
+        $locales = $this->getParameter('pumukit.locales');
         $i18nTitle = $this->buildI18nTitle($titleParam, $locales);
         $series = $this->getSeries($i18nTitle);
         if ($series) {

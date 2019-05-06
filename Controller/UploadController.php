@@ -21,7 +21,7 @@ class UploadController extends SSOController
      *
      * @param Request $request
      *
-     * @return null|RedirectResponse|Response
+     * @return RedirectResponse|Response|null
      *
      * @Route("/upload", name="pumukit_lms_sso_upload")
      */
@@ -37,7 +37,7 @@ class UploadController extends SSOController
         }
 
         $titleParam = $this->getParameter('pumukit_lms.upload_series_title');
-        $locales = $this->getParameter('pumukit2.locales');
+        $locales = $this->getParameter('pumukit.locales');
         $i18nTitle = $this->buildI18nTitle($titleParam, $locales);
         $series = $this->getSeries($i18nTitle);
         if ($series) {

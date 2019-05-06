@@ -151,7 +151,7 @@ class LmsController extends SSOController
         $lmsService = $this->container->get('pumukit_lms.lms');
         $options = [
             'current_locale' => $lmsService->getCurrentLocale($request),
-            'email' => $this->getParameter('pumukit2.info')['email'],
+            'email' => $this->getParameter('pumukit.info')['email'],
             'id' => $request->get('id'),
         ];
 

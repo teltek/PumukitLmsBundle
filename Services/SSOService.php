@@ -63,7 +63,7 @@ class SSOService
     }
 
     /**
-     * Get Pumukit2 Domain for backoffice.
+     * Get Pumukit Domain for backoffice.
      *
      * @return string
      */

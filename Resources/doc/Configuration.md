@@ -5,7 +5,7 @@ Make sure to add the domain of your LMS instance (like test.moodle.com) to the d
 
 ```
 parameters:
-    pumukit2.naked_backoffice_domain: pumukit2-naked.example.com
+    pumukit.naked_backoffice_domain: pumukit-naked.example.com
 pumukit_lms:
     password: 'ThisIsASecretPasswordChangeMe'
     role: 'owner'
@@ -22,7 +22,7 @@ pumukit_lms:
 ```
 
 
-* `pumukit2.naked_backoffice_domain`: Naked URL of PuMuKIT
+* `pumukit.naked_backoffice_domain`: Naked URL of PuMuKIT
 * `password`: Shared secret between Open edX and Pumukit
 * `role`: Role used to filter persons in multimedia object
 * `naked_backoffice_domain`: Domain or subdomain used to access into the naked backoffice

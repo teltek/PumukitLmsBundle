@@ -22,12 +22,12 @@ class SSOController extends Controller
      * @param $hash
      * @param $isSecure
      *
-     * @return null|Response
+     * @return Response|null
      */
     protected function getAndValidateUser($email, $username, $host, $hash, $isSecure)
     {
-        if (!$this->container->hasParameter('pumukit2.naked_backoffice_domain')) {
-            return $this->genError('The domain "pumukit2.naked_backoffice_domain" is not configured.');
+        if (!$this->container->hasParameter('pumukit.naked_backoffice_domain')) {
+            return $this->genError('The domain "pumukit.naked_backoffice_domain" is not configured.');
         }
 
         if ($username) {
