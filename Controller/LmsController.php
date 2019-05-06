@@ -67,7 +67,7 @@ class LmsController extends SSOController
         if ($multimediaObject && $multimediaObject->isPublished()) {
             if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', 'PUCHLMS'])) {
                 if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
-                    array_push($options, ['job' => $job]);
+                    $options['job'] = $job;
 
                     return $this->renderTemplateError(Response::HTTP_BAD_REQUEST, $options);
                 } else {
