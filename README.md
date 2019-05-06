@@ -39,7 +39,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```bash
-$ composer require teltek/pmk2-lms-bundle dev-master
+$ composer require teltek/pumukit-lms-bundle dev-master
 ```
 
 ### Step 3: Install the Bundle
