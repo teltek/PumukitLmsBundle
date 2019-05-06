@@ -17,6 +17,7 @@
             <argument>%pumukit.naked_backoffice_domain%</argument>
             <argument>%pumukit_lms.domains%</argument>
             <argument type="service" id="pumukit_ldap.ldap" on-invalid="null" />
+            <argument type="service" id="request_stack" on-invalid="null" />
         </service>
         <service id="pumukit_lms.lms" class="Pumukit\LmsBundle\Services\LmsService">
             <argument type="service" id="doctrine_mongodb.odm.document_manager" />
@@ -42,13 +43,6 @@
             <argument type="service" id="request_stack"/>
             <argument type="service" id="pumukit_lms.sso"/>
             <tag name="security.voter" />
-        </service>
-        <service id="pumukit_lms.multimedia_object_udpate_listener" class="Pumukit\LmsBundle\EventListener\MultimediaObjectListener">
-            <argument type="service" id="doctrine_mongodb.odm.document_manager"/>
-            <argument type="service" id="request_stack" />
-            <argument>%pumukit_lms.domains%</argument>
-            <argument>%router.request_context.host%</argument>
-            <tag name="kernel.event_listener" event="multimediaobject.create" method="onMultimediaObjectCreate" />
         </service>
     </services>
 </container>

@@ -181,7 +181,7 @@ class SSOService
         $user->setEnabled(true);
 
         if ($this->requestStack && ($req = $this->requestStack->getMasterRequest())) {
-            $user->setProperties('lms_origin', $req->headers->get('referer'));
+            $user->setProperty('lms_origin', $req->headers->get('referer'));
         }
 
         $this->userService->create($user);
