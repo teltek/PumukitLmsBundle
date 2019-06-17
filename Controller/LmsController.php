@@ -115,13 +115,9 @@ class LmsController extends SSOController
      */
     protected function renderIframe(MultimediaObject $multimediaObject, Request $request)
     {
-        return $this->forward(
-            'PumukitBasePlayerBundle:BasePlayer:index',
-            [
-                'request' => $request,
-                'multimediaObject' => $multimediaObject,
-            ]
-        );
+        $playerController = $this->get('pumukit_baseplayer.player_service')->getPublicControllerPlayer($multimediaObject);
+
+        return $this->forward($playerController, ['request' => $request, 'multimediaObject' => $multimediaObject]);
     }
 
     /**
