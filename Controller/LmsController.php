@@ -173,8 +173,7 @@ class LmsController extends SSOController
             if (!$referer) {
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
-            $refererUrl = parse_url($referer, PHP_URL_HOST);
-            if (!$lmsService->validateAccessDomain($refererUrl)) {
+            if (!$lmsService->validateAccessDomain($referer)) {
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
         }
