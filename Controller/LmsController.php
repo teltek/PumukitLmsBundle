@@ -165,12 +165,11 @@ class LmsController extends SSOController
         // NOTE: Check TTK-16603
         $lmsService = $this->container->get('pumukit_lms.lms');
         if ('dev' != $this->get('kernel')->getEnvironment()) {
-            $refererUrl = $request->headers->get('referer');
-            if (!$lmsService->validateAccessDomain($refererUrl)) {
+            $referer = $request->headers->get('referer');
+            if (!$referer) {
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
-            $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
-            if (!$lmsService->validateAccessDomain($refererUrl)) {
+            if (!$lmsService->validateAccessDomain($referer)) {
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
         }
