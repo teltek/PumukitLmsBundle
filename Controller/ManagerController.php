@@ -12,8 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ManagerController extends SSOController
 {
-    const ADMIN_SERIES_ROUTE = '/admin/series';
-    const ADMIN_PLAYLIST_ROUTE = '/admin/playlist';
+    const ADMIN_SERIES_ROUTE = 'pumukitnewadmin_series_index';
+    const ADMIN_MULTIMEDIAOBJECT_ROUTE = 'pumukitnewadmin_mms_shortener';
+    const ADMIN_PLAYLIST_ROUTE = 'pumukitnewadmin_playlist_index';
 
     /**
      *   Parameters:
@@ -40,7 +41,7 @@ class ManagerController extends SSOController
         }
 
         if ($forceReLogin) {
-            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->headers->get('referer'), $request->get('hash'), $request->isSecure());            
+            $user = $this->getAndValidateUser($request->get('email'), $request->get('username'), $request->headers->get('referer'), $request->get('hash'), $request->isSecure());
 
             if ($user instanceof Response) {
                 return $user;
@@ -50,9 +51,13 @@ class ManagerController extends SSOController
         }
 
         if ($request->get('playlist')) {
-            return new RedirectResponse(self::ADMIN_PLAYLIST_ROUTE);
+            return $this->redirectToRoute(self::ADMIN_PLAYLIST_ROUTE);
         }
 
-        return new RedirectResponse(self::ADMIN_SERIES_ROUTE);
+        if ($mmobjId = $request->get('multimediaObject')) {
+            return $this->redirectToRoute(self::ADMIN_MULTIMEDIAOBJECT_ROUTE, array('id' => $mmobjId));
+        }
+
+        return $this->redirectToRoute(self::ADMIN_SERIES_ROUTE);
     }
 }
