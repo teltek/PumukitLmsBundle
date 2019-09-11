@@ -19,7 +19,8 @@ class LmsInitResourcesCommand extends ContainerAwareCommand
           ->setName('lms:init:resources')
           ->addArgument('version', InputArgument::REQUIRED, 'Select the version of PuMuKIT to override PumukitNewAdminBundle list template: 2.3.x, 2.4.x')
           ->setDescription('Initialize the resources necessary to add a button to insert a VoD into LMS')
-          ->setHelp(<<<EOT
+          ->setHelp(
+              <<<EOT
 Initialize the resources necessary to add a button to insert a VoD into LMS. It copies the global resources from Resources/data/override bundle dir to
 the app/Resources project dir.
 
@@ -27,7 +28,7 @@ cp ../Resources/data/override/PumukitNewAdminBundle/views/MultimediaObject/list.
 
 
 EOT
-        );
+          );
     }
 
     /**
