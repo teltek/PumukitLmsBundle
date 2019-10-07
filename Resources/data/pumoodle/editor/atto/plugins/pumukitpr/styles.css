@@ -88,3 +88,8 @@
 div.moodle-dialogue.moodle-has-zindex.yui3-panel {
   min-width: 836px;
 }
+
+/* Remove bottom border for each navbar (if set) */
+.moodle-dialogue a.nav-link {
+    border-bottom: none;
+}
