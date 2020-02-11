@@ -8,9 +8,9 @@
 
 2. [Modules](#modules)
 
-    2.1. [Modules installation](#modules-installation-and-configuration)
+    2.1. [Modules installation](#modules-installation)
 
-    2.2. [Modules configuration](#modules-configuration)
+    2.2. [Enable module](#enable-module)
 
     2.3. [Installation check](#installation-check)
 
