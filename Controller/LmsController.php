@@ -67,7 +67,7 @@ class LmsController extends SSOController
         if ($multimediaObject && $multimediaObject->isPublished()) {
             if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', 'PUCHLMS'])) {
                 if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
-                    array_push($options, ['job' => $job]);
+                    $options['job'] = $job;
 
                     return $this->renderTemplateError(Response::HTTP_BAD_REQUEST, $options);
                 } else {
@@ -115,13 +115,9 @@ class LmsController extends SSOController
      */
     protected function renderIframe(MultimediaObject $multimediaObject, Request $request)
     {
-        return $this->forward(
-            'PumukitBasePlayerBundle:BasePlayer:index',
-            [
-                'request' => $request,
-                'multimediaObject' => $multimediaObject,
-            ]
-        );
+        $playerController = $this->get('pumukit_baseplayer.player_service')->getPublicControllerPlayer($multimediaObject);
+
+        return $this->forward($playerController, ['request' => $request, 'multimediaObject' => $multimediaObject]);
     }
 
     /**
@@ -169,12 +165,11 @@ class LmsController extends SSOController
         // NOTE: Check TTK-16603
         $lmsService = $this->container->get('pumukit_lms.lms');
         if ('dev' != $this->get('kernel')->getEnvironment()) {
-            $refererUrl = $request->headers->get('referer');
-            if (!$lmsService->validateAccessDomain($refererUrl)) {
+            $referer = $request->headers->get('referer');
+            if (!$referer) {
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
-            $refererUrl = parse_url($refererUrl, PHP_URL_HOST);
-            if (!$lmsService->validateAccessDomain($refererUrl)) {
+            if (!$lmsService->validateAccessDomain($referer)) {
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
         }
