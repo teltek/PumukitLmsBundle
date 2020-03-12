@@ -2,40 +2,33 @@
 
 namespace Pumukit\LmsBundle\Command;
 
+use Pumukit\SchemaBundle\Document\Tag;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Pumukit\SchemaBundle\Document\Tag;
 
 class LmsInitPubChannelCommand extends ContainerAwareCommand
 {
-    private $dm = null;
-    private $tagRepo = null;
+    private $dm;
+    private $tagRepo;
 
     protected function configure()
     {
         $this
-          ->setName('lms:init:pubchannel')
-          ->setDescription('Loads the LMS pubchannel to your database')
-          ->setHelp(
+            ->setName('lms:init:pubchannel')
+            ->setDescription('Loads the LMS pubchannel to your database')
+            ->setHelp(
               <<<'EOT'
 Command to load the PUCHLMS pubchannel to the db. Required to publish objects exclusively on the LMS platform.
 EOT
-          );
+          )
+        ;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|null
-     *
-     * @throws \Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dm = $this->getContainer()->get('doctrine_mongodb')->getManager();
-        $this->tagRepo = $this->dm->getRepository('PumukitSchemaBundle:Tag');
+        $this->dm = $this->getContainer()->get('doctrine_mongodb.odm.document_manager');
+        $this->tagRepo = $this->dm->getRepository(Tag::class);
 
         $lmsPublicationChannelTag = $this->createTagWithCode('PUCHLMS', 'LMS', 'PUBCHANNELS', false);
         $this->dm->persist($lmsPublicationChannelTag);
@@ -46,19 +39,9 @@ EOT
         return 0;
     }
 
-    /**
-     * @param      $code
-     * @param      $title
-     * @param null $tagParentCode
-     * @param bool $metatag
-     *
-     * @return Tag
-     *
-     * @throws \Exception
-     */
-    private function createTagWithCode($code, $title, $tagParentCode = null, $metatag = false)
+    private function createTagWithCode(string $code, string $title, string $tagParentCode = null, bool $metatag = false): Tag
     {
-        if ($tag = $this->tagRepo->findOneByCod($code)) {
+        if ($tag = $this->tagRepo->findOneBy(['cod' => $code])) {
             throw new \Exception('Nothing done - Tag retrieved from DB id: '.$tag->getId().' cod: '.$tag->getCod());
         }
         $tag = new Tag();
@@ -69,7 +52,7 @@ EOT
         $tag->setTitle($title, 'gl');
         $tag->setTitle($title, 'en');
         if ($tagParentCode) {
-            if ($parent = $this->tagRepo->findOneByCod($tagParentCode)) {
+            if ($parent = $this->tagRepo->findOneBy(['cod' => $tagParentCode])) {
                 $tag->setParent($parent);
             } else {
                 throw new \Exception('Nothing done - There is no tag in the database with code '.$tagParentCode.' to be the parent tag');

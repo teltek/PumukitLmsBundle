@@ -4,13 +4,13 @@ namespace Pumukit\LmsBundle\Services;
 
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Services\MultimediaObjectService;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class MultimediaObjectVoter extends Voter
 {
-    const PLAY = 'play';
+    public const PLAY = 'play';
 
     private $mmobjService;
     private $requestStack;
@@ -23,10 +23,10 @@ class MultimediaObjectVoter extends Voter
         $this->ssoService = $ssoService;
     }
 
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::PLAY))) {
+        if (!in_array($attribute, [self::PLAY])) {
             return false;
         }
 
@@ -38,19 +38,18 @@ class MultimediaObjectVoter extends Voter
         return true;
     }
 
-    protected function voteOnAttribute($attribute, $multimediaObject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $multimediaObject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
-        switch ($attribute) {
-        case self::PLAY:
+        if (self::PLAY === $attribute) {
             return $this->canPlay($multimediaObject, $user);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    protected function canPlay($multimediaObject, $user = null)
+    protected function canPlay($multimediaObject, $user = null): bool
     {
         $req = $this->requestStack->getMasterRequest();
 

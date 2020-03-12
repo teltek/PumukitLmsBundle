@@ -2,29 +2,22 @@
 
 namespace Pumukit\LmsBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\UserBundle\Model\UserInterface;
+use Pumukit\SchemaBundle\Document\Series;
+use Pumukit\SchemaBundle\Document\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Pumukit\SchemaBundle\Document\User;
 
 /**
  * @Route("/sso")
  */
 class SSOController extends Controller
 {
-    /**
-     * @param $email
-     * @param $username
-     * @param $host
-     * @param $hash
-     * @param $isSecure
-     *
-     * @return Response|null
-     */
-    protected function getAndValidateUser($email, $username, $host, $hash, $isSecure)
+    protected function getAndValidateUser(string $email, string $username, string $host, string $hash, bool $isSecure)
     {
         if (!$this->container->hasParameter('pumukit.naked_backoffice_domain')) {
             return $this->genError('The domain "pumukit.naked_backoffice_domain" is not configured.');
@@ -57,19 +50,20 @@ class SSOController extends Controller
 
         $repo = $this
             ->get('doctrine_mongodb.odm.document_manager')
-            ->getRepository('PumukitSchemaBundle:User');
+            ->getRepository(User::class)
+        ;
 
         //Find User
         try {
             $user = null;
             if ($username) {
-                $user = $repo->findOneBy(array('username' => $username));
+                $user = $repo->findOneBy(['username' => $username]);
             }
             if (!$user && $email) {
-                $user = $repo->findOneBy(array('email' => $email));
+                $user = $repo->findOneBy(['email' => $email]);
             }
             if (!$user) {
-                $user = $ssoService->createUser(array($type => $value));
+                $user = $ssoService->createUser([$type => $value]);
             } else {
                 $ssoService->promoteUser($user);
             }
@@ -84,11 +78,7 @@ class SSOController extends Controller
         return $user;
     }
 
-    /**
-     * @param         $user
-     * @param Request $request
-     */
-    protected function login($user, Request $request)
+    protected function login(UserInterface $user, Request $request): void
     {
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'public', $user->getRoles());
         $this->get('security.token_storage')->setToken($token);
@@ -96,28 +86,15 @@ class SSOController extends Controller
         $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
     }
 
-    /**
-     * @param string $message
-     * @param int    $status
-     *
-     * @return Response
-     */
-    protected function genError($message = 'Not Found', $status = 404)
+    protected function genError(string $message = 'Not Found', int $status = 404)
     {
         return new Response(
-            $this->renderView('PumukitLmsBundle:SSO:error.html.twig', array('message' => $message)),
+            $this->renderView('PumukitLmsBundle:SSO:error.html.twig', ['message' => $message]),
             $status
         );
     }
 
-    /**
-     * @param        $object
-     * @param        $lang
-     * @param string $format
-     *
-     * @return Response
-     */
-    protected function serializeObject($object, $lang, $format = 'json')
+    protected function serializeObject($object, string $lang, string $format = 'json')
     {
         $serializer = $this->get('serializer');
         $data = $serializer->serialize($object, $format);
@@ -125,15 +102,9 @@ class SSOController extends Controller
         return new Response($data);
     }
 
-    /**
-     * @param $titleParam
-     * @param $locales
-     *
-     * @return array
-     */
-    protected function buildI18nTitle($titleParam, $locales)
+    protected function buildI18nTitle(string $titleParam, array $locales)
     {
-        $title = array();
+        $title = [];
         foreach ($locales as $locale) {
             $title[$locale] = $titleParam;
         }
@@ -141,42 +112,29 @@ class SSOController extends Controller
         return $title;
     }
 
-    /**
-     * @param $i18nTitle
-     *
-     * @return mixed
-     */
     protected function getSeries($i18nTitle)
     {
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
-        $repo = $dm->getRepository('PumukitSchemaBundle:Series');
+        $repo = $dm->getRepository(Series::class);
 
-        return $repo->findOneBy(array('title' => $i18nTitle));
+        return $repo->findOneBy(['title' => $i18nTitle]);
     }
 
-    /**
-     * @param $i18nTitle
-     * @param $seriesId
-     *
-     * @return string
-     */
     protected function buildParams($i18nTitle, $seriesId)
     {
-        $data = array();
-        $data['mmobjData'] = array();
-        $data['mmobjData']['properties'] = array('openedx' => true);
+        $data = [];
+        $data['mmobjData'] = [];
+        $data['mmobjData']['properties'] = ['openedx' => true];
         if ($i18nTitle) {
-            $data['seriesData'] = array();
+            $data['seriesData'] = [];
             $data['seriesData']['title'] = $i18nTitle;
         }
-        $values = array('externalData' => $data);
+        $values = ['externalData' => $data];
 
         if ($seriesId) {
             $values['series'] = $seriesId;
         }
 
-        $params = http_build_query($values);
-
-        return $params;
+        return http_build_query($values);
     }
 }

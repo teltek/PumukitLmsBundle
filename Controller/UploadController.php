@@ -15,14 +15,6 @@ class UploadController extends SSOController
     const ADMIN_UPLOAD_ROUTE = '/admin/simplewizard/embedindex';
 
     /**
-     * Parameters:
-     *   - email or username
-     *   - hash.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Response|null
-     *
      * @Route("/upload", name="pumukit_lms_sso_upload")
      */
     public function upload(Request $request)

@@ -1,6 +1,6 @@
 # PumukitLmsBundle
 
-Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT Video Platform](https://github.com/campusdomar/PuMuKIT/blob/2.3.x/README.md).
+Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT Video Platform](https://github.com/pumukit/PuMuKIT/blob/3.2.x/README.md).
 
 The goal of this bundle is to merge the common APIs between the [Moodle bundle](https://github.com/teltek/PuMuKIT2-moodle-bundle) and the [OpenEDX bundle](https://github.com/teltek/PuMuKIT2-open-edx-bundle) into single generic bundle.
 
@@ -11,7 +11,7 @@ This code includes:
 For the OpenEDX integration, an XBlock is also needed:
 - [PuMuKIT2 Opencast Video XBlock](https://github.com/teltek/pumukit2-opencast-video-xblock)
 
-The new Atto Editor integration for Moodle is meant to replace the classical integracion through a mix of repository/filter/block plugins [here](https://github.com/teltek/PuMuKIT2-moodle-bundle)
+The new Atto Editor integration for Moodle is meant to replace the classical integration through a mix of repository/filter/block plugins [here](https://github.com/teltek/PuMuKIT2-moodle-bundle)
 At the moment, there are a couple of missing features:
 * Moodle Playlists support
 * Search and publish public videos (published on the WebTV channel)
@@ -30,7 +30,7 @@ Open a command console, enter your project directory and execute the
 following command to add this repo:
 
 ```bash
-$ composer config repositories.pumukitlmsbundle vcs https://github.com/teltek/PuMuKIT2-lms-bundle.git
+$ composer config repositories.pumukitlmsbundle vcs https://github.com/teltek/pumukit-lms-bundle.git
 ```
 
 ### Step 2: Download the Bundle
@@ -44,12 +44,18 @@ $ composer require teltek/pumukit-lms-bundle dev-master
 
 ### Step 3: Install the Bundle
 
-Install the bundle by executing the following line command. This command updates the Kernel to enable the bundle (app/AppKernel.php) and loads the routing (app/config/routing.yml) to add the bundle route\
-s.
+Add the next line on AppKernel.php file:
 
-```bash
-$ cd /path/to/pumukit/
-$ php app/console pumukit:install:bundle Pumukit/LmsBundle/PumukitLmsBundle
+```
+new Pumukit\LmsBundle\PumukitLmsBundle()
+```
+
+Add the next lines on config/routing.yml file:
+
+```
+pumukit_lms:
+    resource: "@PumukitLmsBundle/Resources/config/routing.yml"
+    prefix:   /
 ```
 
 ### Step 4: Configure Bundle

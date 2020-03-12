@@ -4,8 +4,6 @@ namespace Pumukit\LmsBundle\EventListener;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Pumukit\SchemaBundle\Document\MultimediaObject;
 
 class FilterListener
 {

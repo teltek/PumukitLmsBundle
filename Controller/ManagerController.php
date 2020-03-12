@@ -3,7 +3,6 @@
 namespace Pumukit\LmsBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,19 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ManagerController extends SSOController
 {
-    const ADMIN_SERIES_ROUTE = 'pumukitnewadmin_series_index';
-    const ADMIN_MULTIMEDIAOBJECT_ROUTE = 'pumukitnewadmin_mms_shortener';
-    const ADMIN_PLAYLIST_ROUTE = 'pumukitnewadmin_playlist_index';
+    public const ADMIN_SERIES_ROUTE = 'pumukitnewadmin_series_index';
+    public const ADMIN_MULTIMEDIAOBJECT_ROUTE = 'pumukitnewadmin_mms_shortener';
+    public const ADMIN_PLAYLIST_ROUTE = 'pumukitnewadmin_playlist_index';
 
     /**
-     *   Parameters:
-     *   - email or username
-     *   - hash.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Response|null
-     *
      * @Route("/manager", name="pumukit_lms_sso_manager")
      */
     public function manager(Request $request)
@@ -55,7 +46,7 @@ class ManagerController extends SSOController
         }
 
         if ($mmobjId = $request->get('multimediaObject')) {
-            return $this->redirectToRoute(self::ADMIN_MULTIMEDIAOBJECT_ROUTE, array('id' => $mmobjId));
+            return $this->redirectToRoute(self::ADMIN_MULTIMEDIAOBJECT_ROUTE, ['id' => $mmobjId]);
         }
 
         return $this->redirectToRoute(self::ADMIN_SERIES_ROUTE);
