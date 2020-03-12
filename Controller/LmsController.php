@@ -2,21 +2,18 @@
 
 namespace Pumukit\LmsBundle\Controller;
 
+use Pumukit\EncoderBundle\Document\Job;
+use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Series;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Pumukit\SchemaBundle\Document\MultimediaObject;
-use Pumukit\EncoderBundle\Document\Job;
 
 /**
  * @Route("/openedx")
  */
 class LmsController extends SSOController
 {
-    /**
-     * @var array
-     */
     private $templateErrors = [
         400 => 'PumukitLmsBundle:Lms:400job.html.twig',
         403 => 'PumukitLmsBundle:Lms:403forbidden.html.twig',
@@ -26,17 +23,13 @@ class LmsController extends SSOController
     /**
      * @Route("/embed", name="pumukit_lms_openedx_embed")
      * @Route("/embed/", name="pumukit_lms_openedx_embed")
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function iframeAction(Request $request)
     {
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
         $multimediaObjectService = $this->get('pumukitschema.multimedia_object');
         $options = $this->getOptionsParameters($request);
-        $multimediaObject = $dm->getRepository('PumukitSchemaBundle:MultimediaObject')->findOneBy([
+        $multimediaObject = $dm->getRepository(MultimediaObject::class)->findOneBy([
             '_id' => $options['id'],
         ]);
 
@@ -47,7 +40,7 @@ class LmsController extends SSOController
                 return $validateAccess;
             }
         }
-        $jobRepo = $dm->getRepository('PumukitEncoderBundle:Job');
+        $jobRepo = $dm->getRepository(Job::class);
         $profileService = $this->get('pumukitencoder.profile');
         $displayProfiles = $profileService->getProfiles(true);
         $profileNames = array_keys($displayProfiles);
@@ -70,12 +63,12 @@ class LmsController extends SSOController
                     $options['job'] = $job;
 
                     return $this->renderTemplateError(Response::HTTP_BAD_REQUEST, $options);
-                } else {
-                    return $this->renderIframe($multimediaObject, $request);
                 }
-            } else {
-                return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
+
+                return $this->renderIframe($request, $multimediaObject);
             }
+
+            return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
         }
 
         return $this->renderTemplateError(Response::HTTP_NOT_FOUND, $options);
@@ -84,10 +77,6 @@ class LmsController extends SSOController
     /**
      * @Route("/playlist/embed", name="pumukit_lms_openedx_playlist_embed")
      * @Route("/playlist/embed/", name="pumukit_lms_openedx_playlist_embed")
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function iFramePlaylistAction(Request $request)
     {
@@ -98,35 +87,21 @@ class LmsController extends SSOController
         }
 
         $dm = $this->get('doctrine_mongodb.odm.document_manager');
-        $series = $dm->getRepository('PumukitSchemaBundle:Series')->findOneBy([
+        $series = $dm->getRepository(Series::class)->findOneBy([
             '_id' => $options['id'],
         ]);
 
-        return $this->renderPlaylistIframe($series, $request);
+        return $this->renderPlaylistIframe($request, $series);
     }
 
-    /**
-     * Render iframe.
-     *
-     * @param MultimediaObject $multimediaObject
-     * @param Request          $request
-     *
-     * @return Response
-     */
-    protected function renderIframe(MultimediaObject $multimediaObject, Request $request)
+    protected function renderIframe(Request $request, MultimediaObject $multimediaObject)
     {
         $playerController = $this->get('pumukit_baseplayer.player_service')->getPublicControllerPlayer($multimediaObject);
 
         return $this->forward($playerController, ['request' => $request, 'multimediaObject' => $multimediaObject]);
     }
 
-    /**
-     * @param Series  $series
-     * @param Request $request
-     *
-     * @return Response
-     */
-    protected function renderPlaylistIframe(Series $series, Request $request)
+    protected function renderPlaylistIframe(Request $request, Series $series)
     {
         return $this->redirectToRoute(
             'pumukit_playlistplayer_index',
@@ -137,29 +112,17 @@ class LmsController extends SSOController
         );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getOptionsParameters(Request $request)
+    private function getOptionsParameters(Request $request): array
     {
         $lmsService = $this->container->get('pumukit_lms.lms');
-        $options = [
+
+        return [
             'current_locale' => $lmsService->getCurrentLocale($request),
             'email' => $this->getParameter('pumukit.info')['email'],
             'id' => $request->get('id'),
         ];
-
-        return $options;
     }
 
-    /**
-     * @param Request $request
-     * @param array   $options
-     *
-     * @return bool|Response
-     */
     private function validateAccess(Request $request, array $options)
     {
         // NOTE: Check TTK-16603
@@ -181,12 +144,6 @@ class LmsController extends SSOController
         return true;
     }
 
-    /**
-     * @param       $statusCode
-     * @param array $options
-     *
-     * @return Response
-     */
     private function renderTemplateError($statusCode, array $options)
     {
         $template = $this->templateErrors[$statusCode];

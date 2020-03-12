@@ -7,27 +7,15 @@ use Pumukit\PersonalRecorderBundle\Event\CreateEvent;
 
 class PersonalRecorderEventListener
 {
-    /**
-     * @var LmsService
-     */
+    /** @var LmsService */
     private $lmsService;
 
-    /**
-     * PersonalRecorderEventListener constructor.
-     *
-     * @param LmsService $lmsService
-     */
     public function __construct(LmsService $lmsService)
     {
         $this->lmsService = $lmsService;
     }
 
-    /**
-     * @param CreateEvent $event
-     *
-     * @throws \Exception
-     */
-    public function postCreateMultimediaObject(CreateEvent $event)
+    public function postCreateMultimediaObject(CreateEvent $event): void
     {
         $user = $event->getUser();
         $multimediaObject = $event->getMultimediaObject();
