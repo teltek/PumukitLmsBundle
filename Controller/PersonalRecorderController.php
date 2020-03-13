@@ -15,14 +15,6 @@ class PersonalRecorderController extends SSOController
     const ADMIN_PERSONAL_RECORDER_ROUTE = '/admin/personalrecorder';
 
     /**
-     * Parameters:
-     *   - email or username
-     *   - hash.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Response|null
-     *
      * @Route("/personal_recorder", name="pumukit_lms_sso_personalrecorder")
      */
     public function personalRecorder(Request $request)

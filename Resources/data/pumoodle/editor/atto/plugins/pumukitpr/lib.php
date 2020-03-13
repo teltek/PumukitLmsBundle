@@ -30,14 +30,14 @@ function atto_pumukitpr_strings_for_js()
 {
     global $PAGE;
 
-    $strings = array(
+    $strings = [
         'dialogtitle',
         'button_upload',
         'button_pr',
         'button_myvideos',
         'button_playlists',
         'button_sharevideos',
-    );
+    ];
 
     $PAGE->requires->strings_for_js($strings, 'atto_pumukitpr');
 }
@@ -45,13 +45,17 @@ function atto_pumukitpr_strings_for_js()
 /**
  * Return the js params required for this module.
  *
+ * @param mixed $elementid
+ * @param mixed $options
+ * @param mixed $fpoptions
+ *
  * @return array of additional params to pass to javascript init function for this module
  */
 function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
 {
     global $USER;
 
-    $params = array();
+    $params = [];
 
     $params['pumukitprurl'] = get_config('atto_pumukitpr', 'pumukitprurl');
     $params['dialogtitle'] = get_config('atto_pumukitpr', 'dialogtitle');

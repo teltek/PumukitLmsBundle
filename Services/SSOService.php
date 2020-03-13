@@ -3,24 +3,24 @@
 namespace Pumukit\LmsBundle\Services;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Pumukit\SchemaBundle\Services\PermissionProfileService;
-use Pumukit\SchemaBundle\Services\UserService;
-use Pumukit\SchemaBundle\Services\PersonService;
-use Pumukit\SchemaBundle\Services\GroupService;
-use Pumukit\SchemaBundle\Document\User;
 use Pumukit\SchemaBundle\Document\Group;
+use Pumukit\SchemaBundle\Document\User;
+use Pumukit\SchemaBundle\Services\GroupService;
+use Pumukit\SchemaBundle\Services\PermissionProfileService;
+use Pumukit\SchemaBundle\Services\PersonService;
+use Pumukit\SchemaBundle\Services\UserService;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class SSOService
 {
-    const USER_ORIGIN = 'openedx';
-    const GROUP_KEY = 'edupersonprimaryaffiliation';
-    const LDAP_PDI = 'PDI';
-    const LDAP_PAS = 'PAS';
-    const LDAP_ID_KEY = 'uid';
-    const PERMISSION_PROFILE_AUTO = 'Auto Publisher';
-    const PERMISSION_PROFILE_VIEWER = 'Viewer';
-    const GROUP_ORIGIN = 'cas';
+    public const USER_ORIGIN = 'openedx';
+    public const GROUP_KEY = 'edupersonprimaryaffiliation';
+    public const LDAP_PDI = 'PDI';
+    public const LDAP_PAS = 'PAS';
+    public const LDAP_ID_KEY = 'uid';
+    public const PERMISSION_PROFILE_AUTO = 'Auto Publisher';
+    public const PERMISSION_PROFILE_VIEWER = 'Viewer';
+    public const GROUP_ORIGIN = 'cas';
 
     private $dm;
     private $permissionProfileService;
@@ -29,26 +29,20 @@ class SSOService
     private $groupService;
     private $password;
     private $domain;
-    private $allowedDomains;
-    private $ldapService = null;
-    private $groupRepo;
+    private $ldapService;
     private $requestStack;
 
-    /**
-     * SSOService constructor.
-     *
-     * @param DocumentManager          $dm
-     * @param PermissionProfileService $permissionProfileService
-     * @param UserService              $userService
-     * @param PersonService            $personService
-     * @param GroupService             $groupService
-     * @param                          $password
-     * @param                          $domain
-     * @param                          $allowedDomains
-     * @param                          $ldapService
-     */
-    public function __construct(DocumentManager $dm, PermissionProfileService $permissionProfileService, UserService $userService, PersonService $personService, GroupService $groupService, $password, $domain, $allowedDomains, $ldapService = null, RequestStack $requestStack = null)
-    {
+    public function __construct(
+        DocumentManager $dm,
+        PermissionProfileService $permissionProfileService,
+        UserService $userService,
+        PersonService $personService,
+        GroupService $groupService,
+        $password,
+        $domain,
+        $ldapService = null,
+        RequestStack $requestStack = null
+    ) {
         $this->dm = $dm;
         $this->permissionProfileService = $permissionProfileService;
         $this->userService = $userService;
@@ -56,56 +50,28 @@ class SSOService
         $this->groupService = $groupService;
         $this->password = $password;
         $this->domain = $domain;
-        $this->allowedDomains = $allowedDomains;
         $this->ldapService = $ldapService;
         $this->requestStack = $requestStack;
-        $this->groupRepo = $this->dm->getRepository('PumukitSchemaBundle:Group');
     }
 
-    /**
-     * Get Pumukit Domain for backoffice.
-     *
-     * @return string
-     */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * Get hash for user.
-     *
-     * @param string $email
-     *
-     * @return string
-     */
-    public function getHash($email)
+    public function getHash(string $email): string
     {
         $date = date('d/m/Y');
 
         return md5($email.$this->password.$date.$this->domain);
     }
 
-    /**
-     * Validate hash.
-     *
-     * @param string $hash
-     *
-     * @return bool TRUE if $hash is equals to the given hash, FALSE otherwise
-     */
-    public function validateHash($hash, $email)
+    public function validateHash(string $hash, string $email): bool
     {
         return $hash === $this->getHash($email);
     }
 
-    /**
-     * Create user from ldap.
-     *
-     * @param array $info
-     *
-     * @return User
-     */
-    public function createUser($info)
+    public function createUser(array $info): User
     {
         if (!$this->ldapService) {
             throw new \Exception('LDAP Service not enabled.');
@@ -125,7 +91,7 @@ class SSOService
         }
 
         if (!isset($info[self::GROUP_KEY][0]) ||
-            !in_array($info[self::GROUP_KEY][0], array(self::LDAP_PAS, self::LDAP_PDI))) {
+            !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
             throw new \RuntimeException('User invalid.');
         }
 
@@ -141,13 +107,7 @@ class SSOService
         return $user;
     }
 
-    /**
-     * Promote user
-     * from Viewer to Auto Publisher.
-     *
-     * @param User $user
-     */
-    public function promoteUser(User $user)
+    public function promoteUser(User $user): void
     {
         $permissionProfileViewer = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_VIEWER);
         $permissionProfileAutoPub = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
@@ -159,7 +119,7 @@ class SSOService
                 throw new \RuntimeException('User not found.');
             }
             if (!isset($info[self::GROUP_KEY][0]) ||
-                !in_array($info[self::GROUP_KEY][0], array(self::LDAP_PAS, self::LDAP_PDI))) {
+                !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
                 throw new \RuntimeException('User invalid.');
             }
 
@@ -168,7 +128,7 @@ class SSOService
         }
     }
 
-    public function createUserWithInfo($username, $email)
+    public function createUserWithInfo(string $username, string $email)
     {
         $user = new User();
         $user->setUsername($username);
@@ -190,11 +150,11 @@ class SSOService
         return $user;
     }
 
-    private function getGroup($key)
+    private function getGroup(string $key)
     {
         $cleanKey = preg_replace('/\W/', '', $key);
 
-        $group = $this->groupRepo->findOneByKey($cleanKey);
+        $group = $this->dm->getRepository(Group::class)->findOneBy(['key' => $cleanKey]);
         if ($group) {
             return $group;
         }

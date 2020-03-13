@@ -17,7 +17,7 @@ require_once $CFG->libdir.'/filelib.php';
 
 class filter_pumukitpr extends moodle_text_filter
 {
-    public function filter($text, array $options = array())
+    public function filter($text, array $options = [])
     {
         global $CFG;
 
@@ -63,25 +63,25 @@ function filter_pumukitpr_openedx_callback($link)
     global $CFG;
     //Get arguments from url.
 
-    $link_params = array();
+    $link_params = [];
     parse_str(html_entity_decode(parse_url($link[1], PHP_URL_QUERY)), $link_params);
     //Initialized needed arguments.
     $multistream = isset($link_params['multistream']) ? ('1' == $link_params['multistream']) : false;
-    $mm_id = isset($link_params['id']) ? $link_params['id'] : null;
+    $mm_id = $link_params['id'] ?? null;
     if (!$mm_id) {
-        $mm_id = isset($link_params['playlist']) ? $link_params['playlist'] : null;
+        $mm_id = $link_params['playlist'] ?? null;
     }
-    $email = isset($link_params['email']) ? $link_params['email'] : null;
+    $email = $link_params['email'] ?? null;
     //Prepare new parameters.
 
-    $extra_arguments = array(
+    $extra_arguments = [
         'professor_email' => $email,
         'hash' => filter_pumukitpr_create_ticket_openedx($mm_id, $email ? $email : '', parse_url($link[1], PHP_URL_HOST)),
-    );
+    ];
     $new_url_arguments = '?'.http_build_query(array_merge($extra_arguments, $link_params), '', '&');
     //Create new url with ticket and correct email.
 
-    $url = preg_replace("/(\?.*)/i", $new_url_arguments, $link[1]);
+    $url = preg_replace('/(\\?.*)/i', $new_url_arguments, $link[1]);
 
     return str_replace($link[1], $url, $link[0]);
 }
@@ -104,20 +104,20 @@ function filter_pumukitpr_callback($link)
 {
     global $CFG;
     //Get arguments from url.
-    $link_params = array();
+    $link_params = [];
     parse_str(html_entity_decode(parse_url($link[1], PHP_URL_QUERY)), $link_params);
     //Initialized needed arguments.
     $multistream = isset($link_params['multistream']) ? ('1' == $link_params['multistream']) : false;
-    $mm_id = isset($link_params['id']) ? $link_params['id'] : null;
-    $email = isset($link_params['email']) ? $link_params['email'] : null;
+    $mm_id = $link_params['id'] ?? null;
+    $email = $link_params['email'] ?? null;
     //Prepare new parameters.
-    $extra_arguments = array(
+    $extra_arguments = [
         'professor_email' => $email,
         'ticket' => filter_pumukitpr_create_ticket($mm_id, $email),
-    );
+    ];
     $new_url_arguments = '?'.http_build_query(array_merge($extra_arguments, $link_params), '', '&');
     //Create new url with ticket and correct email.
-    $url = preg_replace("/(\?.*)/i", $new_url_arguments, $link[1]);
+    $url = preg_replace('/(\\?.*)/i', $new_url_arguments, $link[1]);
     //Prepare and return iframe with correct sizes to embed on webpage.
     if ($multistream) {
         $iframe_width = $CFG->iframe_multivideo_width ?: '100%';

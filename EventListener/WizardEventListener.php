@@ -7,27 +7,15 @@ use Pumukit\WizardBundle\Event\FormEvent;
 
 class WizardEventListener
 {
-    /**
-     * @var LmsService
-     */
+    /** @var LmsService */
     private $lmsService;
 
-    /**
-     * WizardEventListener constructor.
-     *
-     * @param LmsService $lmsService
-     */
     public function __construct(LmsService $lmsService)
     {
         $this->lmsService = $lmsService;
     }
 
-    /**
-     * @param FormEvent $event
-     *
-     * @throws \Exception
-     */
-    public function postCreateMultimediaObject(FormEvent $event)
+    public function postCreateMultimediaObject(FormEvent $event): void
     {
         $form = $event->getForm();
         $multimediaObject = $event->getMultimediaObject();
