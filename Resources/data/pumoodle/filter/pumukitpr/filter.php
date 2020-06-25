@@ -31,7 +31,7 @@ class filter_pumukitpr extends moodle_text_filter
 
         if (filter_is_legacy_url($text)) {
             $parsedUrl = filter_convert_legacy_url($text);
-            $iframe = preg_replace_callback(self::LEGACY_VIDEO_SEARCH_REGEX, 'filter_pumukitpr_callback', $text);
+            $iframe = preg_replace_callback(self::LEGACY_VIDEO_SEARCH_REGEX, 'filter_pumukitpr_callback', $parsedUrl);
             if (filter_validate_returned_iframe($text, $iframe)) {
                 return $iframe;
             }
