@@ -20,6 +20,7 @@ class filter_pumukitpr extends moodle_text_filter
     public const PLAYLIST_SEARCH_REGEX = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/playlist\\/embed.*?)".*?>.*?<\\/iframe>/is';
     public const VIDEO_SEARCH_REGEX = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
     public const LEGACY_VIDEO_SEARCH_REGEX = '/<a\\s[^>]*href=["\'](https?:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)["\']>.*?<\\/a>/is';
+    public const LEGACY_PLAYLIST_SEARCH_REGEX = '/<a\\s[^>]*href=["\'](https?:\\/\\/[^>]*?\\/openedx\\/openedx\\/playlist\\/embed.*?)["\']>.*?<\\/a>/is';
 
     public function filter($text, array $options = [])
     {
@@ -31,7 +32,8 @@ class filter_pumukitpr extends moodle_text_filter
 
         if (filter_is_legacy_url($text)) {
             $parsedUrl = filter_convert_legacy_url($text);
-            $iframe = preg_replace_callback(self::LEGACY_VIDEO_SEARCH_REGEX, 'filter_pumukitpr_callback', $parsedUrl);
+            $search = (filter_is_a_playlist($parsedUrl)) ? self::LEGACY_PLAYLIST_SEARCH_REGEX : self::LEGACY_VIDEO_SEARCH_REGEX;
+            $iframe = preg_replace_callback($search, 'filter_pumukitpr_callback', $parsedUrl);
             if (filter_validate_returned_iframe($text, $iframe)) {
                 return $iframe;
             }
@@ -51,6 +53,10 @@ class filter_pumukitpr extends moodle_text_filter
 
 function filter_convert_legacy_url(string $text): string
 {
+    if(stripos($text, 'playlist') !== false) {
+        return str_replace('pumoodle/embed/playlist', 'openedx/openedx/playlist/embed', $text);
+    }
+
     return str_replace('pumoodle/embed', 'openedx/openedx/embed', $text);
 }
 
@@ -132,7 +138,7 @@ function filter_pumukitpr_callback($link)
     //Prepare new parameters.
     $extra_arguments = [
         'professor_email' => $email,
-        'ticket' =>  filter_create_ticket($mm_id, $email, null, true),
+        'ticket' => filter_create_ticket($mm_id, $email, null, true),
     ];
     $new_url_arguments = '?'.http_build_query(array_merge($extra_arguments, $link_params), '', '&');
     //Create new url with ticket and correct email.
