@@ -19,7 +19,7 @@ class filter_pumukitpr extends moodle_text_filter
 {
     public const PLAYLIST_SEARCH_REGEX = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/playlist\\/embed.*?)".*?>.*?<\\/iframe>/is';
     public const VIDEO_SEARCH_REGEX = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
-    public const LEGACY_VIDEO_SEARCH_REGEX = '/<a\\s[^>]*href=\"(https?:\\/\\/[^>]*?\\/pumoodle\\/embed.*?)\">.*?<\\/a>/is';
+    public const LEGACY_VIDEO_SEARCH_REGEX = '/<a\\s[^>]*href=["\'](https?:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)["\']>.*?<\\/a>/is';
 
     public function filter($text, array $options = [])
     {
@@ -31,7 +31,7 @@ class filter_pumukitpr extends moodle_text_filter
 
         if (filter_is_legacy_url($text)) {
             $parsedUrl = filter_convert_legacy_url($text);
-            $iframe = preg_replace_callback(self::LEGACY_VIDEO_SEARCH_REGEX, 'filter_pumukitpr_callback', $parsedUrl);
+            $iframe = preg_replace_callback(self::LEGACY_VIDEO_SEARCH_REGEX, 'filter_pumukitpr_callback', $text);
             if (filter_validate_returned_iframe($text, $iframe)) {
                 return $iframe;
             }
