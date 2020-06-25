@@ -19,7 +19,6 @@ class filter_pumukitpr extends moodle_text_filter
 {
     public const PLAYLIST_SEARCH_REGEX = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/playlist\\/embed.*?)".*?>.*?<\\/iframe>/is';
     public const VIDEO_SEARCH_REGEX = '/<iframe[^>]*?src=\"(https:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)".*?>.*?<\\/iframe>/is';
-    public const LEGACY_VIDEO_SEARCH_REGEX = '/<a\\s[^>]*href=\"(https?:\\/\\/[^>]*?\\/pumoodle\\/embed.*?)\">.*?<\\/a>/is';
 
     public function filter($text, array $options = [])
     {
@@ -31,7 +30,7 @@ class filter_pumukitpr extends moodle_text_filter
 
         if (filter_is_legacy_url($text)) {
             $parsedUrl = filter_convert_legacy_url($text);
-            $iframe = preg_replace_callback(self::LEGACY_VIDEO_SEARCH_REGEX, 'filter_pumukitpr_callback', $parsedUrl);
+            $iframe = filter_pumukitpr_callback($parsedUrl);
             if (filter_validate_returned_iframe($text, $iframe)) {
                 return $iframe;
             }
@@ -56,7 +55,7 @@ function filter_convert_legacy_url(string $text): string
 
 function filter_validate_returned_iframe(string $oldText, string $newText): bool
 {
-    return !empty($newText) && $newText !== $oldText;
+    return !empty($newText) && $newText !== $oldText && filter_is_an_iframe($newText);
 }
 
 function filter_is_a_playlist(string $text): bool
@@ -124,7 +123,7 @@ function filter_pumukitpr_callback($link)
     global $CFG;
     //Get arguments from url.
     $link_params = [];
-    parse_str(html_entity_decode(parse_url($link[1], PHP_URL_QUERY)), $link_params);
+    parse_str(html_entity_decode(parse_url($link, PHP_URL_QUERY)), $link_params);
     //Initialized needed arguments.
     $multistream = isset($link_params['multistream']) ? ('1' == $link_params['multistream']) : false;
     $mm_id = $link_params['id'] ?? null;
@@ -136,7 +135,7 @@ function filter_pumukitpr_callback($link)
     ];
     $new_url_arguments = '?'.http_build_query(array_merge($extra_arguments, $link_params), '', '&');
     //Create new url with ticket and correct email.
-    $url = preg_replace('/(\\?.*)/i', $new_url_arguments, $link[1]);
+    $url = preg_replace('/(\\?.*)/i', $new_url_arguments, $link);
     //Prepare and return iframe with correct sizes to embed on webpage.
     if ($multistream) {
         $iframe_width = $CFG->iframe_multivideo_width ?: '100%';
