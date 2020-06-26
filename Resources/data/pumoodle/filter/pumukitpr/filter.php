@@ -22,7 +22,7 @@ class filter_pumukitpr extends moodle_text_filter
     public const LEGACY_VIDEO_SEARCH_REGEX = '/<a\\s[^>]*href=["\'](https?:\\/\\/[^>]*?\\/openedx\\/openedx\\/embed.*?)["\']>.*?<\\/a>/is';
     public const LEGACY_PLAYLIST_SEARCH_REGEX = '/<a\\s[^>]*href=["\'](https?:\\/\\/[^>]*?\\/openedx\\/openedx\\/playlist\\/embed.*?)["\']>.*?<\\/a>/is';
 
-    public function filter($text, array $options = [])
+    public function filter($text, array $options = []): string
     {
         global $CFG;
 
@@ -125,7 +125,7 @@ function filter_pumukitpr_openedx_callback(array $link): string
     return str_replace($link[1], $url, $link[0]);
 }
 
-function filter_pumukitpr_callback($link)
+function filter_pumukitpr_callback(array $link): string
 {
     global $CFG;
     //Get arguments from url.
@@ -138,7 +138,7 @@ function filter_pumukitpr_callback($link)
     //Prepare new parameters.
     $extra_arguments = [
         'professor_email' => $email,
-        'ticket' => filter_create_ticket($mm_id, $email, null, true),
+        'ticket' => filter_create_ticket($mm_id, $email ?: '', parse_url($link[1], PHP_URL_HOST)),
     ];
     $new_url_arguments = '?'.http_build_query(array_merge($extra_arguments, $link_params), '', '&');
     //Create new url with ticket and correct email.
@@ -159,7 +159,7 @@ function filter_pumukitpr_callback($link)
     return $iframe_html;
 }
 
-function filter_create_ticket($id, $email, $domain, $generateLegacyTicket = null)
+function filter_create_ticket($id, $email, $domain): string
 {
     global $CFG;
 
@@ -167,11 +167,5 @@ function filter_create_ticket($id, $email, $domain, $generateLegacyTicket = null
 
     $date = date('d/m/Y');
 
-    if ($generateLegacyTicket) {
-        $ticket = md5($secret.$date.$id.$email);
-    } else {
-        $ticket = md5($email.$secret.$date.$domain);
-    }
-
-    return $ticket;
+    return md5($email.$secret.$date.$domain);
 }
