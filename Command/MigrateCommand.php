@@ -56,13 +56,19 @@ EOT
         $progress = new ProgressBar($output, count($multimediaObjects));
         $progress->start();
 
+        $messages = [];
         foreach ($multimediaObjects as $multimediaObject) {
             $progress->advance();
             $this->changePubChannel($multimediaObject);
+            $messages[] = 'Multimedia object with id ' . $multimediaObject->getId() . ' migrate';
         }
 
         $progress->finish();
         $this->dm->flush();
+
+        foreach ($messages as $message) {
+            $output->writeln($message);
+        }
 
         return 0;
     }
