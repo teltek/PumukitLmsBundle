@@ -159,9 +159,6 @@ function filter_pumukitpr_callback($link)
     return $iframe_html;
 }
 
-
-
-
 function filter_create_ticket($id, $email, $domain, $generateLegacyTicket = null)
 {
     global $CFG;
