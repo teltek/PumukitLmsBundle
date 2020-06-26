@@ -18,7 +18,6 @@ class MigrateCommand extends ContainerAwareCommand
     /** @var TagService */
     private $tagService;
     private $LMSTag;
-    private $moodleTag;
 
     protected function configure(): void
     {
@@ -39,10 +38,6 @@ EOT
         $this->LMSTag = $this->dm->getRepository(Tag::class)->findOneBy(['cod' => 'PUCHLMS']);
         if (!$this->LMSTag) {
             throw new \Exception('Tag PUCHLMS not found');
-        }
-        $this->moodleTag = $this->dm->getRepository(Tag::class)->findOneBy(['cod' => 'PUCHMOODLE']);
-        if (!$this->moodleTag) {
-            throw new \Exception('Tag PUCHMoodle not found');
         }
     }
 
@@ -82,6 +77,5 @@ EOT
     private function changePubChannel(MultimediaObject $multimediaObject): void
     {
         $this->tagService->addTagToMultimediaObject($multimediaObject, $this->LMSTag);
-        $this->tagService->removeTagFromMultimediaObject($multimediaObject, $this->moodleTag->getId());
     }
 }
