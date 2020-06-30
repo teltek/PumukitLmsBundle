@@ -130,14 +130,17 @@ class LmsController extends SSOController
         if ('dev' != $this->get('kernel')->getEnvironment()) {
             $referer = $request->headers->get('referer');
             if (!$referer) {
+                $options['error_message'] = 'Referer is null';
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
             if (!$lmsService->validateAccessDomain($referer)) {
+                $options['error_message'] = 'Referer is not a valid access domain';
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
         }
         $ssoService = $this->container->get('pumukit_lms.sso');
         if (!$ssoService->validateHash($request->get('hash'), '')) {
+            $options['error_message'] = 'Hash not valid';
             return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
         }
 
