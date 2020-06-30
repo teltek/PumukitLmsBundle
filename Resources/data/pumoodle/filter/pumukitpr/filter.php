@@ -138,7 +138,7 @@ function filter_pumukitpr_callback(array $link): string
     //Prepare new parameters.
     $extra_arguments = [
         'professor_email' => $email,
-        'ticket' => filter_create_ticket($mm_id, $email ?: '', parse_url($link[1], PHP_URL_HOST)),
+        'hash' => filter_create_ticket($mm_id, $email ?: '', parse_url($link[1], PHP_URL_HOST)),
     ];
     $new_url_arguments = '?'.http_build_query(array_merge($extra_arguments, $link_params), '', '&');
     //Create new url with ticket and correct email.
