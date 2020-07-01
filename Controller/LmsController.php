@@ -59,7 +59,7 @@ class LmsController extends SSOController
         $job = $jobRepo->findOneBy(['mm_id' => $options['id'], 'profile' => ['$in' => $profileNames]]);
         if ($multimediaObject && $multimediaObject->isPublished()) {
             if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', 'PUCHLMS'])) {
-                if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
+                if ((!$multimediaObjectService->hasPlayableResource($multimediaObject)) || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
                     $options['job'] = $job;
 
                     return $this->renderTemplateError(Response::HTTP_BAD_REQUEST, $options);
