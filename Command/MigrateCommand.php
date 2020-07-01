@@ -28,13 +28,14 @@ class MigrateCommand extends ContainerAwareCommand
                 <<<'EOT'
 Migrate PUCHMOODLE tag of MultimediaObject to PUCHLMS tag
 EOT
-            );
+            )
+        ;
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->dm = $this->getContainer()->get('doctrine_mongodb.odm.document_manager');
-        $this->tagService = $this->get('pumukitschema.tag');
+        $this->tagService = $this->getContainer()->get('pumukitschema.tag');
         $this->LMSTag = $this->dm->getRepository(Tag::class)->findOneBy(['cod' => 'PUCHLMS']);
         if (!$this->LMSTag) {
             throw new \Exception('Tag PUCHLMS not found');
@@ -45,6 +46,7 @@ EOT
     {
         if (!$multimediaObjects = $this->getAllMultimediaObjects()) {
             $output->writeln('No multimedia object with PUCHMOODLE found');
+
             return 0;
         }
 
@@ -55,7 +57,7 @@ EOT
         foreach ($multimediaObjects as $multimediaObject) {
             $progress->advance();
             $this->changePubChannel($multimediaObject);
-            $messages[] = 'Multimedia object with id ' . $multimediaObject->getId() . ' migrate';
+            $messages[] = 'Multimedia object with id '.$multimediaObject->getId().' migrate';
         }
 
         $progress->finish();

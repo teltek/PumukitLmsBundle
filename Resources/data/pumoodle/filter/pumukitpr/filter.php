@@ -53,7 +53,7 @@ class filter_pumukitpr extends moodle_text_filter
 
 function filter_convert_legacy_url(string $text): string
 {
-    if (stripos($text, 'playlist') !== false) {
+    if (false !== stripos($text, 'playlist')) {
         return str_replace('pumoodle/embed/playlist', 'openedx/openedx/playlist/embed', $text);
     }
 
@@ -67,22 +67,22 @@ function filter_validate_returned_iframe(string $oldText, string $newText): bool
 
 function filter_is_a_playlist(string $text): bool
 {
-    return stripos($text, 'playlist') !== false;
+    return false !== stripos($text, 'playlist');
 }
 
 function filter_is_an_iframe(string $text): bool
 {
-    return stripos($text, '<iframe') !== false;
+    return false !== stripos($text, '<iframe');
 }
 
 function filter_is_an_link(string $text): bool
 {
-    return stripos($text, '<a') !== false;
+    return false !== stripos($text, '<a');
 }
 
 function filter_is_legacy_url(string $text): bool
 {
-    return stripos($text, 'pumoodle') !== false;
+    return false !== stripos($text, 'pumoodle');
 }
 
 function filter_is_valid_text(string $text): bool
