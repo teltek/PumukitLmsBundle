@@ -26,7 +26,7 @@ class SSOController extends Controller
         if ($username) {
             $type = 'username';
             $value = $username;
-        } elseif ($email) {
+        } elseif (!empty($email)) {
             $type = 'email';
             $value = $email;
         } else {
