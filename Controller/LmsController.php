@@ -59,7 +59,7 @@ class LmsController extends SSOController
         $job = $jobRepo->findOneBy(['mm_id' => $options['id'], 'profile' => ['$in' => $profileNames]]);
         if ($multimediaObject && $multimediaObject->isPublished()) {
             if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', 'PUCHLMS'])) {
-                if (!$job || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
+                if ((!$multimediaObjectService->hasPlayableResource($multimediaObject)) || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
                     $options['job'] = $job;
 
                     return $this->renderTemplateError(Response::HTTP_BAD_REQUEST, $options);
@@ -130,14 +130,20 @@ class LmsController extends SSOController
         if ('dev' != $this->get('kernel')->getEnvironment()) {
             $referer = $request->headers->get('referer');
             if (!$referer) {
+                $options['error_message'] = 'Referer is null';
+
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
             if (!$lmsService->validateAccessDomain($referer)) {
+                $options['error_message'] = 'Referer is not a valid access domain';
+
                 return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
             }
         }
         $ssoService = $this->container->get('pumukit_lms.sso');
         if (!$ssoService->validateHash($request->get('hash'), '')) {
+            $options['error_message'] = 'Hash not valid';
+
             return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
         }
 

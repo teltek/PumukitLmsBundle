@@ -54,6 +54,10 @@ class LmsService
     private function validateRegexDomain(array $domainsPatterns, string $currentDomain): bool
     {
         foreach ($domainsPatterns as $pattern) {
+            if ('*' === $pattern) {
+                return true;
+            }
+
             if (1 === preg_match('/'.$pattern.'/i', $currentDomain)) {
                 return true;
             }

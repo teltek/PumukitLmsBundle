@@ -18,10 +18,10 @@ class LmsInitPubChannelCommand extends ContainerAwareCommand
             ->setName('lms:init:pubchannel')
             ->setDescription('Loads the LMS pubchannel to your database')
             ->setHelp(
-              <<<'EOT'
+                <<<'EOT'
 Command to load the PUCHLMS pubchannel to the db. Required to publish objects exclusively on the LMS platform.
 EOT
-          )
+            )
         ;
     }
 
