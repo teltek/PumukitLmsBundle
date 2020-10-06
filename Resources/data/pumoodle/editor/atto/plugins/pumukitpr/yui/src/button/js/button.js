@@ -20,18 +20,13 @@
  */
 
 /**
- * @module moodle-atto_pumukitpr_alignment-button
- */
-
-/**
  * Atto pumukitpr selection tool.
  *
+ * @module moodle-atto_pumukitpr_alignment-button
  * @namespace M.atto_pumukitpr
  * @class Button
  * @extends M.editor_atto.EditorPlugin
  */
-
-
 
 var COMPONENTNAME = 'atto_pumukitpr';
 var FLAVORCONTROL = 'pumukitpr_flavor';
@@ -46,11 +41,9 @@ var CSS = {
         FLAVORCONTROL: '.flavorcontrol'
     };
 
-
 var TEMPLATE = '<ul class="root nav nav-tabs" role="tablist">';
 var TEMPLATE_TABCONTENT = '<div class="root tab-content">';
 
-/* Upload action */
 var ITEM_UPLOAD = '<li class="nav-item">' +
                         '<a class="nav-link" href="#{{elementid}}_upload" role="tab" data-toggle="tab">' +
                             '{{button_upload}}' +
@@ -59,13 +52,12 @@ var ITEM_UPLOAD = '<li class="nav-item">' +
 
 var TABCONTENT_UPLOAD =
     '<div class="tab-pane" id="{{elementid}}_upload">' +
-    '<iframe src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera"></iframe>' +
+    '<iframe class="custom-tab-content" src="{{PUMUKITURL}}/openedx/sso/upload?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" allowfullscreen allow="microphone; camera"></iframe>' +
     '</div>';
 
 TEMPLATE = TEMPLATE + ITEM_UPLOAD;
 TEMPLATE_TABCONTENT = TEMPLATE_TABCONTENT + TABCONTENT_UPLOAD;
 
-/* Personal recorder action */
 var ITEM_PERSONAL_RECORDER =
     '<li class="nav-item">' +
     '<a class="nav-link" href="#{{elementid}}_personal_recorder" role="tab" data-toggle="tab">' +
@@ -75,12 +67,9 @@ var ITEM_PERSONAL_RECORDER =
 
 var TABCONTENT_PERSONALRECORDER =
     '<div data-medium-type="personal_recorder" class="tab-pane" id="{{elementid}}_personal_recorder">' +
-    '<iframe id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" ' +
-    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
-    '</iframe>' +
+    '<iframe class="custom-tab-content" id="pumukitpr_iframe_recorder" src="{{PUMUKITURL}}/openedx/sso/personal_recorder?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" allowfullscreen allow="microphone; camera"></iframe>' +
     '</div>';
 
-/* Manager series action */
 var TEMPLATE_MANAGER =
         '<li class="nav-item">' +
             '<a class="nav-link active" href="#{{elementid}}_manager" role="tab" data-toggle="tab">' +
@@ -88,15 +77,11 @@ var TEMPLATE_MANAGER =
             '</a>' +
         '</li>';
 
-var TABCONTENT_MANAGERSERIES = '<div class="tab-pane active" id="{{elementid}}_manager">' +
-
-    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" ' +
-    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
-    '</iframe>' +
-
+var TABCONTENT_MANAGERSERIES =
+    '<div class="tab-pane active" id="{{elementid}}_manager">' +
+    '<iframe class="custom-tab-content" src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en" allowfullscreen  allow="microphone; camera"></iframe>' +
     '</div>';
 
-/* Manager playlist action */
 var TEMPLATE_PLAYLIST =
     '<li class="nav-item">' +
     '<a class="nav-link" href="#{{elementid}}_playlists" role="tab" data-toggle="tab">' +
@@ -104,14 +89,10 @@ var TEMPLATE_PLAYLIST =
     '</a>' +
     '</li>';
 
-var TABCONTENT_MANAGERPLAYLIST = '<div class="tab-pane" id="{{elementid}}_playlists">' +
-
-    '<iframe src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en&playlist=true" ' +
-    'frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera">' +
-    '</iframe>' +
-
+var TABCONTENT_MANAGERPLAYLIST =
+    '<div class="tab-pane" id="{{elementid}}_playlists">' +
+    '<iframe class="custom-tab-content" src="{{PUMUKITURL}}/openedx/sso/manager?hash={{HASH}}&username={{USERNAME}}&email={{EMAIL}}&lang=en&playlist=true" allowfullscreen allow="microphone; camera"></iframe>' +
     '</div>';
-
 
 var TEMPLATE_SHAREDVIDEOS =
     '<li class="nav-item">' +
@@ -120,19 +101,15 @@ var TEMPLATE_SHAREDVIDEOS =
     '</a>' +
     '</li>';
 
-var TABCONTENT_SHAREDVIDEOS = '<div class="tab-pane" id="{{elementid}}_public">' +
-    '<iframe src="{{PUMUKITURL}}/openedx/search/public/multimediaobjects" frameborder="0" allowfullscreen style="width:100%;height:80vh" allow="microphone; camera"></iframe>' +
+var TABCONTENT_SHAREDVIDEOS =
+    '<div class="tab-pane" id="{{elementid}}_public">' +
+    '<iframe class="custom-tab-content" src="{{PUMUKITURL}}/openedx/search/public/multimediaobjects" allowfullscreen allow="microphone; camera"></iframe>' +
     '</div>';
 
 Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
 
     _receiveMessageBind: null,
 
-    /**
-     * Initialize the button
-     *
-     * @method Initializer
-     */
     initializer: function() {
         // If we don't have the capability to view then give up.
         if (this.get('disabled')){
@@ -148,7 +125,6 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             callbackArgs: 'iconone'
         });
 
-
         // Force SSO
         var id = "pumukitpr_iframe_sso";
         if (!document.getElementById(id)) {
@@ -163,7 +139,6 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             document.getElementsByTagName('body')[0].appendChild(iframe);
         }
 
-
     },
 
     /**
@@ -177,7 +152,6 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         return(this.get('host').get('elementid') + '_' + FLAVORCONTROL);
     },
 
-
      /**
      * Display the pumukitpr Dialogue
      *
@@ -187,7 +161,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
     _displayDialogue: function(e, clickedicon) {
         e.preventDefault();
         var width=900;
-        
+
         this._receiveMessageBind = this._receiveMessage.bind(this);
         window.addEventListener('message', this._receiveMessageBind);
 
@@ -210,7 +184,6 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         var bodycontent =  Y.Node.create('<div></div>');
         bodycontent.append(buttonform);
 
-        //set to bodycontent
         dialogue.set('bodyContent', bodycontent);
         dialogue.show();
         this.markUpdated();
@@ -221,7 +194,6 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             clickButton[0].addEventListener('click', this._closeSharedWindow);
         }
     },
-
 
      /**
      * Return the dialogue content for the tool, attaching any required
@@ -254,7 +226,6 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
              TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + TABCONTENT_SHAREDVIDEOS;
          }
 
-         /* Complete general html */
          TARGET_TEMPLATE = TARGET_TEMPLATE + "</ul>";
          TARGET_TEMPLATE_CONTENT = TARGET_TEMPLATE_CONTENT + '</div>' +
              '<form class="atto_form">' +
@@ -312,9 +283,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
         this.editor.focus();
         this.get('host').insertContentAtFocusPoint(flavorcontrol.get('value'));
         this.markUpdated();
-
     },
-
 
     _receiveMessage : function(e){
         // window.addEventListener('message', function(e){
@@ -343,22 +312,20 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
 
         this.editor.focus();
 
-        var url = '';
+        var url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + e.data.mmId;
         if(e.data.playlist) {
             url = this.get('pumukitprurl') + '/openedx/openedx/playlist/embed/?id=' + e.data.playlist;
         } else if(e.data.url){
             url = e.data.url;
-        } else {
-            url = this.get('pumukitprurl') + '/openedx/openedx/embed/?id=' + e.data.mmId;
         }
 
-        var iframe = '<iframe src="' + url +
-            '" style="border:0px #FFFFFF none;box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);"' +
-            ' scrolling="no" frameborder="1" height="315" width="560" allowfullscreen allow="microphone; camera"></iframe>';
+        var iframe =
+            '<div class="embed-responsive embed-responsive-16by9 tv-iframe">' +
+            '<iframe class="embed-responsive-item tv-iframe-item" src="' + url + '" allowfullscreen allow="microphone; camera"></iframe>' +
+            '</div>';
         this.get('host').insertContentAtFocusPoint(iframe);
         this.markUpdated();
     },
-
 
     _closeSharedWindow : function(e){
         var sharedWindow = document.getElementById('pumukitpr_iframe_recorder');

@@ -1,2 +1,0 @@
-docker cp . moodle:/var/www/html/lib/editor/atto/plugins/pumukitpr
-zip -r pumukitpr.zip pumukitpr

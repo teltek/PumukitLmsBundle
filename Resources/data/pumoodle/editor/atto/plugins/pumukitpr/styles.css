@@ -94,3 +94,17 @@ div.moodle-dialogue.moodle-has-zindex.yui3-panel {
 .moodle-dialogue.moodle-has-zindex.yui3-panel li.nav-item a.nav-link {
     border-bottom: none;
 }
+
+.custom-tab-content {
+    width:100%;
+    height:80vh;
+    border:0;
+}
+
+.tv-iframe-item {
+    border:0 #FFFFFF none;
+    box-shadow:0 3px 10px rgba(0,0,0,.23), 0 3px 10px rgba(0,0,0,.16);
+    height: 315px;
+    width: 560px;
+    overflow:hidden;
+}
