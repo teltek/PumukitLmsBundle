@@ -116,6 +116,6 @@ Click on “Continue”. The Module Configuration will be loaded.
 To configure the filter go to “Administration” -> “Site Administration” -> “Plugins” -> “Filters”
 -> “Manage filters”.
 
-Change the filter status called “Pumukit filter” from “Disabled” to “On”.
+Change the filter status called “Pumukit Personal Recorder filter” from “Disabled” to “On”.
 
 The filter is configured.
