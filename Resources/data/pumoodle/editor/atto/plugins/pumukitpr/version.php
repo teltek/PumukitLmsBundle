@@ -23,6 +23,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2020100601;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version = 2020100603;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires = 2016112900;        // Requires this Moodle version.
 $plugin->component = 'atto_pumukitpr';  // Full name of the plugin (used for diagnostics).
