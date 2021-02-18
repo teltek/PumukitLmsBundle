@@ -111,8 +111,9 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
     _receiveMessageBind: null,
 
     initializer: function() {
+
         // If we don't have the capability to view then give up.
-        if (this.get('disabled')){
+        if (this.get('disabled') || !this.get('capability')){
             return;
         }
 
@@ -245,6 +246,7 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
                 HASH: this.get('hash'),
                 USERNAME: this.get('username'),
                 EMAIL: this.get('email'),
+                CAPABILITY: this.get('capability'),
                 component: COMPONENTNAME,
                 defaultflavor: this.get('defaultflavor'),
                 clickedicon: clickedicon,
@@ -355,6 +357,9 @@ Y.namespace('M.atto_pumukitpr').Button = Y.Base.create('button', Y.M.editor_atto
             value: ''
         },
         showsharedvideos: {
+            value: ''
+        },
+        capability: {
             value: ''
         },
     }

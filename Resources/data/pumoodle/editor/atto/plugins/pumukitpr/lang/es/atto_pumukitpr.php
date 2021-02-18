@@ -45,3 +45,4 @@ $string['showplaylistdesc'] = 'Activar o desactivar la pestaña de listas de moo
 $string['showsharedvideos'] = 'Todos los vídeos';
 $string['showsharedvideostext'] = 'Visualizar la pestaña de todos los vídeos';
 $string['showsharedvideosdesc'] = 'Activar o desactiva la pestaña de todos los vídeos';
+$string['pumukitpr:view'] = 'Visualizar el plugin de PuMuKIT en editor atto';
