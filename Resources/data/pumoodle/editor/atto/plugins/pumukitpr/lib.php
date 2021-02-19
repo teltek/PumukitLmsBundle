@@ -44,6 +44,10 @@ function atto_pumukitpr_strings_for_js()
 
 /**
  * Return the js params required for this module.
+ *
+ * @param mixed $elementid
+ * @param mixed $options
+ * @param mixed $fpoptions
  */
 function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
 {
@@ -70,7 +74,8 @@ function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
     return $params;
 }
 
-function get_capability() {
+function get_capability()
+{
     global $COURSE;
 
     $context = context_course::instance($COURSE->id);
