@@ -48,8 +48,6 @@ function atto_pumukitpr_strings_for_js()
  * @param mixed $elementid
  * @param mixed $options
  * @param mixed $fpoptions
- *
- * @return array of additional params to pass to javascript init function for this module
  */
 function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
 {
@@ -71,5 +69,16 @@ function atto_pumukitpr_params_for_js($elementid, $options, $fpoptions)
     $hash = md5($USER->username.$password.$date.$domain);
     $params['hash'] = $hash;
 
+    $params['capability'] = get_capability();
+
     return $params;
+}
+
+function get_capability()
+{
+    global $COURSE;
+
+    $context = context_course::instance($COURSE->id);
+
+    return has_capability('atto/pumukitpr:view', $context);
 }
