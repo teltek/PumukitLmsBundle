@@ -32,7 +32,7 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('lms:migrate')
+            ->setName('pumukit:lms:migrate')
             ->setDescription('Migrate PUCHMOODLE tag of MultimediaObject to PUCHLMS tag')
             ->setHelp(
                 <<<'EOT'

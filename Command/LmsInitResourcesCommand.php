@@ -25,7 +25,7 @@ class LmsInitResourcesCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('lms:init:resources')
+            ->setName('pumukit:lms:init:resources')
             ->addArgument('version', InputArgument::REQUIRED, 'Select the version of PuMuKIT to override PumukitNewAdminBundle list template: 2.3.x, 2.4.x')
             ->setDescription('Initialize the resources necessary to add a button to insert a VoD into LMS')
             ->setHelp(
