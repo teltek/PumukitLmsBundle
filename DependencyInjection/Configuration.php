@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
             ->info('Role used to filter persons in multimedia object')
             ->end()
             ->scalarNode('naked_backoffice_domain')
-            ->defaultFalse()
+            ->defaultValue('')
             ->info('Domain or subdomain used to access into the naked backoffice')
             ->end()
             ->scalarNode('naked_backoffice_background')

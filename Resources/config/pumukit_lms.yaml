@@ -3,17 +3,34 @@ services:
     autowire:      true
     autoconfigure: true
     public:        true
+    bind:
+      $pumukitInfo: "%pumukit.info%"
+      $recordingSeriesTitle: '%pumukit_lms.recording_series_title%'
+      $uploadSeriesTitle: '%pumukit_lms.upload_series_title%'
+      $locales: '%pumukit.locales%'
 
   Pumukit\LmsBundle\Controller\:
     resource: '../../Controller/'
+    tags: ['controller.service_arguments']
+
+  Pumukit\LmsBundle\Controller\SearchController:
+    class: Pumukit\LmsBundle\Controller\SearchController
+    arguments:
+      $menuSearchTitle: '%menu.search_title%'
+      $columnsObjsSearch: '%columns_objs_search%'
+      $pumukitNewAdminLicenses: '%pumukit_new_admin.licenses%'
+      $limitObjsSearch: '%limit_objs_search%'
     tags: ['controller.service_arguments']
 
   Pumukit\LmsBundle\Command\:
     resource: '../../Command/'
     tags: ['console.command']
 
-  Pumukit\OpencastBundle\Services\ClientService:
-    class: Pumukit\OpencastBundle\Services\ClientService
+  Pumukit\LmsBundle\Command\LmsInitResourcesCommand:
+    class: Pumukit\LmsBundle\Command\LmsInitResourcesCommand
+    arguments:
+      $rootPath: '%kernel.project_dir%'
+    tags: ['console.command']
 
   Pumukit\LmsBundle\Services\ConfigurationService:
     class: Pumukit\LmsBundle\Services\ConfigurationService
@@ -25,8 +42,6 @@ services:
        $nakedBackofficeBackground: '%pumukit_lms.naked_backoffice_background%'
        $nakedBackofficeColor: '%pumukit_lms.naked_backoffice_color%'
        $nakedCustomCssUrl: '%pumukit_lms.naked_custom_css_url%'
-       $uploadSeriesTitle: '%pumukit_lms.upload_series_title%'
-       $recordingSeriesTitle: '%pumukit_lms.recording_series_title%'
        $domainsPatterns: '%pumukit_lms.domains%'
 
   Pumukit\LmsBundle\Services\LmsService:

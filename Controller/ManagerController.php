@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\LmsBundle\Services\SSOService;
@@ -17,7 +19,7 @@ class ManagerController extends AbstractController
     public const ADMIN_MULTIMEDIAOBJECT_ROUTE = 'pumukitnewadmin_mms_shortener';
     public const ADMIN_PLAYLIST_ROUTE = 'pumukitnewadmin_playlist_index';
 
-    private $documentManager;
+    private $SSOService;
 
     public function __construct(SSOService $SSOService)
     {
@@ -41,7 +43,7 @@ class ManagerController extends AbstractController
         }
 
         if ($forceReLogin) {
-            $user = $this->getAndValidateUser(
+            $user = $this->SSOService->getAndValidateUser(
                 $request->get('email') ?? '',
                 $request->get('username'),
                 $request->headers->get('referer'),

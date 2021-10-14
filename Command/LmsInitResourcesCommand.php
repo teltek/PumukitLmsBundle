@@ -59,5 +59,7 @@ EOT
             $output->writeln('    to <info>'.$to.'</info>');
             $fs->copy($from, $to, true);
         }
+
+        return 0;
     }
 }

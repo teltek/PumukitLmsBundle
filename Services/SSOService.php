@@ -11,10 +11,13 @@ use Pumukit\SchemaBundle\Services\GroupService;
 use Pumukit\SchemaBundle\Services\PermissionProfileService;
 use Pumukit\SchemaBundle\Services\PersonService;
 use Pumukit\SchemaBundle\Services\UserService;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class SSOService
@@ -37,6 +40,7 @@ class SSOService
     private $ldapService;
     private $requestStack;
     private $tokenStorage;
+    private $templating;
     private $dispatcher;
 
     public function __construct(
@@ -48,6 +52,7 @@ class SSOService
         ConfigurationService $configurationService,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $dispatcher,
+        \Twig\Environment $templating,
         $ldapService = null,
         RequestStack $requestStack = null
     ) {
@@ -59,6 +64,7 @@ class SSOService
         $this->configurationService = $configurationService;
         $this->ldapService = $ldapService;
         $this->requestStack = $requestStack;
+        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
     }
@@ -208,7 +214,7 @@ class SSOService
     protected function genError(string $message = 'Not Found', int $status = 404): Response
     {
         return new Response(
-            $this->renderView('@PumukitLms/SSO/error.html.twig', ['message' => $message]),
+            $this->templating->render('@PumukitLms/SSO/error.html.twig', ['message' => $message]),
             $status
         );
     }
