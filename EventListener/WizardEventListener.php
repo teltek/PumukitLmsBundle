@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\EventListener;
 
 use Pumukit\LmsBundle\Services\LmsService;
@@ -7,7 +9,6 @@ use Pumukit\WizardBundle\Event\FormEvent;
 
 class WizardEventListener
 {
-    /** @var LmsService */
     private $lmsService;
 
     public function __construct(LmsService $lmsService)

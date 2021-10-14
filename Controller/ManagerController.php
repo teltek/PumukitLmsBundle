@@ -2,18 +2,27 @@
 
 namespace Pumukit\LmsBundle\Controller;
 
+use Pumukit\LmsBundle\Services\SSOService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/sso")
  */
-class ManagerController extends SSOController
+class ManagerController extends AbstractController
 {
     public const ADMIN_SERIES_ROUTE = 'pumukitnewadmin_series_index';
     public const ADMIN_MULTIMEDIAOBJECT_ROUTE = 'pumukitnewadmin_mms_shortener';
     public const ADMIN_PLAYLIST_ROUTE = 'pumukitnewadmin_playlist_index';
+
+    private $documentManager;
+
+    public function __construct(SSOService $SSOService)
+    {
+        $this->SSOService = $SSOService;
+    }
 
     /**
      * @Route("/manager", name="pumukit_lms_sso_manager")
@@ -32,13 +41,19 @@ class ManagerController extends SSOController
         }
 
         if ($forceReLogin) {
-            $user = $this->getAndValidateUser($request->get('email') ?? '', $request->get('username'), $request->headers->get('referer'), $request->get('hash'), $request->isSecure());
+            $user = $this->getAndValidateUser(
+                $request->get('email') ?? '',
+                $request->get('username'),
+                $request->headers->get('referer'),
+                $request->get('hash'),
+                $request->isSecure()
+            );
 
             if ($user instanceof Response) {
                 return $user;
             }
 
-            $this->login($user, $request);
+            $this->SSOService->login($user, $request);
         }
 
         if ($request->get('playlist')) {

@@ -1,6 +1,6 @@
 # PumukitLmsBundle
 
-Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT Video Platform](https://github.com/pumukit/PuMuKIT/blob/3.2.x/README.md).
+Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT Video Platform](https://github.com/pumukit/PuMuKIT/blob/master/README.md).
 
 The goal of this bundle is to merge the common APIs between the [Moodle bundle](https://github.com/teltek/PuMuKIT2-moodle-bundle) and the [OpenEDX bundle](https://github.com/teltek/PuMuKIT2-open-edx-bundle) into single generic bundle.
 
@@ -44,13 +44,13 @@ $ composer require teltek/pumukit-lms-bundle dev-master
 
 ### Step 3: Install the Bundle
 
-Add the next line on AppKernel.php file:
+Add the next line on bundles.php file:
 
 ```
-new Pumukit\LmsBundle\PumukitLmsBundle()
+Pumukit\LmsBundle\PumukitLmsBundle::class => ['all' => true]
 ```
 
-Add the next lines on config/routing.yml file:
+Add the next lines on config/routes/annotations.yaml file:
 
 ```
 pumukit_lms:
@@ -68,13 +68,13 @@ Install the Open edX Publication Channel with tag code PUCHLMS.
 
 ```bash
 $ cd /path/to/pumukit/
-$ php app/console lms:init:pubchannel
+$ php bin/console pumukit:lms:init:pubchannel
 ```
 
 ### Step 6: Add the PUCHLMS tag code to the desire encoder profiles
 
-Edit your `app/config/encoder.yml` profile to add the PUCHLMS tag code to the desire encoder profiles,
-so in case a multimedia object has this Tag, the Tracks with those profiles will be genereated.
+Edit your `config/packages/pumukit_encoder.yaml` profile to add the PUCHLMS tag code to the desire encoder profiles,
+so in case a multimedia object has this Tag, the Tracks with those profiles will be generated.
 
 For example, if you want to generate a `video_h264` Track each time the Open edX Publication Channel is
 added to a Multimedia Object, you should add the tag code this way:
@@ -89,7 +89,7 @@ pumukit_encoder:
 
 ```
 
-For PuMuKIT latest version of 2.3.x and 2.4.x, add this configuration to `encoder.yml` as well:
+For PuMuKIT the latest version ( higher than 2.3.x ) , add this configuration to `config/packages/pumukit_encoder.yaml` as well:
 
 ``` bash
 pumukit_encoder:
@@ -110,24 +110,23 @@ php app/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBL
 
 ### Step 8: Override `PumukitNewAdminBundle:MultimediaObject:list.html.twig` template
 
-Run the lms:init:resources command the branch corresponding to your PuMuKIT version:
-e.g If your server has PuMuKIT 2.6.x installed, execute:
+Run the pumukit:lms:init:resources command the branch corresponding to your PuMuKIT version:
+
 ```bash
-php app/console lms:init:resources 2.6.x
+php bin/console pumukit:lms:init:resources 3.1.x
 ```
 
-*** If you are using PuMuKIT 3.1.x or higher, use 3.1.x templates version.
-
-If your current version gives an error, please open an issue on Github.
+If your current version gives an error, please open an issue on GitHub.
 
 Clear cache:
 
 ```bash
-php app/console cache:clear && php app/console cache:clear --env=prod
+php bin/console cache:clear
+php bin/console cache:clear --env=prod
 ```
 
 ## Documentation
 
-1.- [Configuration](Resources/doc/Configuration.md)
+1. [Configuration](Resources/doc/Configuration.md)
 
-2.- [PuMoodle Installation Guide](Resources/doc/PuMoodleInstallationGuide.md)
+2. [PuMoodle Installation Guide](Resources/doc/PuMoodleInstallationGuide.md)

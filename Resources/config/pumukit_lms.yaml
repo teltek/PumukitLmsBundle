@@ -1,0 +1,56 @@
+services:
+  _defaults:
+    autowire:      true
+    autoconfigure: true
+    public:        true
+
+  Pumukit\LmsBundle\Controller\:
+    resource: '../../Controller/'
+    tags: ['controller.service_arguments']
+
+  Pumukit\LmsBundle\Command\:
+    resource: '../../Command/'
+    tags: ['console.command']
+
+  Pumukit\OpencastBundle\Services\ClientService:
+    class: Pumukit\OpencastBundle\Services\ClientService
+
+  Pumukit\LmsBundle\Services\ConfigurationService:
+    class: Pumukit\LmsBundle\Services\ConfigurationService
+    arguments:
+       $allowCreateUsersFromRequest: '%pumukit_lms.allow_create_users_from_request%'
+       $password: '%pumukit_lms.password%'
+       $role: '%pumukit_lms.role%'
+       $nakedBackofficeDomain: '%pumukit_lms.naked_backoffice_domain%'
+       $nakedBackofficeBackground: '%pumukit_lms.naked_backoffice_background%'
+       $nakedBackofficeColor: '%pumukit_lms.naked_backoffice_color%'
+       $nakedCustomCssUrl: '%pumukit_lms.naked_custom_css_url%'
+       $uploadSeriesTitle: '%pumukit_lms.upload_series_title%'
+       $recordingSeriesTitle: '%pumukit_lms.recording_series_title%'
+       $domainsPatterns: '%pumukit_lms.domains%'
+
+  Pumukit\LmsBundle\Services\LmsService:
+    class: Pumukit\LmsBundle\Services\LmsService
+
+  Pumukit\LmsBundle\Services\MultimediaObjectVoter:
+    class: Pumukit\LmsBundle\Services\MultimediaObjectVoter
+    tags:
+      - { name: "security.voter" }
+
+  Pumukit\LmsBundle\Services\SSOService:
+    class: Pumukit\LmsBundle\Services\SSOService
+
+  Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener:
+    class: Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener
+    tags:
+      - { name: "kernel.event_listener", event: "personalrecorder.create", method: "postCreateMultimediaObject" }
+
+  Pumukit\LmsBundle\EventListener\WizardEventListener:
+    class: Pumukit\LmsBundle\EventListener\WizardEventListener
+    tags:
+      - { name: "kernel.event_listener", event: "wizard.form.submit", method: "postCreateMultimediaObject" }
+
+  Pumukit\LmsBundle\EventListener\FilterListener:
+    class: Pumukit\LmsBundle\EventListener\FilterListener
+    tags:
+      - { name: "kernel.event_listener", event: "kernel.request" }

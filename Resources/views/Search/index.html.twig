@@ -1,4 +1,4 @@
-{% extends 'PumukitWebTVBundle::layout.html.twig' %}
+{% extends '@PumukitWebTV/layout.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -81,10 +81,10 @@
             </div>
         </div>
         <div class="row">
-            {% include 'PumukitWebTVBundle:Search:list.html.twig' %}
+            {% include '@PumukitWebTV/Search/list.html.twig' %}
         </div>
         <div class="row">
-            {% include 'PumukitWebTVBundle:Misc:pager.html.twig' %}
+            {% include '@PumukitWebTV/Misc/pager.html.twig' %}
         </div>
 
         <div class="pmk-modal modal fade" id="sharedVideosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -105,7 +105,4 @@
         </div>
 
     </div>
-
-
-
 {% endblock %}

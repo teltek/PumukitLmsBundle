@@ -15,13 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * pumukitpr settings.
  *
  * @copyright COPYRIGHTINFO
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || exit();
 
 $ADMIN->add('editoratto', new admin_category('atto_pumukitpr', new lang_string('pluginname', 'atto_pumukitpr')));
 

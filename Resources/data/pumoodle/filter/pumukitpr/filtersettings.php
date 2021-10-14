@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * Administration settings definitions for the pumukitpr filter.
  * Settings can be accessed from:
  * Site Administration block -> Plugins -> Filters -> Pumukitpr filter
@@ -24,7 +24,7 @@
  * @copyright  2016
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || exit;
 
 if (!class_exists('admin_setting_configtext_sizecss')) {
     class admin_setting_configtext_sizecss extends admin_setting_configtext

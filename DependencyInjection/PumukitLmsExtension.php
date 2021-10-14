@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
@@ -12,13 +14,12 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('pumukit_lms.yaml');
     }
 
     public function prepend(ContainerBuilder $container): void
     {
-        //Necessary to use the parameters in PumukitNewAdminBundle
         $configs = $container->getExtensionConfig($this->getAlias());
         $config = $this->processConfiguration(new Configuration(), $configs);
 

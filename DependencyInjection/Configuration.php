@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -9,11 +11,15 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('pumukit_lms');
+        $treeBuilder = new TreeBuilder('pumukit_lms');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
+            ->scalarNode('allow_create_users_from_request')
+            ->defaultTrue()
+            ->info('Create users from request')
+            ->end()
             ->scalarNode('password')
             ->defaultValue('ThisIsASecretPasswordChangeMe')
             ->info('shared secret between Open edX and Pumukit')

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\EventListener;
 
 use Pumukit\LmsBundle\Services\LmsService;
 
 class PersonalRecorderEventListener
 {
-    /** @var LmsService */
     private $lmsService;
 
     public function __construct(LmsService $lmsService)

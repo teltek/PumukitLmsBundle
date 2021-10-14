@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * Strings for component 'atto_pumukitpr', language 'en'.
  *
  * @copyright  2013 Damyon Wiese  <damyon@moodle.com>

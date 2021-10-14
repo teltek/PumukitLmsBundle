@@ -1,19 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class LmsInitResourcesCommand extends ContainerAwareCommand
+class LmsInitResourcesCommand extends Command
 {
     public const OVERRIDE_DATA_DIR = 'Resources/data/override';
+    private $rootPath;
 
-    protected function configure()
+    public function __construct(string $rootPath)
+    {
+        $this->rootPath = $rootPath;
+        parent::__construct();
+    }
+
+    protected function configure(): void
     {
         $this
             ->setName('lms:init:resources')
@@ -25,14 +34,12 @@ Initialize the resources necessary to add a button to insert a VoD into LMS. It 
 the app/Resources project dir.
 
 cp ../Resources/data/override/PumukitNewAdminBundle/views/MultimediaObject/list.html.twig  app/Resources/PumukitNewAdminBundle/views/MultimediaObject/list.html.twig
-
-
 EOT
             )
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $version = $input->getArgument('version');
 
@@ -40,7 +47,7 @@ EOT
         $fs = new Filesystem();
 
         $fromDir = realpath(__DIR__.'/../'.self::OVERRIDE_DATA_DIR.'/'.$version);
-        $toDir = $this->getContainer()->get('kernel')->getRootDir().'/Resources';
+        $toDir = $this->rootPath.'/Resources';
 
         $output->writeln('Coping resources from <info>'.$fromDir.'</info> to <info>'.$toDir.'</info>:');
 

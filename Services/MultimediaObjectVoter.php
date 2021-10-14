@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\Services;
 
 use Pumukit\SchemaBundle\Document\MultimediaObject;
@@ -12,21 +14,24 @@ class MultimediaObjectVoter extends Voter
 {
     public const PLAY = 'play';
 
+    private $configurationService;
     private $mmobjService;
     private $requestStack;
-    private $ssoService;
 
-    public function __construct(MultimediaObjectService $mmobjService, RequestStack $requestStack, SSOService $ssoService)
-    {
+    public function __construct(
+        ConfigurationService $configurationService,
+        MultimediaObjectService $mmobjService,
+        RequestStack $requestStack
+    ) {
+        $this->configurationService = $configurationService;
         $this->mmobjService = $mmobjService;
         $this->requestStack = $requestStack;
-        $this->ssoService = $ssoService;
     }
 
     protected function supports($attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::PLAY])) {
+        if (self::PLAY !== $attribute) {
             return false;
         }
 
@@ -75,7 +80,7 @@ class MultimediaObjectVoter extends Voter
 
         $hash = $query['hash'];
         //Check TTK-16603 use multimediaObject.id
-        if (!$this->ssoService->validateHash($hash, '')) {
+        if (!$this->configurationService->isValidHash($hash, '')) {
             return false;
         }
 
