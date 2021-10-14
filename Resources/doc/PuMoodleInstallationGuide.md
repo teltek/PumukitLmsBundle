@@ -1,6 +1,7 @@
-# PuMoodle PR Installation Guide
+PumukitLmsBundle
+================
 
-*This page is updated to the PuMuKIT-open-edx-bundle master and to the PuMuKIT 2.3.0*
+*This page is updated to the PumukitLmsBundle and PuMuKIT 4 or higher*
 
 ## Contents
 
@@ -21,10 +22,10 @@
 
 ## Introduction
 
-Pumoodle is a module created for Moodle allowing video embedding from Opencast and
+PumukitLmsBundle is a module created for Moodle allowing video embedding from Opencast and
 PuMuKIT so that you can easily insert videos from those platforms in the courses created.
 
-Follow the next steps to integrate Moodle with eduOER.
+Follow the next steps to integrate Moodle with PuMuKIT.
 
 ## Modules
 
@@ -81,7 +82,7 @@ Go to any course, or create a new course for testing.
 To upload videos into a course, activate the edition on “Turn editing on” and click on "Add an
 activity or a resource." Select “Page” and click on "Add".
 
-In the editor, click on the orange icon of a camera to add vieos fro Pumukit.
+In the editor, click on the orange icon of a camera to add videos from Pumukit.
 
 After saving changes you can click on the video link to watch the video.
 
@@ -94,7 +95,7 @@ created in a course in Moodle.
 
 ### Filter installation and configuration
 
-To install the filter go to “Administration” -> “Site Administration” -> “Plugins” -> “Install add ons”
+To install the filter go to “Administration” -> “Site Administration” -> “Plugins” -> “Install add-ons”
 on the left-side menu.
 
 Select “Text filter (filter)” in “Plugin Type”.

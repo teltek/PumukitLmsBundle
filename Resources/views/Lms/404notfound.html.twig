@@ -1,4 +1,5 @@
-{% extends 'PumukitLmsBundle::layout.html.twig' %}
+{% extends '@PumukitLms/layout.html.twig' %}
+
 {% block iframe_content %}
-    {{ "Error: Multimedia Object with id %id% not found"|trans({"%id%": id}, "messages", current_locale) }}
+    {{ "Error: Multimedia Object with id %id% not found"|trans({"%id%": id}, "messages", app.request.getLocale()|default('en')) }}
 {% endblock %}

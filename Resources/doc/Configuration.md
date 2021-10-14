@@ -1,8 +1,5 @@
 # Configuration
 
-1.- Add the configuration to your `app/config/parameters_deploy.yml` or `app/config/parameters.yml` file:
-Make sure to add the domain of your LMS instance (like test.moodle.com) to the domains list:
-
 ```
 pumukit_lms:
     password: 'ThisIsASecretPasswordChangeMe'
@@ -27,13 +24,4 @@ pumukit_lms:
 * `naked_custom_css_url`: Custom CSS URL
 * `upload_series_title`: Series title for Multimedia Objects uploaded from Open edX
 * `recording_series_title`: Series title for Multimedia Objects recorded from Open edX
-* `domains`: Domains of the platforms connected to this PuMuKIT
-
-
-2.- Clear cache
-
-```
-php app/console cache:clear
-php app/console cache:clear --env=prod
-```
-
+* `domains`: Domains of the platforms connected to this PuMuKIT ( can be patterns )

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\EventListener;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -7,11 +9,11 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class FilterListener
 {
-    private $dm;
+    private $documentManager;
 
     public function __construct(DocumentManager $documentManager)
     {
-        $this->dm = $documentManager;
+        $this->documentManager = $documentManager;
     }
 
     public function onKernelRequest(GetResponseEvent $event)

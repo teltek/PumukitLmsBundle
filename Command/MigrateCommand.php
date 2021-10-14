@@ -7,17 +7,26 @@ namespace Pumukit\LmsBundle\Command;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\SchemaBundle\Services\TagService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateCommand extends ContainerAwareCommand
+class MigrateCommand extends Command
 {
-    private $dm;
-    /** @var TagService */
+    private $documentManager;
     private $tagService;
     private $LMSTag;
+
+    public function __construct(DocumentManager $documentManager, TagService $tagService)
+    {
+        $this->documentManager = $documentManager;
+        $this->tagService = $tagService;
+        if (!$this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => 'PUCHLMS'])) {
+            throw new \Exception('Tag PUCHLMS not found');
+        }
+        parent::__construct();
+    }
 
     protected function configure(): void
     {
@@ -30,16 +39,6 @@ Migrate PUCHMOODLE tag of MultimediaObject to PUCHLMS tag
 EOT
             )
         ;
-    }
-
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
-        $this->dm = $this->getContainer()->get('doctrine_mongodb.odm.document_manager');
-        $this->tagService = $this->getContainer()->get('pumukitschema.tag');
-        $this->LMSTag = $this->dm->getRepository(Tag::class)->findOneBy(['cod' => 'PUCHLMS']);
-        if (!$this->LMSTag) {
-            throw new \Exception('Tag PUCHLMS not found');
-        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): ?int
@@ -61,7 +60,7 @@ EOT
         }
 
         $progress->finish();
-        $this->dm->flush();
+        $this->documentManager->flush();
 
         foreach ($messages as $message) {
             $output->writeln($message);
@@ -73,7 +72,7 @@ EOT
     private function getAllMultimediaObjects()
     {
         // Note: Show https://github.com/teltek/PumukitMoodleBundle/blob/master/Command/MoodleInitPubchannelCommand.php#L31
-        return $this->dm->getRepository(MultimediaObject::class)->findBy(['tags.cod' => 'PUCHMOODLE']);
+        return $this->documentManager->getRepository(MultimediaObject::class)->findBy(['tags.cod' => 'PUCHMOODLE']);
     }
 
     private function changePubChannel(MultimediaObject $multimediaObject): void

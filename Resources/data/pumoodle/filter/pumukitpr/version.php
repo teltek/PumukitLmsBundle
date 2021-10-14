@@ -15,13 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * Media filter.
  *
  * @copyright  Andres Perez aperez@teltek.es
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || exit();
 
 $plugin->version = 2020062508;       // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires = 2016112900;       // Requires this Moodle version

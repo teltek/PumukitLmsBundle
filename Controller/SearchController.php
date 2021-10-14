@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\SchemaBundle\Document\Tag;
@@ -15,7 +17,7 @@ class SearchController extends BaseSearchController
      * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false})
      * @Route("/search/public/multimediaobjects")
      * @ParamConverter("blockedTag", class="PumukitSchemaBundle:Tag", options={"mapping": {"tagCod": "cod"}})
-     * @Template("PumukitLmsBundle:Search:index.html.twig")
+     * @Template("@PumukitLms/Search/index.html.twig")
      *
      * @param mixed $useTagAsGeneral
      */
