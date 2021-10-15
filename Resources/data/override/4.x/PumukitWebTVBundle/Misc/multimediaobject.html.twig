@@ -23,9 +23,9 @@
                     </div>
                     <div class="date mmobj">
                         {% if with_publicdate is defined and with_publicdate %}
-                            {{ object.publicDate|localizeddate('medium','none',app.request.getLocale()) }}
+                            {{ object.publicDate|date('Y/m/d') }}
                         {% else %}
-                            {{ object.recordDate|localizeddate('medium','none',app.request.getLocale()) }}
+                            {{ object.recordDate|date('Y/m/d') }}
                         {% endif %}
                     </div>
                 </div>

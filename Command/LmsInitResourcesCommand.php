@@ -31,9 +31,7 @@ class LmsInitResourcesCommand extends Command
             ->setHelp(
                 <<<'EOT'
 Initialize the resources necessary to add a button to insert a VoD into LMS. It copies the global resources from Resources/data/override bundle dir to
-the app/Resources project dir.
-
-cp ../Resources/data/override/PumukitNewAdminBundle/views/MultimediaObject/list.html.twig  app/Resources/PumukitNewAdminBundle/views/MultimediaObject/list.html.twig
+the bundles/templates project dir.
 EOT
             )
         ;
@@ -47,7 +45,7 @@ EOT
         $fs = new Filesystem();
 
         $fromDir = realpath(__DIR__.'/../'.self::OVERRIDE_DATA_DIR.'/'.$version);
-        $toDir = $this->rootPath.'/Resources';
+        $toDir = $this->rootPath.'/bundles/templates';
 
         $output->writeln('Coping resources from <info>'.$fromDir.'</info> to <info>'.$toDir.'</info>:');
 
