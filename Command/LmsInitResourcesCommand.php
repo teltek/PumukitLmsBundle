@@ -45,7 +45,7 @@ EOT
         $fs = new Filesystem();
 
         $fromDir = realpath(__DIR__.'/../'.self::OVERRIDE_DATA_DIR.'/'.$version);
-        $toDir = $this->rootPath.'/bundles/templates';
+        $toDir = $this->rootPath.'/templates/bundles';
 
         $output->writeln('Coping resources from <info>'.$fromDir.'</info> to <info>'.$toDir.'</info>:');
 
