@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\LmsBundle\Services\SSOService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/sso")
