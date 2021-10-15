@@ -113,7 +113,7 @@ php app/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBL
 Run the pumukit:lms:init:resources command the branch corresponding to your PuMuKIT version:
 
 ```bash
-php bin/console pumukit:lms:init:resources 3.1.x
+php bin/console pumukit:lms:init:resources 4.x
 ```
 
 If your current version gives an error, please open an issue on GitHub.
