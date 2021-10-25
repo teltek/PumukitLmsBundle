@@ -22,9 +22,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class LmsController extends AbstractController
 {
     private $templateErrors = [
-        400 => '@PumukitLmsBundle/Lms/400job.html.twig',
-        403 => '@PumukitLmsBundle/Lms/403forbidden.html.twig',
-        404 => '@PumukitLmsBundle/Lms/404notfound.html.twig',
+        400 => '@PumukitLms/Lms/400job.html.twig',
+        403 => '@PumukitLms/Lms/403forbidden.html.twig',
+        404 => '@PumukitLms/Lms/404notfound.html.twig',
     ];
 
     private $documentManager;
