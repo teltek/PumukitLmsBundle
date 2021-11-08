@@ -129,4 +129,7 @@ php bin/console cache:clear --env=prod
 
 1. [Configuration](Resources/doc/Configuration.md)
 
-2. [PuMoodle Installation Guide](Resources/doc/PuMoodleInstallationGuide.md)
+## Plugins
+
+1. [moodle-atto_pumukitpr](https://github.com/teltek/moodle-atto_pumukitpr)
+2. [moodle-atto_filter](https://github.com/teltek/moodle-filter_pumukitpr)
