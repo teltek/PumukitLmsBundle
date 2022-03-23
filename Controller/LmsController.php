@@ -3,6 +3,7 @@
 namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\EncoderBundle\Document\Job;
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Series;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -58,7 +59,7 @@ class LmsController extends SSOController
         }
         $job = $jobRepo->findOneBy(['mm_id' => $options['id'], 'profile' => ['$in' => $profileNames]]);
         if ($multimediaObject && $multimediaObject->isPublished()) {
-            if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', 'PUCHLMS'])) {
+            if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', PumukitLmsBundle::LMS_TAG_CODE])) {
                 if ((!$multimediaObjectService->hasPlayableResource($multimediaObject)) || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
                     $options['job'] = $job;
 

@@ -2,6 +2,7 @@
 
 namespace Pumukit\LmsBundle\Services;
 
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Services\MultimediaObjectService;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -53,7 +54,7 @@ class MultimediaObjectVoter extends Voter
     {
         $req = $this->requestStack->getMasterRequest();
 
-        if (!$this->mmobjService->isHidden($multimediaObject, 'PUCHLMS')) {
+        if (!$this->mmobjService->isHidden($multimediaObject, PumukitLmsBundle::LMS_TAG_CODE)) {
             return false;
         }
 

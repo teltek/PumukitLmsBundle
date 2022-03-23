@@ -2,6 +2,7 @@
 
 namespace Pumukit\LmsBundle\Command;
 
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\Tag;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,7 +31,7 @@ EOT
         $this->dm = $this->getContainer()->get('doctrine_mongodb.odm.document_manager');
         $this->tagRepo = $this->dm->getRepository(Tag::class);
 
-        $lmsPublicationChannelTag = $this->createTagWithCode('PUCHLMS', 'LMS', 'PUBCHANNELS', false);
+        $lmsPublicationChannelTag = $this->createTagWithCode(PumukitLmsBundle::LMS_TAG_CODE, 'LMS', 'PUBCHANNELS', false);
         $this->dm->persist($lmsPublicationChannelTag);
         $this->dm->flush();
 

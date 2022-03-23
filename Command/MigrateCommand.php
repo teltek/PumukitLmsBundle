@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Command;
 
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\SchemaBundle\Services\TagService;
@@ -36,7 +37,7 @@ EOT
     {
         $this->dm = $this->getContainer()->get('doctrine_mongodb.odm.document_manager');
         $this->tagService = $this->getContainer()->get('pumukitschema.tag');
-        $this->LMSTag = $this->dm->getRepository(Tag::class)->findOneBy(['cod' => 'PUCHLMS']);
+        $this->LMSTag = $this->dm->getRepository(Tag::class)->findOneBy(['cod' => PumukitLmsBundle::LMS_TAG_CODE]);
         if (!$this->LMSTag) {
             throw new \Exception('Tag PUCHLMS not found');
         }

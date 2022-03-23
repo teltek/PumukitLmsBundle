@@ -124,7 +124,9 @@ class SSOController extends Controller
     {
         $data = [];
         $data['mmobjData'] = [];
-        $data['mmobjData']['properties'] = ['openedx' => true];
+        $data['mmobjData']['properties'] = [
+            'lms' => true,
+        ];
         if ($i18nTitle) {
             $data['seriesData'] = [];
             $data['seriesData']['title'] = $i18nTitle;

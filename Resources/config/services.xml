@@ -42,5 +42,12 @@
             <argument type="service" id="pumukit_lms.sso"/>
             <tag name="security.voter" />
         </service>
+        <service id="pumukit_lms.series_service" class="Pumukit\LmsBundle\Services\SeriesService">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <argument type="service" id="pumukitschema.factory" />
+            <argument type="service" id="pumukit_schema.personal_series" />
+            <argument>%pumukit_lms.default_series_title%</argument>
+            <argument>%pumukit.locales%</argument>
+        </service>
     </services>
 </container>

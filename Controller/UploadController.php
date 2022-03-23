@@ -28,15 +28,9 @@ class UploadController extends SSOController
             $this->login($user, $request);
         }
 
-        $titleParam = $this->getParameter('pumukit_lms.upload_series_title');
-        $locales = $this->getParameter('pumukit.locales');
-        $i18nTitle = $this->buildI18nTitle($titleParam, $locales);
-        $series = $this->getSeries($i18nTitle);
-        if ($series) {
-            $params = '?'.$this->buildParams($i18nTitle, $series->getId());
-        } else {
-            $params = '?'.$this->buildParams($i18nTitle, null);
-        }
+        $seriesService = $this->get('pumukit_lms.series_service');
+        $series = $seriesService->getSeriesToUpload();
+        $params = '?'.$this->buildParams($seriesService->getDefaultSeriesTitle(), $series->getId());
 
         return new RedirectResponse(self::ADMIN_UPLOAD_ROUTE.$params);
     }

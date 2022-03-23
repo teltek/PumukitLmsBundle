@@ -90,8 +90,8 @@ class SSOService
             throw new \RuntimeException('User not found.');
         }
 
-        if (!isset($info[self::GROUP_KEY][0]) ||
-            !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
+        if (!isset($info[self::GROUP_KEY][0])
+            || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
             throw new \RuntimeException('User invalid.');
         }
 
@@ -118,8 +118,8 @@ class SSOService
             if (!$info) {
                 throw new \RuntimeException('User not found.');
             }
-            if (!isset($info[self::GROUP_KEY][0]) ||
-                !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
+            if (!isset($info[self::GROUP_KEY][0])
+                || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
                 throw new \RuntimeException('User invalid.');
             }
 

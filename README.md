@@ -62,9 +62,9 @@ pumukit_lms:
 
 Go to [Resources/doc/Configuration.md](Resources/doc/Configuration.md)
 
-### Step 5: Install Open edX Publication Channel
+### Step 5: Install LMS Publication Channel
 
-Install the Open edX Publication Channel with tag code PUCHLMS.
+Install the LMS Publication Channel with tag code PUCHLMS.
 
 ```bash
 $ cd /path/to/pumukit/
@@ -76,7 +76,7 @@ $ php app/console lms:init:pubchannel
 Edit your `app/config/encoder.yml` profile to add the PUCHLMS tag code to the desire encoder profiles,
 so in case a multimedia object has this Tag, the Tracks with those profiles will be genereated.
 
-For example, if you want to generate a `video_h264` Track each time the Open edX Publication Channel is
+For example, if you want to generate a `video_h264` Track each time the LMS Publication Channel is
 added to a Multimedia Object, you should add the tag code this way:
 
 ```bash
@@ -130,4 +130,4 @@ php app/console cache:clear && php app/console cache:clear --env=prod
 
 1.- [Configuration](Resources/doc/Configuration.md)
 
-2.- [PuMoodle Installation Guide](Resources/doc/PuMoodleInstallationGuide.md)
+2.- [Plugin list](Resources/doc/PLUGIN_LIST.md)

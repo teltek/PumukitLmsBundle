@@ -41,8 +41,7 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
             $container->setParameter('pumukit.naked_custom_css_url', $config['naked_custom_css_url']);
         }
 
-        $container->setParameter('pumukit_lms.upload_series_title', $config['upload_series_title']);
-        $container->setParameter('pumukit_lms.recording_series_title', $config['recording_series_title']);
+        $container->setParameter('pumukit_lms.default_series_title', $config['default_series_title']);
         $container->setParameter('pumukit_lms.domains', $config['domains']);
     }
 }
