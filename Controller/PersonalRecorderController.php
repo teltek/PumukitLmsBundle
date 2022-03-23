@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PersonalRecorderController extends SSOController
 {
-    const ADMIN_PERSONAL_RECORDER_ROUTE = '/admin/personalrecorder';
+    public const ADMIN_PERSONAL_RECORDER_ROUTE = '/admin/personalrecorder';
 
     /**
      * @Route("/personal_recorder", name="pumukit_lms_sso_personalrecorder")

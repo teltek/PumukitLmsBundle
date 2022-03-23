@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UploadController extends SSOController
 {
-    const ADMIN_UPLOAD_ROUTE = '/admin/simplewizard/embedindex';
+    public const ADMIN_UPLOAD_ROUTE = '/admin/simplewizard/embedindex';
 
     /**
      * @Route("/upload", name="pumukit_lms_sso_upload")
