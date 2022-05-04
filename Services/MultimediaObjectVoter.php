@@ -70,13 +70,13 @@ class MultimediaObjectVoter extends Voter
         }
 
         parse_str($refererQuery, $query);
-        if (!isset($query['hash'])) {
+        if (!isset($query['playlistId']) && !isset($query['hash'])) {
             return false;
         }
 
         $hash = $query['hash'];
         //Check TTK-16603 use multimediaObject.id
-        if (!$this->ssoService->validateHash($hash, '')) {
+        if (!isset($query['playlistId']) && !$this->ssoService->validateHash($hash, '')) {
             return false;
         }
 
