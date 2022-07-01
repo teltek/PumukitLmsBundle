@@ -6,7 +6,7 @@ namespace Pumukit\LmsBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\CoreBundle\Services\PaginationService;
-use Pumukit\SchemaBundle\Document\TagInterface;
+use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\WebTVBundle\Controller\SearchController as BaseSearchController;
 use Pumukit\WebTVBundle\Services\BreadcrumbsService;
 use Pumukit\WebTVBundle\Services\SearchService;
@@ -48,10 +48,10 @@ class SearchController extends BaseSearchController
     /**
      * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false})
      * @Route("/search/public/multimediaobjects")
-     * @ParamConverter("blockedTag", class="PumukitSchemaBundle:Tag", options={"mapping": {"tagCod": "cod"}})
+     * @ParamConverter("blockedTag", options={"mapping": {"tagCod": "cod"}})
      * @Template("@PumukitLms/Search/index.html.twig")
      */
-    public function multimediaObjectsAction(Request $request, TagInterface $blockedTag = null, bool $useTagAsGeneral = false): array
+    public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, bool $useTagAsGeneral = false): array
     {
         $request->attributes->set('only_public', true);
 
