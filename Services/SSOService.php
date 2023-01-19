@@ -95,10 +95,7 @@ class SSOService
             throw new \RuntimeException('User invalid.');
         }
 
-        $username = $info[self::LDAP_ID_KEY][0];
-        $email = $info['mail'][0];
-
-        $user = $this->createUserWithInfo($username, $email);
+        $user = $this->createUserWithInfo($info);
         $group = $this->getGroup($info[self::GROUP_KEY][0]);
         $this->userService->addGroup($group, $user, true, false);
 
@@ -128,12 +125,16 @@ class SSOService
         }
     }
 
-    public function createUserWithInfo(string $username, string $email)
+    public function createUserWithInfo(array $info): User
     {
+        $username = $info[self::LDAP_ID_KEY][0];
+        $email = $info['mail'][0];
+        $fullName = $info['cn'] ?? $username;
+
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
-        $user->setFullname($username);
+        $user->setFullname($fullName);
 
         $permissionProfile = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
         $user->setPermissionProfile($permissionProfile);
