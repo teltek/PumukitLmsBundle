@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Command;
 
-use Pumukit\LmsBundle\PumukitLmsBundle;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\SchemaBundle\Services\TagService;

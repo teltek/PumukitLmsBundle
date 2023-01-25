@@ -6,8 +6,8 @@ namespace Pumukit\LmsBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\EncoderBundle\Document\Job;
-use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\EncoderBundle\Services\ProfileService;
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Series;
