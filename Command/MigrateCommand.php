@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Command;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\SchemaBundle\Services\TagService;
@@ -23,7 +24,7 @@ class MigrateCommand extends Command
     {
         $this->documentManager = $documentManager;
         $this->tagService = $tagService;
-        if (!$this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => 'PUCHLMS'])) {
+        if (!$this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => PumukitLmsBundle::LMS_TAG_CODE])) {
             throw new \Exception('Tag PUCHLMS not found. Please initialize it using pumukit:lms:init:pubchannel command');
         }
         parent::__construct();

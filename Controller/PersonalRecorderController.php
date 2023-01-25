@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\SeriesUtils;
-use Pumukit\SchemaBundle\Document\Series;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +24,13 @@ class PersonalRecorderController extends AbstractController
     private $documentManager;
     private $SSOService;
     private $recordingSeriesTitle;
+    private $seriesService;
     private $locales;
 
     public function __construct(
         DocumentManager $documentManager,
         SSOService $SSOService,
+        SeriesService $seriesService,
         string $recordingSeriesTitle,
         array $locales
     ) {
@@ -36,6 +38,7 @@ class PersonalRecorderController extends AbstractController
         $this->SSOService = $SSOService;
         $this->recordingSeriesTitle = $recordingSeriesTitle;
         $this->locales = $locales;
+        $this->seriesService = $seriesService;
     }
 
     /**
@@ -64,15 +67,15 @@ class PersonalRecorderController extends AbstractController
         return new RedirectResponse(self::ADMIN_PERSONAL_RECORDER_ROUTE.'/'.$this->generateRouteParams());
     }
 
-    private function getSeries($i18nTitle)
+    private function getSeries()
     {
-        return $this->documentManager->getRepository(Series::class)->findOneBy(['title' => $i18nTitle]);
+        return $this->seriesService->getSeriesToUpload();
     }
 
     private function generateRouteParams(): string
     {
         $i18nTitle = SeriesUtils::buildI18nTitle($this->recordingSeriesTitle, $this->locales);
-        $series = $this->getSeries($i18nTitle);
+        $series = $this->getSeries();
         if ($series) {
             $params = '?'.SeriesUtils::buildParams($i18nTitle, $series->getId());
         } else {

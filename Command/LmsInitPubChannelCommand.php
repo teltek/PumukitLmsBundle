@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Command;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\Tag;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +36,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $lmsPublicationChannelTag = $this->createTagWithCode('PUCHLMS', 'LMS', 'PUBCHANNELS', false);
+        $lmsPublicationChannelTag = $this->createTagWithCode(PumukitLmsBundle::LMS_TAG_CODE, 'LMS', 'PUBCHANNELS', false);
         $this->documentManager->persist($lmsPublicationChannelTag);
         $this->documentManager->flush();
 
