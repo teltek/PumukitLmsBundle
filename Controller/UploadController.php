@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\SeriesUtils;
 use Pumukit\SchemaBundle\Document\Series;
@@ -23,11 +24,13 @@ class UploadController extends AbstractController
     private $documentManager;
     private $SSOService;
     private $uploadSeriesTitle;
+    private $seriesService;
     private $locales;
 
     public function __construct(
         DocumentManager $documentManager,
         SSOService $SSOService,
+        SeriesService $seriesService,
         string $uploadSeriesTitle,
         array $locales
     ) {
@@ -60,15 +63,15 @@ class UploadController extends AbstractController
         return new RedirectResponse(self::ADMIN_UPLOAD_ROUTE.$this->generateRouteParams());
     }
 
-    private function getSeries($i18nTitle)
+    private function getSeries()
     {
-        return $this->documentManager->getRepository(Series::class)->findOneBy(['title' => $i18nTitle]);
+        return $this->seriesService->getSeriesToUpload();
     }
 
     private function generateRouteParams(): string
     {
         $i18nTitle = SeriesUtils::buildI18nTitle($this->uploadSeriesTitle, $this->locales);
-        $series = $this->getSeries($i18nTitle);
+        $series = $this->getSeries();
         if ($series) {
             $params = '?'.SeriesUtils::buildParams($i18nTitle, $series->getId());
         } else {
