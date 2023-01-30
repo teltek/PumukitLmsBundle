@@ -120,6 +120,7 @@ class SSOService
                 throw new \RuntimeException('User invalid.');
             }
 
+            $user->setFullname($this->getFullNameOfUser($info, $user->getFullname()));
             $user->setPermissionProfile($permissionProfileAutoPub);
             $this->userService->update($user, true, false);
         }
@@ -129,7 +130,7 @@ class SSOService
     {
         $username = $info[self::LDAP_ID_KEY][0];
         $email = $info['mail'][0];
-        $fullName = $info['cn'] ?? $username;
+        $fullName = $this->getFullNameOfUser($info, $username);
 
         $user = new User();
         $user->setUsername($username);
@@ -167,5 +168,10 @@ class SSOService
         $this->groupService->create($group);
 
         return $group;
+    }
+
+    private function getFullNameOfUser(array $info, $username): string
+    {
+        return $info['cn'] ?? $username;
     }
 }
