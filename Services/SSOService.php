@@ -132,6 +132,11 @@ class SSOService
         $email = $info['mail'][0];
         $fullName = $this->getFullNameOfUser($info, $username);
 
+        return $this->createUserByUsernameAndEmail($username, $email, $fullName);
+    }
+
+    public function createUserByUsernameAndEmail($username, $email, $fullName): User
+    {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
@@ -150,6 +155,7 @@ class SSOService
         $this->personService->referencePersonIntoUser($user);
 
         return $user;
+
     }
 
     private function getGroup(string $key)
