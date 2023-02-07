@@ -155,7 +155,6 @@ class SSOService
         $this->personService->referencePersonIntoUser($user);
 
         return $user;
-
     }
 
     private function getGroup(string $key)
