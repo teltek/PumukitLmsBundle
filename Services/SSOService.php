@@ -194,6 +194,6 @@ class SSOService
 
     private function getFullNameOfUser(array $info, $username): string
     {
-        return $info['cn'] ?? $username;
+        return $info['cn'][0] ?? $username;
     }
 }
