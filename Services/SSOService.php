@@ -106,22 +106,39 @@ class SSOService
 
     public function promoteUser(User $user): void
     {
+        if (!$this->ldapService) {
+            throw new \Exception('LDAP Service not enabled.');
+        }
+
+        if (!$this->ldapService->isConfigured()) {
+            throw new \Exception('LDAP Service not enabled.');
+        }
+
+        $updateUser = false;
         $permissionProfileViewer = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_VIEWER);
         $permissionProfileAutoPub = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
 
-        if ($permissionProfileViewer == $user->getPermissionProfile()) {
-            $info = $this->ldapService->getInfoFromEmail($user->getEmail());
+        $info = $this->ldapService->getInfoFromEmail($user->getEmail());
+        if (!$info) {
+            throw new \RuntimeException('User not found.');
+        }
 
-            if (!$info) {
-                throw new \RuntimeException('User not found.');
-            }
+        if ($permissionProfileViewer == $user->getPermissionProfile()) {
             if (!isset($info[self::GROUP_KEY][0])
                 || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
                 throw new \RuntimeException('User invalid.');
             }
 
-            $user->setFullname($this->getFullNameOfUser($info, $user->getFullname()));
             $user->setPermissionProfile($permissionProfileAutoPub);
+            $updateUser = true;
+        }
+
+        if ($this->getFullNameOfUser($info, $user->getFullname()) !== $user->getFullname()) {
+            $user->setFullname($this->getFullNameOfUser($info, $user->getFullname()));
+            $updateUser = true;
+        }
+
+        if ($updateUser) {
             $this->userService->update($user, true, false);
         }
     }
