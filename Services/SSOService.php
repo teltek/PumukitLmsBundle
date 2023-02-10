@@ -73,18 +73,7 @@ class SSOService
 
     public function createUser(array $info): User
     {
-        if (!$this->ldapService) {
-            throw new \Exception('LDAP Service not enabled.');
-        }
-        if (!$this->ldapService->isConfigured()) {
-            throw new \Exception('LDAP Service not enabled.');
-        }
-
-        if (array_key_exists('email', $info)) {
-            $info = $this->ldapService->getInfoFromEmail($info['email']);
-        } elseif (array_key_exists('username', $info)) {
-            $info = $this->ldapService->getInfoFrom(self::LDAP_ID_KEY, $info['username']);
-        }
+        $info = $this->getInfoFromLDAP($info);
 
         if (!isset($info) || !$info) {
             throw new \RuntimeException('User not found.');
@@ -106,19 +95,11 @@ class SSOService
 
     public function promoteUser(User $user): void
     {
-        if (!$this->ldapService) {
-            throw new \Exception('LDAP Service not enabled.');
-        }
-
-        if (!$this->ldapService->isConfigured()) {
-            throw new \Exception('LDAP Service not enabled.');
-        }
-
         $updateUser = false;
         $permissionProfileViewer = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_VIEWER);
         $permissionProfileAutoPub = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
 
-        $info = $this->ldapService->getInfoFromEmail($user->getEmail());
+        $info = $this->getInfoFromLDAP(['email' => $user->getEmail()]);
         if (!$info) {
             throw new \RuntimeException('User not found.');
         }
@@ -133,8 +114,8 @@ class SSOService
             $updateUser = true;
         }
 
-        if ($this->getFullNameOfUser($info, $user->getFullname()) !== $user->getFullname()) {
-            $user->setFullname($this->getFullNameOfUser($info, $user->getFullname()));
+        if (isset($info['cn'][0])) {
+            $user->setFullname($info['cn'][0]);
             $updateUser = true;
         }
 
@@ -147,7 +128,7 @@ class SSOService
     {
         $username = $info[self::LDAP_ID_KEY][0];
         $email = $info['mail'][0];
-        $fullName = $this->getFullNameOfUser($info, $username);
+        $fullName = $info['cn'][0];
 
         return $this->createUserByUsernameAndEmail($username, $email, $fullName);
     }
@@ -157,7 +138,12 @@ class SSOService
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
-        $user->setFullname($fullName);
+        $info = $this->getInfoFromLDAP(['email' => $email, 'username' => $username]);
+        if ($info) {
+            $user->setFullname($info['cn'][0]);
+        } else {
+            $user->setFullname($fullName);
+        }
 
         $permissionProfile = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
         $user->setPermissionProfile($permissionProfile);
@@ -172,6 +158,27 @@ class SSOService
         $this->personService->referencePersonIntoUser($user);
 
         return $user;
+    }
+
+    private function getInfoFromLDAP(array $info)
+    {
+        if (!$this->ldapService) {
+            throw new \Exception('LDAP Service not enabled.');
+        }
+
+        if (!$this->ldapService->isConfigured()) {
+            throw new \Exception('LDAP Service not enabled.');
+        }
+
+        $ldapInfo = [];
+
+        if (array_key_exists('email', $info)) {
+            $ldapInfo = $this->ldapService->getInfoFromEmail($info['email']);
+        } elseif (array_key_exists('username', $info)) {
+            $ldapInfo = $this->ldapService->getInfoFrom(self::LDAP_ID_KEY, $info['username']);
+        }
+
+        return $ldapInfo;
     }
 
     private function getGroup(string $key)
@@ -190,10 +197,5 @@ class SSOService
         $this->groupService->create($group);
 
         return $group;
-    }
-
-    private function getFullNameOfUser(array $info, $username): string
-    {
-        return $info['cn'][0] ?? $username;
     }
 }
