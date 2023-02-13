@@ -14,6 +14,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+            ->scalarNode('check_ldap_info_for_permission_profile')
+            ->defaultTrue()
+            ->info('Check group key and PAS/PDI key to update permission profile to auto publisher')
+            ->end()
             ->scalarNode('password')
             ->defaultValue('ThisIsASecretPasswordChangeMe')
             ->info('shared secret between LMS and Pumukit')

@@ -5,6 +5,7 @@ Make sure to add the domain of your LMS instance (like test.moodle.com) to the d
 
 ```
 pumukit_lms:
+    check_ldap_info_for_permission_profile: true
     password: 'ThisIsASecretPasswordChangeMe'
     role: 'owner'
     naked_backoffice_domain: false
@@ -18,6 +19,7 @@ pumukit_lms:
         - test.moodle.com
 ```
 
+* `check_ldap_info_for_permission_profile`: Check LDAP group key and PDI/PAS key to update user to auto publisher.
 * `password`: Shared secret between LMS and Pumukit
 * `role`: Role used to filter persons in multimedia object
 * `naked_backoffice_domain`: Domain or subdomain used to access into the naked backoffice

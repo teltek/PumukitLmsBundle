@@ -32,6 +32,8 @@ class SSOService
     private $ldapService;
     private $requestStack;
 
+    private $checkLDAPInfoToUpdatePermissionProfile;
+
     public function __construct(
         DocumentManager $dm,
         PermissionProfileService $permissionProfileService,
@@ -41,7 +43,8 @@ class SSOService
         $password,
         $domain,
         $ldapService = null,
-        RequestStack $requestStack = null
+        RequestStack $requestStack = null,
+        $checkLDAPInfoToUpdatePermissionProfile
     ) {
         $this->dm = $dm;
         $this->permissionProfileService = $permissionProfileService;
@@ -52,6 +55,7 @@ class SSOService
         $this->domain = $domain;
         $this->ldapService = $ldapService;
         $this->requestStack = $requestStack;
+        $this->checkLDAPInfoToUpdatePermissionProfile = $checkLDAPInfoToUpdatePermissionProfile;
     }
 
     public function getDomain(): string
@@ -105,8 +109,8 @@ class SSOService
         }
 
         if ($permissionProfileViewer == $user->getPermissionProfile()) {
-            if (!isset($info[self::GROUP_KEY][0])
-                || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
+            if ($this->checkLDAPInfoToUpdatePermissionProfile && (!isset($info[self::GROUP_KEY][0])
+                || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI]))) {
                 throw new \RuntimeException('User invalid.');
             }
 

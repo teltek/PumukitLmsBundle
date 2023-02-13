@@ -18,10 +18,11 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container): void
     {
-        //Necessary to use the parameters in PumukitNewAdminBundle
+        // Necessary to use the parameters in PumukitNewAdminBundle
         $configs = $container->getExtensionConfig($this->getAlias());
         $config = $this->processConfiguration(new Configuration(), $configs);
 
+        $container->setParameter('pumukit_lms.check_ldap_info_for_permission_profile', $config['check_ldap_info_for_permission_profile']);
         $container->setParameter('pumukit_lms.password', $config['password']);
         $container->setParameter('pumukit_lms.role', $config['role']);
 
