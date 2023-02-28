@@ -84,7 +84,7 @@ class SSOService
     {
         $info = $this->getInfoFromLDAP($info);
 
-        if (!isset($info) || !$info) {
+        if (!empty($info) || !$info) {
             throw new \RuntimeException('User not found.');
         }
 
@@ -215,7 +215,7 @@ class SSOService
             }
         } catch (\Exception $e) {
             if ($this->configurationService->isAllowCreateUsersFromRequest() && $email && $username) {
-                return $this->createUserWithInfo($username, $email);
+                return $this->createUserByUsernameAndEmail($username, $email, $username);
             }
 
             return $this->genError($e->getMessage());

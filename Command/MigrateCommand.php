@@ -51,7 +51,7 @@ EOT
             return 0;
         }
 
-        $progress = new ProgressBar($output, count($multimediaObjects));
+        $progress = new ProgressBar($output, is_countable($multimediaObjects) ? count($multimediaObjects) : 0);
         $progress->start();
 
         $messages = [];

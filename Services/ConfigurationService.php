@@ -13,6 +13,8 @@ class ConfigurationService
     private $nakedBackofficeBackground;
     private $nakedBackofficeColor;
     private $nakedCustomCssUrl;
+
+    private $defaultSeriesTitle;
     private $domainsPatterns;
 
     public function __construct(

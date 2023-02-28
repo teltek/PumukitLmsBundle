@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\EventListener;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class FilterListener
 {
@@ -16,7 +16,7 @@ class FilterListener
         $this->documentManager = $documentManager;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $req = $event->getRequest();
         $routeParams = $req->attributes->get('_route_params');

@@ -6,6 +6,7 @@ namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
+use Pumukit\LmsBundle\Utils\SeriesUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,7 +55,7 @@ class PersonalRecorderController extends AbstractController
         }
 
         $series = $this->seriesService->getSeriesToUpload();
-        $params = '?'.$this->buildParams($this->seriesService->getDefaultSeriesTitle(), $series->getId());
+        $params = '?'.SeriesUtils::buildParams($this->seriesService->getDefaultSeriesTitle(), $series->getId());
         $params .= '&showButton=false';
 
         return new RedirectResponse(self::ADMIN_PERSONAL_RECORDER_ROUTE.'/'.$params);
