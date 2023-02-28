@@ -7,6 +7,7 @@ services:
       $pumukitInfo: "%pumukit.info%"
       $defaultSeriesTitle: '%pumukit_lms.default_series_title%'
       $locales: '%pumukit.locales%'
+      $checkLDAPInfoToUpdatePermissionProfile: '%pumukit_lms.check_ldap_info_for_permission_profile%'
 
   Pumukit\LmsBundle\Controller\:
     resource: '../../Controller/'

@@ -54,7 +54,7 @@ class SSOService
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $dispatcher,
         \Twig\Environment $templating,
-        $checkLDAPInfoToUpdatePermissionProfile,
+        bool $checkLDAPInfoToUpdatePermissionProfile,
         $ldapService = null,
         RequestStack $requestStack = null
     ) {
