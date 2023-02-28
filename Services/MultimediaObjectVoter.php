@@ -80,7 +80,7 @@ class MultimediaObjectVoter extends Voter
         }
 
         $hash = $query['hash'];
-        //Check TTK-16603 use multimediaObject.id
+        // Check TTK-16603 use multimediaObject.id
         if (!isset($query['playlistId']) && !$this->ssoService->validateHash($hash, '')) {
             return false;
         }

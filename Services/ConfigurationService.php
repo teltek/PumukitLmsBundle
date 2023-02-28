@@ -13,8 +13,6 @@ class ConfigurationService
     private $nakedBackofficeBackground;
     private $nakedBackofficeColor;
     private $nakedCustomCssUrl;
-    private $uploadSeriesTitle;
-    private $recordingSeriesTitle;
     private $domainsPatterns;
 
     public function __construct(
@@ -25,8 +23,7 @@ class ConfigurationService
         string $nakedBackofficeBackground,
         string $nakedBackofficeColor,
         ?string $nakedCustomCssUrl,
-        string $uploadSeriesTitle,
-        string $recordingSeriesTitle,
+        string $defaultSeriesTitle,
         array $domainsPatterns
     ) {
         $this->allowCreateUsersFromRequest = $allowCreateUsersFromRequest;
@@ -36,8 +33,7 @@ class ConfigurationService
         $this->nakedBackofficeBackground = $nakedBackofficeBackground;
         $this->nakedBackofficeColor = $nakedBackofficeColor;
         $this->nakedCustomCssUrl = $nakedCustomCssUrl;
-        $this->uploadSeriesTitle = $uploadSeriesTitle;
-        $this->recordingSeriesTitle = $recordingSeriesTitle;
+        $this->defaultSeriesTitle = $defaultSeriesTitle;
         $this->domainsPatterns = $domainsPatterns;
     }
 
@@ -76,14 +72,9 @@ class ConfigurationService
         return $this->nakedCustomCssUrl;
     }
 
-    public function getUploadSeriesTitle(): string
+    public function getDefaultSeriesTitle(): string
     {
-        return $this->uploadSeriesTitle;
-    }
-
-    public function getRecordingSeriesTitle(): string
-    {
-        return $this->recordingSeriesTitle;
+        return $this->defaultSeriesTitle;
     }
 
     public function getDomainsPatterns(): array

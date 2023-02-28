@@ -5,8 +5,7 @@ services:
     public:        true
     bind:
       $pumukitInfo: "%pumukit.info%"
-      $recordingSeriesTitle: '%pumukit_lms.recording_series_title%'
-      $uploadSeriesTitle: '%pumukit_lms.upload_series_title%'
+      $defaultSeriesTitle: '%pumukit_lms.default_series_title%'
       $locales: '%pumukit.locales%'
 
   Pumukit\LmsBundle\Controller\:
@@ -54,6 +53,9 @@ services:
 
   Pumukit\LmsBundle\Services\SSOService:
     class: Pumukit\LmsBundle\Services\SSOService
+
+  Pumukit\LmsBundle\Services\SeriesService:
+    class: Pumukit\LmsBundle\Services\SeriesService
 
   Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener:
     class: Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener

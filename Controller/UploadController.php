@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
-use Pumukit\LmsBundle\Utils\SeriesUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,23 +18,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class UploadController extends AbstractController
 {
     public const ADMIN_UPLOAD_ROUTE = '/admin/simplewizard/embedindex';
-    private $documentManager;
     private $SSOService;
-    private $uploadSeriesTitle;
     private $seriesService;
-    private $locales;
 
     public function __construct(
-        DocumentManager $documentManager,
         SSOService $SSOService,
-        SeriesService $seriesService,
-        string $uploadSeriesTitle,
-        array $locales
+        SeriesService $seriesService
     ) {
-        $this->documentManager = $documentManager;
         $this->SSOService = $SSOService;
-        $this->uploadSeriesTitle = $uploadSeriesTitle;
-        $this->locales = $locales;
+        $this->seriesService = $seriesService;
     }
 
     /**
@@ -59,24 +49,9 @@ class UploadController extends AbstractController
             $this->SSOService->login($user, $request);
         }
 
-        return new RedirectResponse(self::ADMIN_UPLOAD_ROUTE.$this->generateRouteParams());
-    }
+        $series = $this->seriesService->getSeriesToUpload();
+        $params = '?'.$this->buildParams($this->seriesService->getDefaultSeriesTitle(), $series->getId());
 
-    private function getSeries()
-    {
-        return $this->seriesService->getSeriesToUpload();
-    }
-
-    private function generateRouteParams(): string
-    {
-        $i18nTitle = SeriesUtils::buildI18nTitle($this->uploadSeriesTitle, $this->locales);
-        $series = $this->getSeries();
-        if ($series) {
-            $params = '?'.SeriesUtils::buildParams($i18nTitle, $series->getId());
-        } else {
-            $params = '?'.SeriesUtils::buildParams($i18nTitle, null);
-        }
-
-        return $params;
+        return new RedirectResponse(self::ADMIN_UPLOAD_ROUTE.$params);
     }
 }

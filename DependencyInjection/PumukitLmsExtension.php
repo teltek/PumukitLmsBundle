@@ -23,6 +23,7 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
         $configs = $container->getExtensionConfig($this->getAlias());
         $config = $this->processConfiguration(new Configuration(), $configs);
 
+        $container->setParameter('pumukit_lms.check_ldap_info_for_permission_profile', $config['check_ldap_info_for_permission_profile']);
         $container->setParameter('pumukit_lms.password', $config['password']);
         $container->setParameter('pumukit_lms.role', $config['role']);
         $container->setParameter('pumukit_lms.naked_backoffice_domain', $config['naked_backoffice_domain']);

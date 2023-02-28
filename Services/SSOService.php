@@ -42,6 +42,7 @@ class SSOService
     private $tokenStorage;
     private $templating;
     private $dispatcher;
+    private $checkLDAPInfoToUpdatePermissionProfile;
 
     public function __construct(
         DocumentManager $documentManager,
@@ -54,7 +55,8 @@ class SSOService
         EventDispatcherInterface $dispatcher,
         \Twig\Environment $templating,
         $ldapService = null,
-        RequestStack $requestStack = null
+        RequestStack $requestStack = null,
+        $checkLDAPInfoToUpdatePermissionProfile
     ) {
         $this->documentManager = $documentManager;
         $this->permissionProfileService = $permissionProfileService;
@@ -67,6 +69,7 @@ class SSOService
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
+        $this->checkLDAPInfoToUpdatePermissionProfile = $checkLDAPInfoToUpdatePermissionProfile;
     }
 
     public function login(UserInterface $user, Request $request): void
@@ -79,18 +82,7 @@ class SSOService
 
     public function createUser(array $info): User
     {
-        if (!$this->ldapService) {
-            throw new \Exception('LDAP Service not enabled.');
-        }
-        if (!$this->ldapService->isConfigured()) {
-            throw new \Exception('LDAP Service not enabled.');
-        }
-
-        if (array_key_exists('email', $info)) {
-            $info = $this->ldapService->getInfoFromEmail($info['email']);
-        } elseif (array_key_exists('username', $info)) {
-            $info = $this->ldapService->getInfoFrom(self::LDAP_ID_KEY, $info['username']);
-        }
+        $info = $this->getInfoFromLDAP($info);
 
         if (!isset($info) || !$info) {
             throw new \RuntimeException('User not found.');
@@ -101,10 +93,7 @@ class SSOService
             throw new \RuntimeException('User invalid.');
         }
 
-        $username = $info[self::LDAP_ID_KEY][0];
-        $email = $info['mail'][0];
-
-        $user = $this->createUserWithInfo($username, $email);
+        $user = $this->createUserWithInfo($info);
         $group = $this->getGroup($info[self::GROUP_KEY][0]);
         $this->userService->addGroup($group, $user, true, false);
 
@@ -115,31 +104,55 @@ class SSOService
 
     public function promoteUser(User $user): void
     {
+        $updateUser = false;
         $permissionProfileViewer = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_VIEWER);
         $permissionProfileAutoPub = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
 
-        if ($permissionProfileViewer == $user->getPermissionProfile()) {
-            $info = $this->ldapService->getInfoFromEmail($user->getEmail());
+        $info = $this->getInfoFromLDAP(['email' => $user->getEmail()]);
+        if (!$info) {
+            throw new \RuntimeException('User not found.');
+        }
 
-            if (!$info) {
-                throw new \RuntimeException('User not found.');
-            }
-            if (!isset($info[self::GROUP_KEY][0])
-                || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
+        if ($permissionProfileViewer == $user->getPermissionProfile()) {
+            if ($this->checkLDAPInfoToUpdatePermissionProfile && (!isset($info[self::GROUP_KEY][0])
+                || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI]))) {
                 throw new \RuntimeException('User invalid.');
             }
 
             $user->setPermissionProfile($permissionProfileAutoPub);
+            $updateUser = true;
+        }
+
+        if (isset($info['cn'][0])) {
+            $user->setFullname($info['cn'][0]);
+            $updateUser = true;
+        }
+
+        if ($updateUser) {
             $this->userService->update($user, true, false);
         }
     }
 
-    public function createUserWithInfo(string $username, string $email)
+    public function createUserWithInfo(array $info): User
+    {
+        $username = $info[self::LDAP_ID_KEY][0];
+        $email = $info['mail'][0];
+        $fullName = $info['cn'][0];
+
+        return $this->createUserByUsernameAndEmail($username, $email, $fullName);
+    }
+
+    public function createUserByUsernameAndEmail($username, $email, $fullName): User
     {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
-        $user->setFullname($username);
+        $info = $this->getInfoFromLDAP(['email' => $email, 'username' => $username]);
+        if ($info) {
+            $user->setFullname($info['cn'][0]);
+        } else {
+            $user->setFullname($fullName);
+        }
 
         $permissionProfile = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
         $user->setPermissionProfile($permissionProfile);
@@ -186,7 +199,7 @@ class SSOService
 
         $repo = $this->documentManager->getRepository(User::class);
 
-        //Find User
+        // Find User
         try {
             $user = null;
             if ($username) {
@@ -217,6 +230,27 @@ class SSOService
             $this->templating->render('@PumukitLms/SSO/error.html.twig', ['message' => $message]),
             $status
         );
+    }
+
+    private function getInfoFromLDAP(array $info)
+    {
+        if (!$this->ldapService) {
+            throw new \Exception('LDAP Service not enabled.');
+        }
+
+        if (!$this->ldapService->isConfigured()) {
+            throw new \Exception('LDAP Service not enabled.');
+        }
+
+        $ldapInfo = [];
+
+        if (array_key_exists('email', $info)) {
+            $ldapInfo = $this->ldapService->getInfoFromEmail($info['email']);
+        } elseif (array_key_exists('username', $info)) {
+            $ldapInfo = $this->ldapService->getInfoFrom(self::LDAP_ID_KEY, $info['username']);
+        }
+
+        return $ldapInfo;
     }
 
     private function getGroup(string $key): Group

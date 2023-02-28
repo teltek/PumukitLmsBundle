@@ -48,7 +48,9 @@ class SearchController extends BaseSearchController
     /**
      * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false})
      * @Route("/search/public/multimediaobjects")
+     *
      * @ParamConverter("blockedTag", options={"mapping": {"tagCod": "cod"}})
+     *
      * @Template("@PumukitLms/Search/index.html.twig")
      */
     public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, bool $useTagAsGeneral = false): array
