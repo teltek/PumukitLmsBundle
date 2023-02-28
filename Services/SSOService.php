@@ -54,9 +54,9 @@ class SSOService
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $dispatcher,
         \Twig\Environment $templating,
+        $checkLDAPInfoToUpdatePermissionProfile,
         $ldapService = null,
-        RequestStack $requestStack = null,
-        $checkLDAPInfoToUpdatePermissionProfile
+        RequestStack $requestStack = null
     ) {
         $this->documentManager = $documentManager;
         $this->permissionProfileService = $permissionProfileService;
@@ -232,7 +232,7 @@ class SSOService
         );
     }
 
-    private function getInfoFromLDAP(array $info)
+    private function getInfoFromLDAP(array $info): array
     {
         if (!$this->ldapService) {
             throw new \Exception('LDAP Service not enabled.');
