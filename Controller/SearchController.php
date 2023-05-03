@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -53,7 +54,7 @@ class SearchController extends BaseSearchController
      *
      * @Template("@PumukitLms/Search/index.html.twig")
      */
-    public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, bool $useTagAsGeneral = false): array
+    public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, bool $useTagAsGeneral = false): Response
     {
         $request->attributes->set('only_public', true);
 
