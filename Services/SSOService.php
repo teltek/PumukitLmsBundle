@@ -103,9 +103,10 @@ class SSOService
         $permissionProfileViewer = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_VIEWER);
         $permissionProfileAutoPub = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
 
-        $info = $this->getInfoFromLDAP(['email' => $user->getEmail()]);
-        if (!$info) {
-            throw new \RuntimeException('User not found.');
+        try {
+            $info = $this->getInfoFromLDAP(['email' => $user->getEmail()]);
+        } catch (\Exception $exception) {
+            return;
         }
 
         if ($permissionProfileViewer == $user->getPermissionProfile()) {
