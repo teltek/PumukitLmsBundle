@@ -14,7 +14,9 @@ class SearchController extends BaseSearchController
     /**
      * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false})
      * @Route("/search/public/multimediaobjects")
+     *
      * @ParamConverter("blockedTag", class="PumukitSchemaBundle:Tag", options={"mapping": {"tagCod": "cod"}})
+     *
      * @Template("PumukitLmsBundle:Search:index.html.twig")
      *
      * @param mixed $useTagAsGeneral

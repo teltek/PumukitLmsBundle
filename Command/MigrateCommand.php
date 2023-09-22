@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MigrateCommand extends ContainerAwareCommand
 {
     private $dm;
+
     /** @var TagService */
     private $tagService;
     private $LMSTag;

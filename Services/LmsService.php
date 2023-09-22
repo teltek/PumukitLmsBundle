@@ -8,8 +8,10 @@ use Pumukit\SchemaBundle\Services\TagService;
 class LmsService
 {
     public const LMS_TAG_CODE = 'PUCHLMS';
+
     /** @var TagService */
     private $tagService;
+
     /** @var array */
     private $domainsPatterns;
     private $allowedLocales;
