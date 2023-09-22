@@ -33,12 +33,15 @@ class SSOController extends Controller
             return $this->genError('Not email or username parameter.');
         }
 
+        $logger = $this->container->get('logger');
+
         $lmsService = $this->container->get('pumukit_lms.lms');
         if (!$lmsService->validateAccessDomain($host)) {
             return $this->genError('Invalid Domain!');
         }
 
         $ssoService = $this->container->get('pumukit_lms.sso');
+        $logger->info('TTK Validate hash: ' . $ssoService->validateHash($hash, $value));
         if (!$ssoService->validateHash($hash, $value)) {
             return $this->genError('The hash is not valid.');
         }
@@ -50,25 +53,31 @@ class SSOController extends Controller
 
         $repo = $this
             ->get('doctrine_mongodb.odm.document_manager')
-            ->getRepository(User::class)
-        ;
+            ->getRepository(User::class);
 
         //Find User
         try {
             $user = null;
             if ($username) {
+                $logger->info('TTK FindByUsername: ' . $username);
                 $user = $repo->findOneBy(['username' => $username]);
             }
             if (!$user && $email) {
+                $logger->info('TTK Not found by username, FindByEmail: ' . $email);
                 $user = $repo->findOneBy(['email' => $email]);
             }
             if (!$user) {
+                $logger->info('TTK Not found user, create user: ' . $type . ' - ' . $value);
                 $user = $ssoService->createUser([$type => $value]);
             } else {
+                $logger->info('TTK update user');
                 $ssoService->promoteUser($user);
             }
+        } catch (\RuntimeException $e) {
+            $logger->info('TTK Runtime exception');
         } catch (\Exception $e) {
             if ($this->getParameter('pumukit_lms.allow_create_users_from_req') && $email && $username) {
+                $logger->info('TTK Exception, now create user by username and email: ' . $username . ' - ' . $email);
                 return $ssoService->createUserByUsernameAndEmail($username, $email, $username);
             }
 
