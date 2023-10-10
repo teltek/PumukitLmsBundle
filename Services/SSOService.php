@@ -83,7 +83,7 @@ class SSOService
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'public', $user->getRoles());
         $this->tokenStorage->setToken($token);
         $event = new InteractiveLoginEvent($request, $token);
-        $this->dispatcher->dispatch('security.interactive_login', $event);
+        $this->dispatcher->dispatch($event, 'security.interactive_login');
     }
 
     public function createUser(array $info): User
