@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Services;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Psr\Log\LoggerInterface;
+use Pumukit\LDAPBundle\Services\LDAPService;
 use Pumukit\SchemaBundle\Document\Group;
 use Pumukit\SchemaBundle\Document\User;
 use Pumukit\SchemaBundle\Services\GroupService;
@@ -44,6 +46,8 @@ class SSOService
     private $dispatcher;
     private $checkLDAPInfoToUpdatePermissionProfile;
 
+    private $logger;
+
     public function __construct(
         DocumentManager $documentManager,
         PermissionProfileService $permissionProfileService,
@@ -55,8 +59,9 @@ class SSOService
         EventDispatcherInterface $dispatcher,
         \Twig\Environment $templating,
         bool $checkLDAPInfoToUpdatePermissionProfile,
-        $ldapService = null,
-        RequestStack $requestStack = null
+        LDAPService $ldapService = null,
+        RequestStack $requestStack = null,
+        LoggerInterface $logger
     ) {
         $this->documentManager = $documentManager;
         $this->permissionProfileService = $permissionProfileService;
@@ -70,6 +75,7 @@ class SSOService
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
         $this->checkLDAPInfoToUpdatePermissionProfile = $checkLDAPInfoToUpdatePermissionProfile;
+        $this->logger = $logger;
     }
 
     public function login(UserInterface $user, Request $request): void
@@ -214,6 +220,8 @@ class SSOService
             } else {
                 $this->promoteUser($user);
             }
+        } catch (\RuntimeException $e) {
+            $this->logger->info('TTK Runtime exception');
         } catch (\Exception $e) {
             if ($this->configurationService->isAllowCreateUsersFromRequest() && $email && $username) {
                 return $this->createUserByUsernameAndEmail($username, $email, $username);
