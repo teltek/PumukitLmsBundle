@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Pumukit\BasePlayerBundle\Services\PlayerService;
 use Pumukit\EncoderBundle\Document\Job;
 use Pumukit\EncoderBundle\Services\ProfileService;
 use Pumukit\LmsBundle\PumukitLmsBundle;
@@ -32,6 +33,7 @@ class LmsController extends AbstractController
     private $multimediaObjectService;
     private $profileService;
     private $configurationService;
+    private $playerService;
     private $pumukitInfo;
 
     public function __construct(
@@ -39,12 +41,14 @@ class LmsController extends AbstractController
         MultimediaObjectService $multimediaObjectService,
         ProfileService $profileService,
         ConfigurationService $configurationService,
+        PlayerService $playerService,
         array $pumukitInfo
     ) {
         $this->documentManager = $documentManager;
         $this->multimediaObjectService = $multimediaObjectService;
         $this->profileService = $profileService;
         $this->configurationService = $configurationService;
+        $this->playerService = $playerService;
         $this->pumukitInfo = $pumukitInfo;
     }
 
@@ -123,7 +127,7 @@ class LmsController extends AbstractController
 
     protected function renderIframe(Request $request, MultimediaObject $multimediaObject)
     {
-        $playerController = $this->get('pumukit_baseplayer.player_service')->getPublicControllerPlayer($multimediaObject);
+        $playerController = $this->playerService->getPublicControllerPlayer($multimediaObject);
 
         return $this->forward($playerController, ['request' => $request, 'multimediaObject' => $multimediaObject]);
     }
