@@ -17,7 +17,7 @@ class PersonalRecorderEventListener
 
     public function postCreateMultimediaObject($event): void
     {
-        if (class_exists('Pumukit\PersonalRecorderBundle\Event\CreateEvent')) {
+        if (class_exists(\Pumukit\PersonalRecorderBundle\Event\CreateEvent::class)) {
             $user = $event->getUser();
             $multimediaObject = $event->getMultimediaObject();
             if (!$user->hasRole('ROLE_TAG_DEFAULT_PUCHWEBTV')) {

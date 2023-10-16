@@ -36,7 +36,7 @@ class PersonalRecorderController extends AbstractController
      */
     public function personalRecorder(Request $request)
     {
-        if (!class_exists('Pumukit\PersonalRecorderBundle\PumukitPersonalRecorderBundle')) {
+        if (!class_exists(\Pumukit\PersonalRecorderBundle\PumukitPersonalRecorderBundle::class)) {
             return new Response($this->renderView('@PumukitLms/PersonalRecorder/not_found.html.twig'), 403);
         }
 
