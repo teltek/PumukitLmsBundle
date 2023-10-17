@@ -24,9 +24,7 @@ class MigrateCommand extends Command
     {
         $this->documentManager = $documentManager;
         $this->tagService = $tagService;
-        if (!$this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => PumukitLmsBundle::LMS_TAG_CODE])) {
-            throw new \Exception('Tag PUCHLMS not found. Please initialize it using pumukit:lms:init:pubchannel command');
-        }
+
         parent::__construct();
     }
 
@@ -45,6 +43,12 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
+        if (!$this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => PumukitLmsBundle::LMS_TAG_CODE])) {
+            $output->writeln('Tag PUCHLMS not found. Please initialize it using pumukit:lms:init:pubchannel command');
+
+            return -1;
+        }
+
         if (!$multimediaObjects = $this->getAllMultimediaObjects()) {
             $output->writeln('No multimedia object with PUCHMOODLE found');
 
