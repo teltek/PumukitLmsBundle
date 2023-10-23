@@ -88,15 +88,18 @@ class SSOService
 
     public function createUser(array $info): User
     {
-        $info = $this->getInfoFromLDAP($info);
-
-        if (!empty($info) || !$info) {
-            throw new \RuntimeException('User not found.');
+        try {
+            $info = $this->getInfoFromLDAP($info);
+        } catch (\Exception $exception) {
+            throw new \Exception('LDAP Service not enabled');
         }
 
-        if (!isset($info[self::GROUP_KEY][0])
-            || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
-            throw new \RuntimeException('User invalid.');
+        if (!$info) {
+            throw new \Exception('User not found on LDAP');
+        }
+
+        if (!isset($info[self::GROUP_KEY][0]) || !in_array($info[self::GROUP_KEY][0], [self::LDAP_PAS, self::LDAP_PDI])) {
+            throw new \Exception('User data invalid.');
         }
 
         $user = $this->createUserWithInfo($info);
@@ -155,7 +158,7 @@ class SSOService
         $user->setUsername($username);
         $user->setEmail($email);
         $info = $this->getInfoFromLDAP(['email' => $email, 'username' => $username]);
-        if ($info) {
+        if (!empty($info)) {
             $user->setFullname($info['cn'][0]);
         } else {
             $user->setFullname($fullName);
@@ -259,7 +262,7 @@ class SSOService
             $ldapInfo = $this->ldapService->getInfoFrom(self::LDAP_ID_KEY, $info['username']);
         }
 
-        return $ldapInfo;
+        return false !== $ldapInfo ? $ldapInfo : [];
     }
 
     private function getGroup(string $key): Group
