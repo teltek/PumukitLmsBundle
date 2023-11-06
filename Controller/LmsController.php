@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/openedx/openedx")
+ * @Route("/lms")
  */
 class LmsController extends AbstractController
 {
@@ -147,7 +148,7 @@ class LmsController extends AbstractController
     {
         return [
             'email' => $this->pumukitInfo['email'],
-            'id' => $request->get('id'),
+            'id' => $request->get('id') ?? $request->attributes->get('id'),
         ];
     }
 
