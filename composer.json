@@ -20,7 +20,8 @@
   ],
   "require": {
     "php": ">=7.2",
-    "pumukit/pumukit": "^4.0"
+    "pumukit/pumukit": "^4.0",
+    "celtic/lti": "^5.0"
   },
   "autoload": {
     "psr-4": {
