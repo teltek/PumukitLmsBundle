@@ -37,7 +37,6 @@ class LTIController extends AbstractController
 
         $data_connector = DataConnector::getDataConnector($consumer->getDsn(), $consumer->getDbName(), 'pdo');
         $toolProvider = new Tool($data_connector);
-
         $toolProvider->setParameterConstraint('resource_link_id', TRUE, 50);
 
         if(!$toolProvider->ok) {
@@ -50,7 +49,7 @@ class LTIController extends AbstractController
             $user = $this->createUser($toolProvider);
         }
 
-        return $this->render('lti/launch.html.twig', [
+        return $this->render('@PumukitLms/lti/launch.html.twig', [
             'username' => $user->getFullName(),
             'role'=> $user->getRoles(),
             'courseName' => $toolProvider->resource_link->settings['context_title']
