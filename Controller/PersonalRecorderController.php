@@ -7,6 +7,7 @@ namespace Pumukit\LmsBundle\Controller;
 use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\SeriesUtils;
+use Pumukit\PersonalRecorderBundle\PumukitPersonalRecorderBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class PersonalRecorderController extends AbstractController
      */
     public function personalRecorder(Request $request)
     {
-        if (!class_exists(\Pumukit\PersonalRecorderBundle\PumukitPersonalRecorderBundle::class)) {
+        if (!class_exists(PumukitPersonalRecorderBundle::class)) {
             return new Response($this->renderView('@PumukitLms/PersonalRecorder/not_found.html.twig'), 403);
         }
 

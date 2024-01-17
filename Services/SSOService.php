@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Twig\Environment;
 
 class SSOService
 {
@@ -57,7 +58,7 @@ class SSOService
         ConfigurationService $configurationService,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $dispatcher,
-        \Twig\Environment $templating,
+        Environment $templating,
         bool $checkLDAPInfoToUpdatePermissionProfile,
         LDAPService $ldapService = null,
         RequestStack $requestStack = null,
