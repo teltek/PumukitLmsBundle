@@ -11,7 +11,6 @@ use Pumukit\WebTVBundle\Controller\SearchController as BaseSearchController;
 use Pumukit\WebTVBundle\Services\BreadcrumbsService;
 use Pumukit\WebTVBundle\Services\SearchService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/openedx")
+ * @Route("/lms")
  */
 class SearchController extends BaseSearchController
 {
@@ -54,13 +54,16 @@ class SearchController extends BaseSearchController
      * @Route("/search/public/multimediaobjects")
      *
      * @ParamConverter("blockedTag", options={"mapping": {"tagCod": "cod"}})
-     *
-     * @Template("@PumukitLms/Search/index.html.twig")
      */
     public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, bool $useTagAsGeneral = false): Response
     {
         $request->attributes->set('only_public', true);
 
         return parent::multimediaObjectsAction($request, $blockedTag, $useTagAsGeneral);
+    }
+
+    protected function renderedTemplate(): string
+    {
+        return '@PumukitLms/Search/template.html.twig';
     }
 }

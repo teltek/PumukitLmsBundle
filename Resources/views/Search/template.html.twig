@@ -35,10 +35,10 @@
                 $('.modal-body-shared-videos').html('');
             });
 
-            $('.pumukit_mmobj').on('click', function(e) {
+            $('.multimediaobject').on('click', function(e) {
                 e.preventDefault();
-                if (window.parent && e.currentTarget.parentElement.href) {
-                    var url = e.currentTarget.parentElement.href.replace('/video/', '/iframe/');
+                if (window.parent && e.currentTarget.href) {
+                    var url = e.currentTarget.href.replace('/video/', '/iframe/');
                     $('.modal-body-shared-videos').html(
                         '<div class="embed-responsive embed-responsive-16by9">' +
                         '<iframe id="pmk-iframe" src="' + url + '" frameborder="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
@@ -81,9 +81,8 @@
             </div>
         </div>
         <div class="row">
-            {% include '@PumukitWebTV/Search/list.html.twig' %}
-        </div>
-        <div class="row">
+            {% include '@PumukitWebTV/Search/template_title.html.twig'  %}
+            {% include '@PumukitWebTV/Search/template_list.html.twig' %}
             {% include '@PumukitWebTV/Misc/pager.html.twig' %}
         </div>
 
