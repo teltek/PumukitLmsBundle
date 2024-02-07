@@ -15,16 +15,16 @@ class MultimediaObjectVoter extends Voter
 {
     public const PLAY = 'play';
 
-    private $SSOService;
+    private $configurationService;
     private $mmobjService;
     private $requestStack;
 
     public function __construct(
-        SSOService $SSOService,
+        ConfigurationService $configurationService,
         MultimediaObjectService $mmobjService,
         RequestStack $requestStack
     ) {
-        $this->SSOService = $SSOService;
+        $this->configurationService = $configurationService;
         $this->mmobjService = $mmobjService;
         $this->requestStack = $requestStack;
     }
@@ -64,7 +64,6 @@ class MultimediaObjectVoter extends Voter
         }
 
         $refererUrl = $req->headers->get('referer');
-
         if (!$refererUrl) {
             return false;
         }
@@ -81,7 +80,7 @@ class MultimediaObjectVoter extends Voter
 
         $hash = $query['hash'];
         // Check TTK-16603 use multimediaObject.id
-        if (!isset($query['playlistId']) && !$this->SSOService->validateHash($hash, '')) {
+        if (!isset($query['playlistId']) && !$this->configurationService->isValidHash($hash, '')) {
             return false;
         }
 
