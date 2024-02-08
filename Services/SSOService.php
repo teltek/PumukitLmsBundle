@@ -158,11 +158,16 @@ class SSOService
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
-        $info = $this->getInfoFromLDAP(['email' => $email, 'username' => $username]);
-        if (!empty($info)) {
-            $user->setFullname($info['cn'][0]);
-        } else {
-            $user->setFullname($fullName);
+
+        try {
+            $info = $this->getInfoFromLDAP(['email' => $email, 'username' => $username]);
+            if (!empty($info)) {
+                $user->setFullname($info['cn'][0]);
+            } else {
+                $user->setFullname($fullName);
+            }
+        } catch (\Exception $exception) {
+            $user->setFullname($username);
         }
 
         $permissionProfile = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
