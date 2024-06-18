@@ -23,3 +23,9 @@ Once the LTI tool is registered and active, you can use the LTI tool in the LMS 
 This LTI integration is based on the LTI 1.3 and use deep linking to connect the LMS platform with PuMuKIT.
 
 Its necessary LTI Advantage to use this integration.
+
+## FAQ
+
+### ERROR: Consumer key is incorrect
+
+PuMuKIT saves de LTIClient info in the database when LMS register the tool. If you have this error, you can remove the LTIClient info from the database and register the tool again.
