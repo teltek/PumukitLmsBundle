@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Document;
 
 use MongoDB\BSON\ObjectId;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
  * @MongoDB\Document
  */
-final class Consumer
+class Consumer
 {
     /**
      * @MongoDB\Id

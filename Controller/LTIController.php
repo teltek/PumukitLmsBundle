@@ -4,68 +4,66 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
-use ceLTIc\LTI\DataConnector\DataConnector;
-use ceLTIc\LTI\Tool;
-use Pumukit\LmsBundle\Document\Consumer;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Firebase\JWT\JWK;
+use Firebase\JWT\JWT;
+use Pumukit\LmsBundle\Document\LTIClient;
+use Pumukit\LmsBundle\Services\LTIUserCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ODM\MongoDB\DocumentManager as DocumentManager;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class LTIController extends AbstractController
 {
+    public const ADMIN_SERIES_ROUTE = 'pumukitnewadmin_series_index';
     private $documentManager;
+    private $client;
+    private $ltiUserCreator;
 
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(DocumentManager $documentManager, HttpClientInterface $httpClient, LTIUserCreator $ltiUserCreator)
     {
         $this->documentManager = $documentManager;
+        $this->client = $httpClient;
+        $this->ltiUserCreator = $ltiUserCreator;
     }
 
     /**
-     * @Route("/lti/launch", name="lti_launch", methods={"POST"})
+     * @Route("/lti/launch", name="lti_tool_launch", methods={"GET","POST"})
      */
     public function launch(Request $request): Response
     {
-        $params = $request->request->all();
-        $consumer_key = $params['oauth_consumer_key'];
+        $token = $request->request->get('id_token');
+        $state = $request->request->get('state');
+        $origin = $request->headers->get('origin');
 
-        $consumer = $this->documentManager->getRepository(Consumer::class)->findOneBy(['consumer_key' => $consumer_key]);
-        if (!$consumer) {
-            throw $this->createNotFoundException('No consumer found for key ' . $consumer_key);
+        $client = $this->documentManager->getRepository(LTIClient::class)->findOneBy(['issuer' => $origin]);
+        if (!$client) {
+            throw new \Exception('Client not found.');
         }
 
-        $data_connector = DataConnector::getDataConnector($consumer->getDsn(), $consumer->getDbName(), 'pdo');
-        $toolProvider = new Tool($data_connector);
-        $toolProvider->setParameterConstraint('resource_link_id', TRUE, 50);
+        $jwksUri = $client->getJWKSUri();
+        $response = $this->client->request('GET', $jwksUri, ['verify_peer' => false]);
 
-        if(!$toolProvider->ok) {
-            throw new \Exception("LTI request validation failed.");
-        }
+        $jwks = json_decode($response->getContent(), true);
 
-        $userId = $toolProvider->user->getId();
-        $user = $this->documentManager->getRepository(User::class)->findOneBy(['userId' => $userId]);
-        if (!$user) {
-            $user = $this->createUser($toolProvider);
-        }
+        $keys = JWK::parseKeySet($jwks);
+        $decodedToken = JWT::decode($token, $keys);
 
-        return $this->render('@PumukitLms/lti/launch.html.twig', [
-            'username' => $user->getFullName(),
-            'role'=> $user->getRoles(),
-            'courseName' => $toolProvider->resource_link->settings['context_title']
-        ]);
+        $userID = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->userID;
+        $username = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->username;
+        $mail = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_email;
+        $fullname = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_fullname;
+        $roles = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/roles'};
 
-    }
+        $user = $this->ltiUserCreator->createUserFromResponse($userID, $username, $mail, $fullname, $roles);
 
-    private function createUser(Tool $tool): User
-    {
-        $user = new User();
-        $user->setRoles($tool->user->roles);
-        $user->setFullName($tool->user->fullname);
-        $user->setEmail($tool->user->email);
-        $this->documentManager->persist($user);
-        $this->documentManager->flush();
+        $this->ltiUserCreator->login($user, $request);
+        $session = $request->getSession();
+        $session->set('lti_client_id', $client->id());
+        $session->set('lti_deep_link_return_url', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->deep_link_return_url);
 
-        return $user;
+        return $this->redirectToRoute(self::ADMIN_SERIES_ROUTE);
     }
 }
