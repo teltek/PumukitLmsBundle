@@ -80,7 +80,7 @@ class LTIDeepLinkController extends AbstractController
     {
         return [
             'type' => 'ltiResourceLink',
-            'url' => 'https://pumoodle.local.teltek.es/iframe/'.$multimediaObject->getId(),
+            'url' => $this->generateUrl('pumukit_lms_openedx_embed_3', ['id' => $multimediaObject->getId()]),
             'title' => $multimediaObject->getTitle(),
             'presentation' => [
                 'documentTarget' => 'iframe',

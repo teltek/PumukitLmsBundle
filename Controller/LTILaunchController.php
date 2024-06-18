@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class LTIController extends AbstractController
+class LTILaunchController extends AbstractController
 {
     public const ADMIN_SERIES_ROUTE = 'pumukitnewadmin_series_index';
     private $documentManager;
