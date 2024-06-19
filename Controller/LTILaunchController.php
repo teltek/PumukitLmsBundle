@@ -62,7 +62,14 @@ class LTILaunchController extends AbstractController
         $this->ltiUserCreator->login($user, $request);
         $session = $request->getSession();
         $session->set('lti_client_id', $client->id());
-        $session->set('lti_deep_link_return_url', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->deep_link_return_url);
+
+        if ('LtiResourceLinkRequest' === $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/message_type'}) {
+            return $this->redirect($decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'});
+        }
+
+        if (isset($decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'})) {
+            $session->set('lti_deep_link_return_url', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->deep_link_return_url);
+        }
 
         return $this->redirectToRoute(self::ADMIN_SERIES_ROUTE);
     }

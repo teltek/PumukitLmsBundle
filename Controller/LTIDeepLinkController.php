@@ -14,6 +14,7 @@ use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class LTIDeepLinkController extends AbstractController
@@ -68,7 +69,9 @@ class LTIDeepLinkController extends AbstractController
             ],
         ];
 
-        $jwt = JWT::encode($claims, $privateKey, 'RS256');
+        $kid = $this->LTIKeyConfiguration->kidFromJwkKey();
+
+        $jwt = JWT::encode($claims, $privateKey, 'RS256', $kid);
 
         return $this->render('@PumukitLms/LTI/deep_link_response.html.twig', [
             'id_token' => $jwt,
@@ -80,7 +83,7 @@ class LTIDeepLinkController extends AbstractController
     {
         return [
             'type' => 'ltiResourceLink',
-            'url' => $this->generateUrl('pumukit_lms_openedx_embed_3', ['id' => $multimediaObject->getId()]),
+            'url' => $this->generateUrl('pumukit_lms_openedx_embed_3', ['id' => $multimediaObject->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             'title' => $multimediaObject->getTitle(),
             'presentation' => [
                 'documentTarget' => 'iframe',
