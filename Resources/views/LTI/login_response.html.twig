@@ -7,7 +7,7 @@
         window.onload = function() {
             setTimeout(function() {
                 document.getElementById("autosubmit").submit();
-            }, 1000);
+            }, 500);
         }
     </script>
 </head>
@@ -42,7 +42,6 @@
         <input type="hidden" name="response_mode" value="{{ response_mode }}">
         <input type="hidden" name="prompt" value="{{ prompt }}">
         <input type="hidden" name="lti_message_hint" value="{{ lti_message_hint }}">
-{#        <input type="submit" value="Login with OpenID Connect">#}
     </form>
 </div>
 

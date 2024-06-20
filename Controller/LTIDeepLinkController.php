@@ -83,7 +83,14 @@ class LTIDeepLinkController extends AbstractController
     {
         return [
             'type' => 'ltiResourceLink',
-            'url' => $this->generateUrl('pumukit_lms_openedx_embed_3', ['id' => $multimediaObject->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            'url' => $this->generateUrl(
+                'pumukit_lms_openedx_embed_3',
+                [
+                    'id' => $multimediaObject->getId(),
+                    'hash' => $this->configurationService->generateHash(''),
+                ],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
             'title' => $multimediaObject->getTitle(),
             'presentation' => [
                 'documentTarget' => 'iframe',

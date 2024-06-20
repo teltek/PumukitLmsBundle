@@ -7,7 +7,7 @@
         window.onload = function() {
             setTimeout(function() {
                 document.getElementById("autosubmit").submit();
-            }, 1000);
+            }, 500);
         }
     </script>
 </head>
@@ -34,7 +34,6 @@
     <form id="autosubmit" method="POST" action="{{ target_link_uri }}">
         <input type="hidden" name="id_token" value="{{ id_token }}">
         <input type="hidden" name="JWT" value="{{ id_token }}">
-        {#        <input type="submit" value="Login with OpenID Connect">#}
     </form>
 </div>
 
