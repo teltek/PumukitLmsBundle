@@ -28,8 +28,19 @@ final class LTIAutoRegisterController extends AbstractController
     public function register(Request $request): Response
     {
         $params = $request->query->all();
-        if (!isset($params['openid_configuration']) || !isset($params['registration_token'])) {
-            throw new \Exception('Missing required parameters.');
+
+        if (!isset($params['openid_configuration'])) {
+            throw new \Exception('Missing openid_configuration required parameter.');
+        }
+
+        if (str_contains($params['openid_configuration'], 'blackboard')) {
+            $blackboardParams = parse_url($params['openid_configuration'], PHP_URL_QUERY);
+            $explode = explode('registrationToken=', $blackboardParams);
+            $params['registration_token'] = $explode[1];
+        }
+
+        if (!isset($params['registration_token'])) {
+            throw new \Exception('Missing registration_token required parameter.');
         }
 
         $openIdConfiguration = $this->ltiRegister->openIdRequestConfiguration($params['openid_configuration']);
