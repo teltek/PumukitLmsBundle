@@ -25,7 +25,7 @@ use Twig\Environment;
 
 class SSOService
 {
-    public const USER_ORIGIN = 'openedx';
+    public const USER_ORIGIN = 'lms';
     public const GROUP_KEY = 'edupersonprimaryaffiliation';
     public const LDAP_PDI = 'PDI';
     public const LDAP_PAS = 'PAS';
