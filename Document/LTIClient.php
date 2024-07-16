@@ -124,7 +124,7 @@ class LTIClient
         return $openIdRaw['jwks_uri'];
     }
 
-    public function ltiDeploymentId(): string
+    public function ltiDeploymentId(): ?string
     {
         return $this->lti_deployment_id;
     }

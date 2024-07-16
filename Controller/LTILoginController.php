@@ -23,11 +23,17 @@ class LTILoginController extends AbstractController
     public function login(Request $request)
     {
         $data = $request->request->all();
+        if (empty($data)) {
+            $data = $request->query->all();
+        }
 
         $ltiClient = $this->documentManager->getRepository(LTIClient::class)->findOneBy(['client_id' => $data['client_id']]);
         if (!$ltiClient) {
             throw new \Exception('Client not found.');
         }
+
+        $session = $request->getSession();
+        $session->set('lti_deployment_id', $ltiClient->ltiDeploymentId() ?? $data['lti_deployment_id']);
 
         $authParams = [
             'action' => $ltiClient->authorizationEndpoint(),
@@ -41,7 +47,7 @@ class LTILoginController extends AbstractController
             'nonce' => bin2hex(random_bytes(16)),
             'prompt' => 'none',
             'lti_message_hint' => $data['lti_message_hint'],
-            'lti_deployment_id' => $ltiClient->ltiDeploymentId(),
+            'lti_deployment_id' => $session->get('lti_deployment_id'),
         ];
 
         return $this->render('@PumukitLms/LTI/login_response.html.twig', $authParams);

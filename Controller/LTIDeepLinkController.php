@@ -52,7 +52,7 @@ class LTIDeepLinkController extends AbstractController
         $ltiContent = $this->generateLTIContentLink($multimediaObject);
 
         $privateKey = $this->LTIKeyConfiguration->privateKeyContent();
-        $deploymentId = $ltiClient->ltiDeploymentId();
+        $deploymentId = $session->get('lti_deployment_id');
 
         $claims = [
             'iss' => $ltiClient->clientId(),
