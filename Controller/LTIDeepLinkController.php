@@ -55,9 +55,9 @@ class LTIDeepLinkController extends AbstractController
         $deploymentId = $session->get('lti_deployment_id');
 
         $claims = [
-            'iss' => $ltiClient->clientId(),
-            'aud' => [$ltiClient->authorizationEndpoint()],
-            'sub' => $ltiClient->clientId(),
+            'iss' => $ltiClient->issuer(),
+            'aud' => [$ltiClient->clientId()],
+            'sub' => '24400320',
             'iat' => time(),
             'exp' => time() + 3600,
             'nonce' => bin2hex(random_bytes(32)),
