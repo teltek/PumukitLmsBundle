@@ -24,6 +24,7 @@ class LmsController extends SSOController
     /**
      * @Route("/embed", name="pumukit_lms_openedx_embed")
      * @Route("/embed/", name="pumukit_lms_openedx_embed")
+     * @Route("/embed/{id}", name="pumukit_lms_openedx_embed_3")
      */
     public function iframeAction(Request $request)
     {
@@ -78,6 +79,7 @@ class LmsController extends SSOController
     /**
      * @Route("/playlist/embed", name="pumukit_lms_openedx_playlist_embed")
      * @Route("/playlist/embed/", name="pumukit_lms_openedx_playlist_embed")
+     * @Route("/playlist/embed/{id}", name="pumukit_lms_openedx_playlist_embed_3")
      */
     public function iFramePlaylistAction(Request $request)
     {
