@@ -13,6 +13,7 @@ use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Series;
 use Pumukit\SchemaBundle\Services\MultimediaObjectService;
+use Pumukit\WebTVBundle\PumukitWebTVBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,7 +93,7 @@ class LmsController extends AbstractController
             'profile' => ['$in' => $profileNames],
         ]);
         if ($multimediaObject && $multimediaObject->isPublished()) {
-            if ($multimediaObject->containsAnyTagWithCodes(['PUCHWEBTV', PumukitLmsBundle::LMS_TAG_CODE])) {
+            if ($multimediaObject->containsAnyTagWithCodes([PumukitWebTVBundle::WEB_TV_TAG, PumukitLmsBundle::LMS_TAG_CODE])) {
                 if ((!$this->multimediaObjectService->hasPlayableResource($multimediaObject)) || ($job && Job::STATUS_FINISHED !== $job->getStatus())) {
                     $options['job'] = $job;
 
