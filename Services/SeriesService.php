@@ -6,6 +6,7 @@ namespace Pumukit\LmsBundle\Services;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\LmsBundle\PumukitLmsBundle;
+use Pumukit\LmsBundle\Utils\SeriesUtils;
 use Pumukit\SchemaBundle\Document\Series;
 use Pumukit\SchemaBundle\Services\FactoryService;
 use Pumukit\SchemaBundle\Services\PersonalSeriesService;
@@ -48,28 +49,13 @@ class SeriesService
         return $series;
     }
 
-    public function createLmsSeries(): Series
+    private function createLmsSeries(): Series
     {
-        $series = $this->factoryService->createSeries(null, $this->buildI18nSeriesTitle());
+        $series = $this->factoryService->createSeries(null, SeriesUtils::buildI18nTitle($this->defaultSeriesTitle, $this->locales));
         $series->setProperty(PumukitLmsBundle::PROPERTY_LMS, true);
 
         $this->documentManager->flush();
 
         return $series;
-    }
-
-    public function getDefaultSeriesTitle(): string
-    {
-        return $this->defaultSeriesTitle;
-    }
-
-    private function buildI18nSeriesTitle(): array
-    {
-        $i18nTitle = [];
-        foreach ($this->locales as $locale) {
-            $i18nTitle[$locale] = $this->defaultSeriesTitle;
-        }
-
-        return $i18nTitle;
     }
 }

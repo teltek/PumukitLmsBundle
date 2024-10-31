@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
+use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\SeriesUtils;
@@ -21,13 +22,16 @@ class UploadController extends AbstractController
     public const ADMIN_UPLOAD_ROUTE = '/admin/simplewizard/embedindex';
     private $SSOService;
     private $seriesService;
+    private $configurationService;
 
     public function __construct(
         SSOService $SSOService,
-        SeriesService $seriesService
+        SeriesService $seriesService,
+        ConfigurationService $configurationService,
     ) {
         $this->SSOService = $SSOService;
         $this->seriesService = $seriesService;
+        $this->configurationService = $configurationService;
     }
 
     /**
@@ -51,7 +55,7 @@ class UploadController extends AbstractController
         }
 
         $series = $this->seriesService->getSeriesToUpload();
-        $params = '?'.SeriesUtils::buildParams($this->seriesService->getDefaultSeriesTitle(), $series->getId());
+        $params = '?'.SeriesUtils::buildParams($this->configurationService->getDefaultSeriesTitle(), $series->getId());
 
         return new RedirectResponse(self::ADMIN_UPLOAD_ROUTE.$params);
     }
