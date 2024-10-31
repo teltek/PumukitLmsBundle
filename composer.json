@@ -21,7 +21,7 @@
   ],
   "require": {
     "php": "^8.2",
-    "pumukit/pumukit": "^5.0"
+    "pumukit/pumukit": "^5.0",
     "web-token/jwt-framework": "^3.3",
     "firebase/php-jwt": "^6.10",
     "symfony/http-client": "^5.0"
