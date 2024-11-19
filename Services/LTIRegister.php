@@ -122,7 +122,7 @@ class LTIRegister
                 'userID' => '$User.id',
                 'username' => '$User.username',
                 'person_email' => '$Person.email.primary',
-                'person_fullname' => '$Person.name.full'
+                'person_fullname' => '$Person.name.full',
             ],
             'claims' => ['iss', 'sub', 'name', 'given_name', 'family_name', 'email'],
             'messages' => [
