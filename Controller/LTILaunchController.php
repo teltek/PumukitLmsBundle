@@ -57,14 +57,15 @@ class LTILaunchController extends AbstractController
         $userID = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->userID;
         $username = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->username;
         $mail = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_email;
-        $fullname = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_fullname;
+        $fullName = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_fullname;
         $roles = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/roles'};
 
-        $user = $this->ltiUserCreator->createUserFromResponse($userID, $username, $mail, $fullname, $roles);
+        $user = $this->ltiUserCreator->createUserFromResponse($userID, $username, $mail, $fullName, $roles);
 
         $this->ltiUserCreator->login($user, $request);
         $session = $request->getSession();
         $session->set('lti_client_id', $client->id());
+        $session->set('lti_state', $state);
 
         if ('LtiResourceLinkRequest' === $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/message_type'}) {
             return $this->redirect($decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'});

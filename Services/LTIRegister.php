@@ -122,9 +122,7 @@ class LTIRegister
                 'userID' => '$User.id',
                 'username' => '$User.username',
                 'person_email' => '$Person.email.primary',
-                'person_fullname' => '$Person.name.full',
-                'resource_link_title' => '$ResourceLink.title',
-                'resource_link_desc' => '$ResourceLink.description',
+                'person_fullname' => '$Person.name.full'
             ],
             'claims' => ['iss', 'sub', 'name', 'given_name', 'family_name', 'email'],
             'messages' => [

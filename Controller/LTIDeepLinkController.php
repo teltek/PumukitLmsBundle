@@ -57,12 +57,12 @@ class LTIDeepLinkController extends AbstractController
         $claims = [
             'iss' => $ltiClient->issuer(),
             'aud' => [$ltiClient->clientId()],
-            'sub' => '24400320',
+            'sub' => $ltiClient->clientId(),
             'iat' => time(),
             'exp' => time() + 3600,
             'nonce' => bin2hex(random_bytes(32)),
             'https://purl.imsglobal.org/spec/lti/claim/deployment_id' => $deploymentId,
-            'https://purl.imsglobal.org/spec/lti/claim/message_type' => 'LtiDeepLinkingRequest',
+            'https://purl.imsglobal.org/spec/lti/claim/message_type' => 'LtiDeepLinkingResponse',
             'https://purl.imsglobal.org/spec/lti/claim/version' => '1.3.0',
             'https://purl.imsglobal.org/spec/lti-dl/claim/content_items' => [
                 $ltiContent,
