@@ -158,7 +158,6 @@ class LmsController extends AbstractController
     private function getPublicImageDocControllerPlayer(MultimediaObject $multimediaObject)
     {
         $url = $this->router->generate('pumukit_player_index', ['id' => $multimediaObject->getId()]);
-        $url = str_replace('app_dev.php/', '', $url);
         $endpoint = $this->router->match($url);
 
         return $endpoint['_controller'];
