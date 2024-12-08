@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
-use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
-use Pumukit\LmsBundle\Utils\SeriesUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,19 +17,18 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UploadController extends AbstractController
 {
-    public const ADMIN_UPLOAD_ROUTE = '/admin/simplewizard/embedindex';
     private $SSOService;
     private $seriesService;
-    private $configurationService;
+    private $defaultUploadProfile;
 
     public function __construct(
         SSOService $SSOService,
         SeriesService $seriesService,
-        ConfigurationService $configurationService,
+        string $defaultUploadProfile
     ) {
         $this->SSOService = $SSOService;
         $this->seriesService = $seriesService;
-        $this->configurationService = $configurationService;
+        $this->defaultUploadProfile = $defaultUploadProfile;
     }
 
     /**
@@ -54,9 +51,13 @@ class UploadController extends AbstractController
             $this->SSOService->login($user, $request);
         }
 
-        $series = $this->seriesService->getSeriesToUpload();
-        $params = '?'.SeriesUtils::buildParams($this->configurationService->getDefaultSeriesTitle(), $series->getId());
+        $series = $this->getUser()->getPersonalSeries();
+        if (!$series) {
+            $series = $this->seriesService->getSeriesToUpload();
+        }
 
-        return new RedirectResponse(self::ADMIN_UPLOAD_ROUTE.$params);
+        $redirectUrl = $this->generateUrl('wizard_upload', ['series' => $series->getId(), 'show_profiles' => false, 'profile' => $this->defaultUploadProfile]);
+
+        return new RedirectResponse($redirectUrl);
     }
 }
