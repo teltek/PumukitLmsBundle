@@ -66,6 +66,8 @@ class LTILaunchController extends AbstractController
         $session = $request->getSession();
         $session->set('lti_client_id', $client->id());
         $session->set('lti_state', $state);
+        $session->set('lti_iss', $decodedToken->iss);
+        $session->set('lti_sub', $decodedToken->sub);
 
         if ('LtiResourceLinkRequest' === $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/message_type'}) {
             return $this->redirect($decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'});

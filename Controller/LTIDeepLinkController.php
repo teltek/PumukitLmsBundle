@@ -33,10 +33,15 @@ class LTIDeepLinkController extends AbstractController
     }
 
     /**
-     * @Route("/lti/deep_link/{id}", name="lti_tool_deep_link", methods={"GET","POST"})
+     * @Route("/lti/deep_link", name="lti_tool_deep_link", methods={"GET","POST"})
      */
-    public function deepLink(Request $request, string $id)
+    public function deepLink(Request $request)
     {
+        $id = $request->query->get('id');
+        if(!$id) {
+            throw new \Exception('ID not found on DeepLink Request');
+        }
+
         $multimediaObject = $this->documentManager->getRepository(MultimediaObject::class)->findOneBy(['_id' => $id]);
         if (!$multimediaObject) {
             throw new \Exception('Multimedia object not found.');
@@ -55,9 +60,9 @@ class LTIDeepLinkController extends AbstractController
         $deploymentId = $session->get('lti_deployment_id');
 
         $claims = [
-            'iss' => $ltiClient->clientId(),
+            'iss' => $ltiClient->clientId(), //$session->get('lti_iss'),
             'aud' => [$ltiClient->clientId()],
-            'sub' => $ltiClient->clientId(),
+            'sub' => $session->get('lti_sub'),
             'iat' => time(),
             'exp' => time() + 3600,
             'nonce' => bin2hex(random_bytes(32)),
