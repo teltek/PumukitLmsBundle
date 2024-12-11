@@ -110,6 +110,7 @@ class LTIRegister
         $json['redirect_uris'] = [
             $this->compoundToolUrl().PumukitLmsBundle::LTI_TOOL_LOGIN_URL,
             $this->compoundToolUrl().PumukitLmsBundle::LTI_TOOL_LAUNCH_URL,
+            $this->compoundToolUrl().PumukitLmsBundle::LTI_TOOL_DEEPLINK_URL,
             $this->compoundToolUrl(),
         ];
         $json['client_name'] = 'PuMuKIT LMS';
