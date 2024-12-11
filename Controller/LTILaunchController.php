@@ -73,17 +73,19 @@ class LTILaunchController extends AbstractController
             return $this->redirect($decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'});
         }
 
-        if (isset($decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/deployment_id'})) {
-            $session->set('lti_deployment_id', $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/deployment_id'});
-        }
-
-        if (isset($decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'})) {
-            if(isset($decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->data)) {
-                $session->set('lti_deep_link_return_data', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->data);
-            } else {
-                $session->set('lti_deep_link_return_data', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'});
+        if ('LtiDeepLinkingRequest' === $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/message_type'}) {
+            if (isset($decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/deployment_id'})) {
+                $session->set('lti_deployment_id', $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/deployment_id'});
             }
-            $session->set('lti_deep_link_return_url', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->deep_link_return_url);
+
+            if (isset($decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'})) {
+                if (isset($decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->data)) {
+                    $session->set('lti_deep_link_return_data', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->data);
+                } else {
+                    $session->set('lti_deep_link_return_data', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'});
+                }
+                $session->set('lti_deep_link_return_url', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->deep_link_return_url);
+            }
         }
 
         return $this->redirectToRoute(self::ADMIN_SERIES_ROUTE);
