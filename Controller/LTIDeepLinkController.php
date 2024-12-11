@@ -38,7 +38,7 @@ class LTIDeepLinkController extends AbstractController
     public function deepLink(Request $request)
     {
         $id = $request->query->get('id');
-        if(!$id) {
+        if (!$id) {
             throw new \Exception('ID not found on DeepLink Request');
         }
 
@@ -60,8 +60,8 @@ class LTIDeepLinkController extends AbstractController
         $deploymentId = $session->get('lti_deployment_id');
 
         $claims = [
-            'iss' => $ltiClient->clientId(), //$session->get('lti_iss'),
-            'aud' => [$session->get('lti_iss')], //[$ltiClient->clientId()],
+            'iss' => $ltiClient->clientId(), // $session->get('lti_iss'),
+            'aud' => [$session->get('lti_iss')], // [$ltiClient->clientId()],
             'sub' => $session->get('lti_sub'),
             'iat' => time(),
             'exp' => time() + 3600,
@@ -71,7 +71,7 @@ class LTIDeepLinkController extends AbstractController
             'https://purl.imsglobal.org/spec/lti/claim/version' => '1.3.0',
             'https://purl.imsglobal.org/spec/lti-dl/claim/data' => $session->get('lti_deep_link_return_data'),
             'https://purl.imsglobal.org/spec/lti-dl/claim/msg ' => 'Content added',
-            'https://purl.imsglobal.org/spec/lti-dl/claim/log' => 'PuMuKIT - Media with ID '. $id .' was added',
+            'https://purl.imsglobal.org/spec/lti-dl/claim/log' => 'PuMuKIT - Media with ID '.$id.' was added',
             'https://purl.imsglobal.org/spec/lti-dl/claim/content_items' => [
                 $ltiContent,
             ],
