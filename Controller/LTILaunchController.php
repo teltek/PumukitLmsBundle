@@ -74,7 +74,11 @@ class LTILaunchController extends AbstractController
         }
 
         if (isset($decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'})) {
-            $session->set('lti_deep_link_return_data', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'});
+            if(isset($decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->data)) {
+                $session->set('lti_deep_link_return_data', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->data);
+            } else {
+                $session->set('lti_deep_link_return_data', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'});
+            }
             $session->set('lti_deep_link_return_url', $decodedToken->{'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'}->deep_link_return_url);
         }
 
