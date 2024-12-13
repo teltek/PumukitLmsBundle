@@ -137,7 +137,7 @@ class LmsController extends AbstractController
     {
         $playerController = $this->playerService->getPublicControllerPlayer($multimediaObject);
 
-        if ($multimediaObject->isImageType() || $multimediaObject->isDocumentType()) {
+        if ($multimediaObject->isImageType() || $multimediaObject->isDocumentType() || $multimediaObject->isExternalType()) {
             $playerController = $this->getPublicImageDocControllerPlayer($multimediaObject);
         }
 
