@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @Route("/openedx/openedx")
@@ -37,6 +38,7 @@ class LmsController extends AbstractController
     private $configurationService;
     private $playerService;
     private $pumukitInfo;
+    private $router;
 
     public function __construct(
         DocumentManager $documentManager,
@@ -44,6 +46,7 @@ class LmsController extends AbstractController
         ProfileService $profileService,
         ConfigurationService $configurationService,
         PlayerService $playerService,
+        RouterInterface $router,
         array $pumukitInfo
     ) {
         $this->documentManager = $documentManager;
@@ -51,6 +54,7 @@ class LmsController extends AbstractController
         $this->profileService = $profileService;
         $this->configurationService = $configurationService;
         $this->playerService = $playerService;
+        $this->router = $router;
         $this->pumukitInfo = $pumukitInfo;
     }
 
@@ -133,6 +137,10 @@ class LmsController extends AbstractController
     {
         $playerController = $this->playerService->getPublicControllerPlayer($multimediaObject);
 
+        if ($multimediaObject->isImageType() || $multimediaObject->isDocumentType() || $multimediaObject->isExternalType()) {
+            $playerController = $this->getPublicImageDocControllerPlayer($multimediaObject);
+        }
+
         return $this->forward($playerController, ['request' => $request, 'multimediaObject' => $multimediaObject]);
     }
 
@@ -145,6 +153,14 @@ class LmsController extends AbstractController
                 'id' => $series->getId(),
             ]
         );
+    }
+
+    private function getPublicImageDocControllerPlayer(MultimediaObject $multimediaObject)
+    {
+        $url = $this->router->generate('pumukit_player_index', ['id' => $multimediaObject->getId()]);
+        $endpoint = $this->router->match($url);
+
+        return $endpoint['_controller'];
     }
 
     private function getOptionsParameters(Request $request): array

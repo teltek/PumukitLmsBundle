@@ -39,6 +39,12 @@
                 e.preventDefault();
                 if (window.parent && e.currentTarget.href) {
                     var url = e.currentTarget.href.replace('/video/', '/iframe/');
+                    const checkClasses = ['image', 'document', 'external'];
+
+                    if (checkClasses.some(classes => e.currentTarget.classList.contains(classes))) {
+                        url = e.currentTarget.href.replace('/video/', '/iframe/player/');
+                    }
+
                     $('.modal-body-shared-videos').html(
                         '<div class="embed-responsive embed-responsive-16by9">' +
                         '<iframe id="pmk-iframe" src="' + url + '" frameborder="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
