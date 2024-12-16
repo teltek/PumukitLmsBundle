@@ -22,6 +22,12 @@ services:
       $limitObjsSearch: '%limit_objs_search%'
     tags: ['controller.service_arguments']
 
+  Pumukit\LmsBundle\Controller\UploadController:
+    class: Pumukit\LmsBundle\Controller\UploadController
+    arguments:
+      $defaultUploadProfile: '%pumukit_lms.default_upload_profile%'
+    tags: ['controller.service_arguments']
+
   Pumukit\LmsBundle\Command\:
     resource: '../../Command/'
     tags: ['console.command']
