@@ -4,6 +4,7 @@ services:
     autoconfigure: true
     public:        true
     bind:
+      $kernelProjectDir: '%kernel.project_dir%'
       $pumukitInfo: "%pumukit.info%"
       $defaultSeriesTitle: '%pumukit_lms.default_series_title%'
       $locales: '%pumukit.locales%'
@@ -78,3 +79,14 @@ services:
     class: Pumukit\LmsBundle\EventListener\FilterListener
     tags:
       - { name: "kernel.event_listener", event: "kernel.request" }
+
+  Pumukit\LmsBundle\Services\LTIRegister:
+    class: Pumukit\LmsBundle\Services\LTIRegister
+    arguments:
+      $domain: '%pumukit_lms.naked_backoffice_domain%'
+
+  Pumukit\LmsBundle\Services\LTIUserCreator:
+    class: Pumukit\LmsBundle\Services\LTIUserCreator
+
+  Pumukit\LmsBundle\Services\LTIKeyConfiguration:
+    class: Pumukit\LmsBundle\Services\LTIKeyConfiguration
