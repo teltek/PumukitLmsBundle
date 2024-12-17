@@ -53,10 +53,10 @@ class UploadController extends AbstractController
 
         $series = $this->getUser()->getPersonalSeries();
         if (!$series) {
-            $series = $this->seriesService->getSeriesToUpload();
+            $series = $this->seriesService->getSeriesToUpload()->getId();
         }
 
-        $redirectUrl = $this->generateUrl('wizard_upload', ['series' => $series->getId(), 'show_profiles' => false, 'profile' => $this->defaultUploadProfile]);
+        $redirectUrl = $this->generateUrl('wizard_upload', ['series' => $series, 'show_profiles' => false, 'profile' => $this->defaultUploadProfile]);
 
         return new RedirectResponse($redirectUrl);
     }
