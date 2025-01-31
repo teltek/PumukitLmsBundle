@@ -60,8 +60,8 @@ class SSOService
         EventDispatcherInterface $dispatcher,
         Environment $templating,
         bool $checkLDAPInfoToUpdatePermissionProfile,
-        LDAPService $ldapService = null,
-        RequestStack $requestStack = null,
+        ?LDAPService $ldapService = null,
+        ?RequestStack $requestStack = null,
         LoggerInterface $logger
     ) {
         $this->documentManager = $documentManager;

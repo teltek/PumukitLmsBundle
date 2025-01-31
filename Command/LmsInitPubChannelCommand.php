@@ -45,7 +45,7 @@ EOT
         return 0;
     }
 
-    private function createTagWithCode(string $code, string $title, string $tagParentCode = null, bool $metatag = false): Tag
+    private function createTagWithCode(string $code, string $title, ?string $tagParentCode = null, bool $metatag = false): Tag
     {
         if ($tag = $this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => $code])) {
             throw new \Exception('Nothing done - Tag retrieved from DB id: '.$tag->getId().' cod: '.$tag->getCod());

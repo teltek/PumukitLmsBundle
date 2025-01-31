@@ -55,7 +55,7 @@ class SearchController extends BaseSearchController
      *
      * @ParamConverter("blockedTag", options={"mapping": {"tagCod": "cod"}})
      */
-    public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, bool $useTagAsGeneral = false): Response
+    public function multimediaObjectsAction(Request $request, ?Tag $blockedTag = null, bool $useTagAsGeneral = false): Response
     {
         $request->attributes->set('only_public', true);
 
