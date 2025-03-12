@@ -124,7 +124,7 @@ class LTIRegister
                 'username' => '$User.username',
                 'person_email' => '$Person.email.primary',
                 'person_fullname' => '$Person.name.full',
-                'person_email_institutional' => '@X@user.email.institution_email@X@'
+                'person_email_institutional' => '@X@user.email.institution_email@X@',
             ],
             'claims' => ['iss', 'sub', 'name', 'given_name', 'family_name', 'email'],
             'messages' => [
