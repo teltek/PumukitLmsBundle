@@ -43,7 +43,10 @@ class LTILaunchController extends AbstractController
         if (!$client) {
             $client = $this->documentManager->getRepository(LTIClient::class)->findOneBy(['issuer' => 'https://developer.blackboard.com/']);
             if (!$client) {
-                throw new \Exception('Client not found.');
+                $client = $this->documentManager->getRepository(LTIClient::class)->findOneBy(['issuer' => 'https://blackboard.com']);
+                if (!$client) {
+                    throw new \Exception('Client not found.');
+                }
             }
             $blackboardOrigin = true;
         }
