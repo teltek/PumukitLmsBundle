@@ -37,6 +37,7 @@ class LTILaunchController extends AbstractController
         $token = $request->request->get('id_token');
         $state = $request->request->get('state');
         $origin = $request->headers->get('origin');
+        $blackboardOrigin = false;
 
         $client = $this->documentManager->getRepository(LTIClient::class)->findOneBy(['issuer' => $origin]);
         if (!$client) {
@@ -44,6 +45,7 @@ class LTILaunchController extends AbstractController
             if (!$client) {
                 throw new \Exception('Client not found.');
             }
+            $blackboardOrigin = true;
         }
 
         $jwksUri = $client->getJWKSUri();
@@ -57,6 +59,9 @@ class LTILaunchController extends AbstractController
         $userID = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->userID;
         $username = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->username;
         $mail = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_email;
+        if ($blackboardOrigin) {
+            $mail = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_email_institutional;
+        }
         $fullName = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/custom'}->person_fullname;
         $roles = $decodedToken->{'https://purl.imsglobal.org/spec/lti/claim/roles'};
 
