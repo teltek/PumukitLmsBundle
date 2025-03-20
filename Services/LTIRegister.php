@@ -113,7 +113,7 @@ class LTIRegister
             $this->compoundToolUrl().PumukitLmsBundle::LTI_TOOL_DEEPLINK_URL,
             $this->compoundToolUrl(),
         ];
-        $json['client_name'] = 'PuMuKIT LMS';
+        $json['client_name'] = $this->compoundToolUrlWithoutDomain();
         $json['jwks_uri'] = $this->compoundToolUrl().PumukitLmsBundle::LTI_TOOL_PUBLIC_KEYSET_URL;
         $json['token_endpoint_auth_method'] = 'private_key_jwt';
         $json['https://purl.imsglobal.org/spec/lti-tool-configuration'] = [
