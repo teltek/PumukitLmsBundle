@@ -40,7 +40,20 @@ class EmbedLMSController extends AbstractController
             return new JsonResponse(['error' => 'MultimediaObject not found'], 404);
         }
 
-        $multimediaObject->setProperty('embedded_in_lms', date('Y'));
+        $currentYear = date('Y');
+        $property = $multimediaObject->getProperty('embedded_in_lms');
+
+        if (null === $property) {
+            $multimediaObject->setProperty('embedded_in_lms', [$currentYear]);
+        } elseif (is_array($property)) {
+            if (!in_array($currentYear, $property)) {
+                $property[] = $currentYear;
+                $multimediaObject->setProperty('embedded_in_lms', $property);
+            }
+        } elseif ($property !== $currentYear) {
+            $multimediaObject->setProperty('embedded_in_lms', [$property, $currentYear]);
+        }
+
         $this->documentManager->flush();
 
         return new JsonResponse(['status' => 'ok', 'mmId' => $mmId]);
