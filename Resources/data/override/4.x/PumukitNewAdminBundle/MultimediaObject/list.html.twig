@@ -27,7 +27,7 @@
                     {% endif %}
                     <td headers="th-icons">
                       {% if is_naked() and mm.containsAnyTagWithCodes(['PUCHOPENEDX', 'PUCHMOODLE', 'PUCHLMS'])%}
-                      <a class="moodlepr-add" href="#" title="{% trans %}Publish to LMS{% endtrans %}" onclick="parent.window.postMessage({'mmId': '{{ mm.id }}'}, '*'); return false;"><i class="mdi-editor-insert-photo"></i></a>
+                      <a class="moodlepr-add" href="#" data-mm="{{ mm.id }}" title="{% trans %}Publish to LMS{% endtrans %}"><i class="mdi-editor-insert-photo"></i></a>
                       {% endif %}
                     </td>
                     <td headers="th-icons">
@@ -142,14 +142,37 @@
 </style>
 <script>
  $(function(){
- parent.postMessage('enableMoodlePRAdd?', '*');
- window.addEventListener('message', function(e){
-   if(e.data.moodlepradd != 'OK'){
-     return;
-   }
-   $('.moodlepr-add').show();
- });
- });
+        parent.postMessage('enableMoodlePRAdd?', '*');
+            window.addEventListener('message', function(e){
+            if(e.data.moodlepradd != 'OK'){
+                return;
+            }
+            $('.moodlepr-add').show();
+        });
+    });
+
+    function embedToLMS(mmId) {
+        parent.window.postMessage({ mmId }, '*');
+
+        $.ajax({
+            url: "{{ path('pumukit_lms_embed') }}",
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ mmId: mmId }),
+            success: function(data) {
+                console.log('Server response:', data);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error sending request:', error);
+            }
+        });
+    }
+
+    $(document).on('click', '.moodlepr-add', function (e) {
+        e.preventDefault();
+        const mmId = $(this).data('mm');
+        embedToLMS(mmId);
+    });
 </script>
 {# TODO variables
 

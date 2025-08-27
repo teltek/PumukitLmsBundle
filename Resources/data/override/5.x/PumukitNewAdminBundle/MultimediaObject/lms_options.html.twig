@@ -1,0 +1,32 @@
+{% if is_naked() %}
+    <td headers="th-icons" style="width: 1em;">
+        {% if mm.containsAnyTagWithCodes(['PUCHOPENEDX', 'PUCHMOODLE', 'PUCHLMS'])%}
+            <a class="moodlepr-add" href="#" data-mm="{{ mm.id }}" title="{% trans %}Publish to LMS{% endtrans %}"><i class="mdi-editor-insert-photo"></i></a>
+        {% endif %}
+    </td>
+{% endif %}
+
+<script>
+    function embedToLMS(mmId) {
+        parent.window.postMessage({ mmId }, '*');
+
+        $.ajax({
+            url: "{{ path('pumukit_lms_embed') }}",
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ mmId: mmId }),
+            success: function(data) {
+                console.log('Server response:', data);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error sending request:', error);
+            }
+        });
+    }
+
+    $(document).on('click', '.moodlepr-add', function (e) {
+        e.preventDefault();
+        const mmId = $(this).data('mm');
+        embedToLMS(mmId);
+    });
+</script>
