@@ -51,6 +51,11 @@ services:
        $nakedCustomCssUrl: '%pumukit_lms.naked_custom_css_url%'
        $domainsPatterns: '%pumukit_lms.domains%'
 
+  Pumukit\LmsBundle\Services\InboxLmsService:
+    class: Pumukit\LmsBundle\Services\InboxLmsService
+    arguments:
+      $lmsUploadURL: '%pumukit_lms.lms_upload_url%'
+
   Pumukit\LmsBundle\Services\LmsService:
     class: Pumukit\LmsBundle\Services\LmsService
 
@@ -90,3 +95,8 @@ services:
 
   Pumukit\LmsBundle\Services\LTIKeyConfiguration:
     class: Pumukit\LmsBundle\Services\LTIKeyConfiguration
+
+  Pumukit\LmsBundle\Twig\InboxLmsExtension:
+    class: Pumukit\LmsBundle\Twig\InboxLmsExtension
+    tags:
+      - { name: "twig.extension" }
