@@ -191,12 +191,14 @@ class SSOService
             return $this->genError('The domain "pumukit.naked_backoffice_domain" is not configured.');
         }
 
-        if ($username) {
-            $type = 'username';
-            $value = $username;
-        } elseif (!empty($email)) {
+        $hashValidationValue = !empty($email) ? $email : $username;
+
+        if (!empty($email)) {
             $type = 'email';
             $value = $email;
+        } elseif ($username) {
+            $type = 'username';
+            $value = $username;
         } else {
             return $this->genError('Not email or username parameter.');
         }
@@ -205,7 +207,7 @@ class SSOService
             return $this->genError('Invalid Domain!');
         }
 
-        if (!$this->configurationService->isValidHash($hash, $value)) {
+        if (!$this->configurationService->isValidHash($hash, $hashValidationValue)) {
             return $this->genError('The hash is not valid.');
         }
 

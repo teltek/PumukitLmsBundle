@@ -62,7 +62,6 @@ class UploadController extends AbstractController
 
         $request->getSession()->set('tus_sso_email', $email);
         $request->getSession()->set('tus_sso_username', $username);
-        $request->getSession()->set('tus_sso_hash', $hash);
 
         $redirectUrl = $this->generateUrl('wizard_upload', ['series' => $series, 'show_profiles' => false, 'profile' => $this->defaultUploadProfile]);
 

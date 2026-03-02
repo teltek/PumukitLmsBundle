@@ -9,6 +9,7 @@ use Pumukit\CoreBundle\Services\InboxService;
 use Pumukit\CoreBundle\Services\UploadDispatcherService;
 use Pumukit\CoreBundle\Utils\BlackListExtensions;
 use Pumukit\CoreBundle\Utils\MediaMimeTypeUtils;
+use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\SSOService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,13 +28,15 @@ class MoodleServerController extends AbstractController
     private $ssoService;
     private $inboxService;
     private $uploadDispatcherService;
+    private $configurationService;
 
-    public function __construct(LoggerInterface $logger, SSOService $ssoService, InboxService $inboxService, UploadDispatcherService $uploadDispatcherService)
+    public function __construct(LoggerInterface $logger, SSOService $ssoService, InboxService $inboxService, UploadDispatcherService $uploadDispatcherService, ConfigurationService $configurationService)
     {
         $this->logger = $logger;
         $this->ssoService = $ssoService;
         $this->inboxService = $inboxService;
         $this->uploadDispatcherService = $uploadDispatcherService;
+        $this->configurationService = $configurationService;
     }
 
     /**
@@ -92,11 +95,20 @@ class MoodleServerController extends AbstractController
                 $email = $request->query->get('email');
                 $series = $request->get('series');
 
-                if (!$username || !$hash || !$email || !$series) {
-                    return new Response('Invalid parameters', 401);
+                if (!$username && !$email) {
+                    return new Response('Missing username and email', 400);
+                }
+                if (!$series) {
+                    return new Response('Missing series', 400);
                 }
 
-                $referer = $request->headers->get('referer') ?? $request->getSchemeAndHttpHost();
+                $hashValidationValue = !empty($email) ? $email : $username;
+
+                if (!$hash) {
+                    $hash = $this->configurationService->generateHash($hashValidationValue);
+                }
+
+                $referer = $request->headers->get('referer');
                 $user = $this->ssoService->getAndValidateUser(
                     (string) $email,
                     (string) $username,
@@ -169,14 +181,23 @@ class MoodleServerController extends AbstractController
         $email = $request->get('email');
         $uuid = $request->get('uuid');
 
-        if (!$username || !$hash || !$email || !$uuid) {
-            return new JsonResponse(['success' => false, 'error' => 'Missing parameters'], 401);
+        if (!$username && !$email) {
+            return new JsonResponse(['success' => false, 'error' => 'Missing username and email'], 400);
+        }
+        if (!$uuid) {
+            return new JsonResponse(['success' => false, 'error' => 'Missing uuid'], 400);
+        }
+
+        $hashValidationValue = !empty($email) ? $email : $username;
+
+        if (!$hash) {
+            $hash = $this->configurationService->generateHash($hashValidationValue);
         }
 
         $user = $this->ssoService->getAndValidateUser(
             $email,
             $username,
-            $request->getSchemeAndHttpHost(),
+            $request->headers->get('referer'),
             $hash,
             $request->isSecure()
         );
