@@ -238,7 +238,7 @@ class MoodleServerController extends AbstractController
             }
 
             // Prevent directory traversal and enforce simple file names
-            if (false !== strpos($fileName, '..') || false !== strpbrk($fileName, "/\\")) {
+            if (false !== strpos($fileName, '..') || false !== strpbrk($fileName, '/\\')) {
                 return new JsonResponse(['success' => false, 'error' => 'Invalid file name'], 400);
             }
 
