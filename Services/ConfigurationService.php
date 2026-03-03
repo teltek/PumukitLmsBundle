@@ -98,9 +98,38 @@ class ConfigurationService
         return md5($email.$this->getPassword().$date.$this->getNakedBackofficeDomain());
     }
 
-    public function isValidHash(string $hash, string $email): bool
+    public function generateHashWithValue(?string $email, ?string $username = null): string
     {
-        return $hash === $this->generateHash($email);
+        // Prioriza email, si está vacío usa username
+        $value = !empty($email) ? $email : $username;
+
+        if (empty($value)) {
+            throw new \InvalidArgumentException('Either email or username must be provided');
+        }
+
+        return $this->generateHash($value);
+    }
+
+    public function isValidHash(string $hash, string $email, ?string $username = null): bool
+    {
+        if (empty($email) && empty($username)) {
+            return false;
+        }
+
+        $hashWithEmail = $email ? $this->generateHash($email) : null;
+        $hashWithUsername = $username ? $this->generateHash($username) : null;
+
+        // Intenta con email primero
+        if ($hashWithEmail && $hash === $hashWithEmail) {
+            return true;
+        }
+
+        // Intenta con username (como lo genera el plugin de Moodle)
+        if ($hashWithUsername && $hash === $hashWithUsername) {
+            return true;
+        }
+
+        return false;
     }
 
     private function validateRegexDomain(array $domainsPatterns, string $currentDomain): bool
