@@ -102,10 +102,8 @@ class MoodleServerController extends AbstractController
                     return new Response('Missing series', 400);
                 }
 
-                $hashValidationValue = !empty($email) ? $email : $username;
-
                 if (!$hash) {
-                    $hash = $this->configurationService->generateHash($hashValidationValue);
+                    $hash = $this->configurationService->generateHashWithValue($email, $username);
                 }
 
                 $referer = $request->headers->get('referer');
@@ -188,10 +186,8 @@ class MoodleServerController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => 'Missing uuid'], 400);
         }
 
-        $hashValidationValue = !empty($email) ? $email : $username;
-
         if (!$hash) {
-            $hash = $this->configurationService->generateHash($hashValidationValue);
+            $hash = $this->configurationService->generateHashWithValue($email, $username);
         }
 
         $user = $this->ssoService->getAndValidateUser(
