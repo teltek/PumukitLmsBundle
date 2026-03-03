@@ -121,7 +121,7 @@ class MoodleServerController extends AbstractController
 
                 $this->validateFileExtension($request);
 
-                $cleanSeries = preg_replace('/[^a-zA-Z0-9_\-]/', '', (string) $series);
+                $cleanSeries = $this->sanitizeSeries((string) $series);
                 if ('' === $cleanSeries) {
                     return new Response('Invalid series', 400);
                 }
@@ -133,7 +133,21 @@ class MoodleServerController extends AbstractController
 
                 $metadata = $request->headers->get('Upload-Metadata');
                 if ($metadata && preg_match('/filename (?P<name>[^\s,]+)/', $metadata, $matches)) {
-                    $filename = base64_decode($matches['name']);
+                    $decodedName = base64_decode($matches['name'], true);
+                    if (false === $decodedName) {
+                        return new Response('Invalid filename encoding', 400);
+                    }
+
+                    // Sanitize filename to prevent directory traversal and unsafe characters
+                    $filename = basename($decodedName);
+                    $filename = str_replace(['/', '\\'], '_', $filename);
+                    $filename = preg_replace('/[^a-zA-Z0-9._\- ]/', '_', $filename);
+                    $filename = trim((string) $filename);
+
+                    if ('' === $filename) {
+                        return new Response('Invalid filename', 400);
+                    }
+
                     $targetFile = $seriesPath.DIRECTORY_SEPARATOR.$filename;
 
                     if (file_exists($targetFile)) {
@@ -218,9 +232,21 @@ class MoodleServerController extends AbstractController
                 return new JsonResponse(['success' => false, 'error' => 'Invalid mapping'], 400);
             }
 
+            $fileName = $request->get('fileName');
+            if (!is_string($fileName) || '' === $fileName) {
+                return new JsonResponse(['success' => false, 'error' => 'Invalid file name'], 400);
+            }
+
+            // Prevent directory traversal and enforce simple file names
+            if (false !== strpos($fileName, '..') || false !== strpbrk($fileName, "/\\")) {
+                return new JsonResponse(['success' => false, 'error' => 'Invalid file name'], 400);
+            }
+
+            $fileName = basename($fileName);
+
             $this->uploadDispatcherService->dispatchUploadFromInbox(
                 $user,
-                $request->get('fileName'),
+                $fileName,
                 $series,
                 $request->get('profile', 'master_copy')
             );
@@ -244,10 +270,24 @@ class MoodleServerController extends AbstractController
         $declaredMimeType = '';
 
         if (preg_match('/filename (?P<name>[^\s,]+)/', $metadata, $matches)) {
-            $filename = base64_decode($matches['name']);
+            $decodedName = base64_decode($matches['name'], true);
+            if (false === $decodedName) {
+                throw new \Exception('Invalid filename encoding.');
+            }
+
+            $filename = basename($decodedName);
+            $filename = str_replace(['/', '\\'], '_', $filename);
+            $filename = preg_replace('/[^a-zA-Z0-9._\- ]/', '_', $filename);
+            $filename = trim((string) $filename);
         }
+
         if (preg_match('/filetype (?P<type>[^\s,]+)/', $metadata, $matches)) {
             $declaredMimeType = base64_decode($matches['type']);
+            if (false === $declaredMimeType) {
+                throw new \Exception('Invalid MIME type encoding.');
+            }
+
+            $declaredMimeType = preg_replace('/[^a-zA-Z0-9\-\/\.\+]/', '', $declaredMimeType);
         }
 
         $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -263,5 +303,12 @@ class MoodleServerController extends AbstractController
 
             throw new \Exception('File type not allowed by policy.');
         }
+    }
+
+    private function sanitizeSeries(string $series): string
+    {
+        $cleanSeries = preg_replace('/[^a-zA-Z0-9_\-]/', '', $series);
+
+        return $cleanSeries ?? '';
     }
 }
