@@ -110,8 +110,12 @@ class ConfigurationService
         return $this->generateHash($value);
     }
 
-    public function isValidHash(string $hash, string $email, ?string $username = null): bool
+    public function isValidHash(string $hash, string $email, ?string $username = null, bool $isEmbed = false): bool
     {
+        if ($isEmbed) {
+            return $hash === $this->generateHash('');
+        }
+
         if (empty($email) && empty($username)) {
             return false;
         }
