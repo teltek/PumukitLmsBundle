@@ -31,10 +31,26 @@ class ManagerController extends AbstractController
      */
     public function manager(Request $request)
     {
+        $session = $request->getSession();
+
+        $email = $request->get('email');
+        $username = $request->get('username');
+        $hash = $request->get('hash');
+
+        if ($email && $username) {
+            if (
+                $session->get('tus_sso_email') !== $email
+                || $session->get('tus_sso_username') !== $username
+            ) {
+                $session->set('tus_sso_email', $email);
+                $session->set('tus_sso_username', $username);
+            }
+        }
+
         $forceReLogin = false;
 
         $user = $this->getUser();
-        if (!$user || $user->getEmail() !== $request->get('email') || $user->getUsername() !== $request->get('username')) {
+        if (!$user || $user->getEmail() !== $email || $user->getUsername() !== $username) {
             $forceReLogin = true;
         }
 
@@ -44,10 +60,10 @@ class ManagerController extends AbstractController
 
         if ($forceReLogin) {
             $user = $this->SSOService->getAndValidateUser(
-                $request->get('email') ?? '',
-                $request->get('username'),
+                $email ?? '',
+                $username,
                 $request->headers->get('referer'),
-                $request->get('hash'),
+                $hash,
                 $request->isSecure()
             );
 
