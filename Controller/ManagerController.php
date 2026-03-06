@@ -37,7 +37,7 @@ class ManagerController extends AbstractController
         $username = $request->get('username');
         $hash = $request->get('hash');
 
-        if ($email && $username) {
+         if ($email || $username) {
             if (
                 $session->get('tus_sso_email') !== $email
                 || $session->get('tus_sso_username') !== $username
