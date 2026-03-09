@@ -112,24 +112,35 @@ class ConfigurationService
 
     public function isValidHash(string $hash, string $email, ?string $username = null, bool $isEmbed = false): bool
     {
+        $today = date('d/m/Y');
+        $yesterday = date('d/m/Y', strtotime('-1 day'));
+
+        $check = function (?string $value, bool $allowEmpty = false) use ($hash, $today, $yesterday) {
+            if (null === $value || ('' === $value && !$allowEmpty)) {
+                return false;
+            }
+
+            $hashToday = md5($value.$this->getPassword().$today.$this->getNakedBackofficeDomain());
+            $hashYesterday = md5($value.$this->getPassword().$yesterday.$this->getNakedBackofficeDomain());
+
+            return $hash === $hashToday || $hash === $hashYesterday;
+        };
+
         if ($isEmbed) {
-            return $hash === $this->generateHash('');
+            return $check('', true);
         }
 
         if (empty($email) && empty($username)) {
             return false;
         }
 
-        $hashWithEmail = $email ? $this->generateHash($email) : null;
-        $hashWithUsername = $username ? $this->generateHash($username) : null;
-
-        // Intenta con email primero
-        if ($hashWithEmail && $hash === $hashWithEmail) {
+        // Intenta con email
+        if ($check($email)) {
             return true;
         }
 
         // Intenta con username (como lo genera el plugin de Moodle)
-        if ($hashWithUsername && $hash === $hashWithUsername) {
+        if ($check($username)) {
             return true;
         }
 
