@@ -98,9 +98,53 @@ class ConfigurationService
         return md5($email.$this->getPassword().$date.$this->getNakedBackofficeDomain());
     }
 
-    public function isValidHash(string $hash, string $email): bool
+    public function generateHashWithValue(?string $email, ?string $username = null): string
     {
-        return $hash === $this->generateHash($email);
+        // Prioriza email, si está vacío usa username
+        $value = !empty($email) ? $email : $username;
+
+        if (empty($value)) {
+            throw new \InvalidArgumentException('Either email or username must be provided');
+        }
+
+        return $this->generateHash($value);
+    }
+
+    public function isValidHash(string $hash, string $email, ?string $username = null, bool $isEmbed = false): bool
+    {
+        $today = date('d/m/Y');
+        $yesterday = date('d/m/Y', strtotime('-1 day'));
+
+        $check = function (?string $value, bool $allowEmpty = false) use ($hash, $today, $yesterday) {
+            if (null === $value || ('' === $value && !$allowEmpty)) {
+                return false;
+            }
+
+            $hashToday = md5($value.$this->getPassword().$today.$this->getNakedBackofficeDomain());
+            $hashYesterday = md5($value.$this->getPassword().$yesterday.$this->getNakedBackofficeDomain());
+
+            return $hash === $hashToday || $hash === $hashYesterday;
+        };
+
+        if ($isEmbed) {
+            return $check('', true);
+        }
+
+        if (empty($email) && empty($username)) {
+            return false;
+        }
+
+        // Intenta con email
+        if ($check($email)) {
+            return true;
+        }
+
+        // Intenta con username (como lo genera el plugin de Moodle)
+        if ($check($username)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function validateRegexDomain(array $domainsPatterns, string $currentDomain): bool

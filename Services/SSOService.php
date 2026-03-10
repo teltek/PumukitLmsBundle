@@ -191,12 +191,12 @@ class SSOService
             return $this->genError('The domain "pumukit.naked_backoffice_domain" is not configured.');
         }
 
-        if ($username) {
-            $type = 'username';
-            $value = $username;
-        } elseif (!empty($email)) {
+        if (!empty($email)) {
             $type = 'email';
             $value = $email;
+        } elseif ($username) {
+            $type = 'username';
+            $value = $username;
         } else {
             return $this->genError('Not email or username parameter.');
         }
@@ -205,7 +205,8 @@ class SSOService
             return $this->genError('Invalid Domain!');
         }
 
-        if (!$this->configurationService->isValidHash($hash, $value)) {
+        // Valida hash con email o username (plugin Moodle usa username)
+        if (!$this->configurationService->isValidHash($hash, $email, $username)) {
             return $this->genError('The hash is not valid.');
         }
 

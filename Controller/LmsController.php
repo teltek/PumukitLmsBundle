@@ -188,7 +188,7 @@ class LmsController extends AbstractController
             }
         }
 
-        if (!$this->configurationService->isValidHash($request->get('hash'), '')) {
+        if (!$this->configurationService->isValidHash($request->get('hash'), '', null, true)) {
             $options['error_message'] = 'Hash not valid';
 
             return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);

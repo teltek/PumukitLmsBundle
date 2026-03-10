@@ -36,12 +36,16 @@ class UploadController extends AbstractController
      */
     public function upload(Request $request)
     {
+        $email = $request->get('email');
+        $username = $request->get('username');
+        $hash = $request->get('hash');
+
         if (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$this->isGranted('ROLE_SCOPE_PERSONAL')) {
             $user = $this->SSOService->getAndValidateUser(
-                $request->get('email'),
-                $request->get('username'),
+                $email,
+                $username,
                 $request->headers->get('referer'),
-                $request->get('hash'),
+                $hash,
                 $request->isSecure()
             );
             if ($user instanceof Response) {
@@ -55,6 +59,9 @@ class UploadController extends AbstractController
         if (!$series) {
             $series = $this->seriesService->getSeriesToUpload()->getId();
         }
+
+        $request->getSession()->set('tus_sso_email', $email);
+        $request->getSession()->set('tus_sso_username', $username);
 
         $redirectUrl = $this->generateUrl('wizard_upload', ['series' => $series, 'show_profiles' => false, 'profile' => $this->defaultUploadProfile]);
 
