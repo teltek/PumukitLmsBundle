@@ -82,6 +82,6 @@ class ManagerController extends AbstractController
             return $this->redirectToRoute(self::ADMIN_MULTIMEDIAOBJECT_ROUTE, ['id' => $mmobjId]);
         }
 
-        return $this->redirectToRoute(self::ADMIN_SERIES_ROUTE);
+        return $this->redirectToRoute(self::ADMIN_SERIES_ROUTE, ['action' => 'reset_criteria']);
     }
 }
