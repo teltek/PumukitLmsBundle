@@ -143,10 +143,15 @@ class SSOService
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
-        $info = $this->getInfoFromLDAP(['email' => $email, 'username' => $username]);
-        if ($info) {
-            $user->setFullname($info['cn'][0]);
-        } else {
+
+        try {
+            $info = $this->getInfoFromLDAP(['email' => $email, 'username' => $username]);
+            if ($info) {
+                $user->setFullname($info['cn'][0]);
+            } else {
+                $user->setFullname($fullName);
+            }
+        } catch (\Exception $exception) {
             $user->setFullname($fullName);
         }
 
