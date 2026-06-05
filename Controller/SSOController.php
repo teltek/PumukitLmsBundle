@@ -75,7 +75,7 @@ class SSOController extends Controller
                 $ssoService->promoteUser($user);
             }
         } catch (\RuntimeException $e) {
-            $logger->info('TTK Runtime exception');
+            $logger->info('TTK Runtime exception: '.$e->getMessage());
         } catch (\Exception $e) {
             if ($this->getParameter('pumukit_lms.allow_create_users_from_req') && $email && $username) {
                 $logger->info('TTK Exception, now create user by username and email: '.$username.' - '.$email);
