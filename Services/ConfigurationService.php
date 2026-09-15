@@ -154,7 +154,7 @@ class ConfigurationService
                 return true;
             }
 
-            if (1 === preg_match('/'.$pattern.'/i', $currentDomain)) {
+            if (1 === preg_match('/^'.$pattern.'$/i', $currentDomain)) {
                 return true;
             }
         }
