@@ -79,6 +79,9 @@ class MoodleServerController extends AbstractController
             $token = (string) $request->attributes->get('token');
             $isLtiUpload = null !== $request->attributes->get('signature');
             $seriesPath = null;
+            $cleanSeries = '';
+            $user = null;
+            $filename = '';
 
             if ('' !== $token && !preg_match('/^[a-zA-Z0-9-]+$/', $token)) {
                 return new Response('Invalid upload token', 400);
