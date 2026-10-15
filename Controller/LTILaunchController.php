@@ -73,6 +73,7 @@ class LTILaunchController extends AbstractController
         $this->ltiUserCreator->login($user, $request);
         $session = $request->getSession();
         $session->set('lti_client_id', $client->id());
+        $session->set('lti_upload_user_id', (string) $user->getId());
         $session->set('lti_state', $state);
         $session->set('lti_iss', $decodedToken->iss);
         $session->set('lti_sub', $decodedToken->sub);
