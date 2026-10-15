@@ -131,7 +131,7 @@ class MoodleServerController extends AbstractController
                     }
 
                     if (!$hash) {
-                        return new Response('Missing authentication hash', 401);
+                        $hash = $this->configurationService->generateHashWithValue($email, $username);
                     }
 
                     $user = $this->ssoService->getAndValidateUser(
@@ -206,8 +206,7 @@ class MoodleServerController extends AbstractController
 
                     file_put_contents(
                         $mapPath.DIRECTORY_SEPARATOR.$uuid.'.json',
-                        json_encode($data),
-                        LOCK_EX
+                        json_encode($data)
                     );
                 }
             }
@@ -271,8 +270,12 @@ class MoodleServerController extends AbstractController
                 $email = (string) $request->request->get('email', '');
                 $hash = (string) $request->request->get('hash', '');
 
-                if ((!$username && !$email) || !$hash) {
+                if (!$username && !$email) {
                     return new JsonResponse(['success' => false, 'error' => 'Missing authentication'], 401);
+                }
+
+                if (!$hash) {
+                    $hash = $this->configurationService->generateHashWithValue($email, $username);
                 }
 
                 $user = $this->ssoService->getAndValidateUser(
