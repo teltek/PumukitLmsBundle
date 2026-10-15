@@ -14,6 +14,11 @@ services:
     resource: '../../Controller/'
     tags: ['controller.service_arguments']
 
+  Pumukit\LmsBundle\Controller\MoodleServerController:
+    arguments:
+      $secret: '%kernel.secret%'
+    tags: ['controller.service_arguments']
+
   Pumukit\LmsBundle\Controller\SearchController:
     class: Pumukit\LmsBundle\Controller\SearchController
     arguments:
