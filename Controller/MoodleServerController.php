@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Pumukit\CoreBundle\Services\InboxService;
 use Pumukit\CoreBundle\Services\UploadDispatcherService;
@@ -11,6 +12,7 @@ use Pumukit\CoreBundle\Utils\BlackListExtensions;
 use Pumukit\CoreBundle\Utils\MediaMimeTypeUtils;
 use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\SSOService;
+use Pumukit\SchemaBundle\Document\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,24 +26,29 @@ use TusPhp\Tus\Server as TusServer;
  */
 class MoodleServerController extends AbstractController
 {
+    private $documentManager;
     private $logger;
     private $ssoService;
     private $inboxService;
     private $uploadDispatcherService;
     private $configurationService;
+    private $secret;
 
-    public function __construct(LoggerInterface $logger, SSOService $ssoService, InboxService $inboxService, UploadDispatcherService $uploadDispatcherService, ConfigurationService $configurationService)
+    public function __construct(DocumentManager $documentManager, LoggerInterface $logger, SSOService $ssoService, InboxService $inboxService, UploadDispatcherService $uploadDispatcherService, ConfigurationService $configurationService, string $secret)
     {
+        $this->documentManager = $documentManager;
         $this->logger = $logger;
         $this->ssoService = $ssoService;
         $this->inboxService = $inboxService;
         $this->uploadDispatcherService = $uploadDispatcherService;
         $this->configurationService = $configurationService;
+        $this->secret = $secret;
     }
 
     /**
      * @Route("/tus", name="moodle_tus_post")
-     * @Route("/tus/{token}", name="moodle_tus_post_token", requirements={"token"=".+"})
+     * @Route("/tus/lti/{userId}/{expires}/{signature}", name="moodle_tus_lti", methods={"POST"}, priority=10, requirements={"userId"="[a-fA-F0-9]+", "expires"="\d+", "signature"="[a-fA-F0-9]{64}"})
+     * @Route("/tus/{token}", name="moodle_tus_post_token", requirements={"token"=".+"}, priority=-10)
      */
     public function moodleServer(Request $request): Response
     {
@@ -70,9 +77,17 @@ class MoodleServerController extends AbstractController
             }
 
             $token = (string) $request->attributes->get('token');
+            $isLtiUpload = null !== $request->attributes->get('signature');
             $seriesPath = null;
+            $cleanSeries = '';
+            $user = null;
+            $filename = '';
 
-            if ('' !== $token) {
+            if ('' !== $token && !preg_match('/^[a-zA-Z0-9-]+$/', $token)) {
+                return new Response('Invalid upload token', 400);
+            }
+
+            if ('' !== $token && !$isLtiUpload) {
                 $mapFile = $mapPath.DIRECTORY_SEPARATOR.$token.'.json';
                 if (!file_exists($mapFile)) {
                     return new Response('Upload not found', 404);
@@ -95,25 +110,38 @@ class MoodleServerController extends AbstractController
                 $email = $request->query->get('email');
                 $series = $request->get('series');
 
-                if (!$username && !$email) {
-                    return new Response('Missing username and email', 400);
-                }
                 if (!$series) {
                     return new Response('Missing series', 400);
                 }
 
-                if (!$hash) {
-                    $hash = $this->configurationService->generateHashWithValue($email, $username);
-                }
+                if ($isLtiUpload) {
+                    $user = $this->validateLtiUpload(
+                        (string) $request->attributes->get('userId'),
+                        (string) $request->attributes->get('expires'),
+                        (string) $request->attributes->get('signature')
+                    );
 
-                $referer = $request->headers->get('referer');
-                $user = $this->ssoService->getAndValidateUser(
-                    (string) $email,
-                    (string) $username,
-                    $referer,
-                    (string) $hash,
-                    $request->isSecure()
-                );
+                    if (!$user) {
+                        return new Response('Unauthorized LTI upload', 401);
+                    }
+                } else {
+                    // Moodle tradicional
+                    if (!$username && !$email) {
+                        return new Response('Missing username and email', 400);
+                    }
+
+                    if (!$hash) {
+                        $hash = $this->configurationService->generateHashWithValue($email, $username);
+                    }
+
+                    $user = $this->ssoService->getAndValidateUser(
+                        (string) $email,
+                        (string) $username,
+                        $request->headers->get('referer'),
+                        (string) $hash,
+                        $request->isSecure()
+                    );
+                }
 
                 if (!$user || $user instanceof Response) {
                     return new Response('Unauthorized', 401);
@@ -131,28 +159,29 @@ class MoodleServerController extends AbstractController
                     mkdir($seriesPath, 0755, true);
                 }
 
+                $filename = null;
                 $metadata = $request->headers->get('Upload-Metadata');
-                if ($metadata && preg_match('/filename (?P<name>[^\s,]+)/', $metadata, $matches)) {
-                    $decodedName = base64_decode($matches['name'], true);
-                    if (false === $decodedName) {
-                        return new Response('Invalid filename encoding', 400);
-                    }
 
-                    // Sanitize filename to prevent directory traversal and unsafe characters
-                    $filename = basename($decodedName);
-                    $filename = str_replace(['/', '\\'], '_', $filename);
-                    $filename = preg_replace('/[^a-zA-Z0-9._\- ]/', '_', $filename);
-                    $filename = trim((string) $filename);
+                if (!$metadata || !preg_match('/(?:^|,)filename (?P<name>[^,]+)/', $metadata, $matches)) {
+                    return new Response('Missing filename', 400);
+                }
 
-                    if ('' === $filename) {
-                        return new Response('Invalid filename', 400);
-                    }
+                $filename = base64_decode($matches['name'], true);
 
-                    $targetFile = $seriesPath.DIRECTORY_SEPARATOR.$filename;
+                if (!is_string($filename)
+                    || '' === $filename
+                    || '.' === $filename
+                    || '..' === $filename
+                    || false !== strpos($filename, '..')
+                    || false !== strpbrk($filename, '/\\')
+                    || !preg_match('/^[a-zA-Z0-9._ -]+$/', $filename)) {
+                    return new Response('Invalid filename', 400);
+                }
 
-                    if (file_exists($targetFile)) {
-                        return new Response("A file with the name '{$filename}' already exists in this folder.", 409);
-                    }
+                $targetFile = $seriesPath.DIRECTORY_SEPARATOR.$filename;
+
+                if (file_exists($targetFile)) {
+                    return new Response('File already exists', 409);
                 }
             }
 
@@ -166,11 +195,18 @@ class MoodleServerController extends AbstractController
                 $location = $response->headers->get('Location');
                 $uuid = $location ? basename($location) : null;
 
-                if ($uuid) {
-                    $cleanSeries = preg_replace('/[^a-zA-Z0-9_\-]/', '', (string) $series);
+                if ($uuid && preg_match('/^[a-zA-Z0-9-]+$/', $uuid)) {
+                    $data = [
+                        'series' => $cleanSeries,
+                        'userId' => (string) $user->getId(),
+                        'authType' => $isLtiUpload ? 'lti' : 'sso',
+                        'fileName' => $filename,
+                        'uploadLength' => (int) $request->headers->get('Upload-Length'),
+                    ];
+
                     file_put_contents(
                         $mapPath.DIRECTORY_SEPARATOR.$uuid.'.json',
-                        json_encode(['series' => $cleanSeries])
+                        json_encode($data)
                     );
                 }
             }
@@ -184,79 +220,119 @@ class MoodleServerController extends AbstractController
     }
 
     /**
-     * @Route("/dispatchImport", name="moodle_dispatch_import")
+     * @Route("/dispatchImport", name="moodle_dispatch_import", methods={"POST"})
      */
     public function moodleDispatchImport(Request $request): JsonResponse
     {
-        $username = $request->get('username');
-        $hash = $request->get('hash');
-        $email = $request->get('email');
-        $uuid = $request->get('uuid');
+        $uuid = (string) $request->request->get('uuid', '');
 
-        if (!$username && !$email) {
-            return new JsonResponse(['success' => false, 'error' => 'Missing username and email'], 400);
-        }
-        if (!$uuid) {
-            return new JsonResponse(['success' => false, 'error' => 'Missing uuid'], 400);
-        }
-
-        if (!$hash) {
-            $hash = $this->configurationService->generateHashWithValue($email, $username);
-        }
-
-        $user = $this->ssoService->getAndValidateUser(
-            $email,
-            $username,
-            $request->headers->get('referer'),
-            $hash,
-            $request->isSecure()
-        );
-
-        if (!$user) {
-            return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
+        if (!preg_match('/^[a-zA-Z0-9-]+$/', $uuid)) {
+            return new JsonResponse(['success' => false, 'error' => 'Invalid uuid'], 400);
         }
 
         try {
             $basePath = realpath($this->inboxService->inboxPath());
-            $mapPath = $basePath.DIRECTORY_SEPARATOR.'_moodle_map';
-            $mapFile = $mapPath.DIRECTORY_SEPARATOR.$uuid.'.json';
 
-            if (!file_exists($mapFile)) {
+            if (!$basePath) {
+                return new JsonResponse(['success' => false, 'error' => 'Upload directory unavailable'], 500);
+            }
+
+            $mapFile = $basePath.DIRECTORY_SEPARATOR.'_moodle_map'
+                .DIRECTORY_SEPARATOR.$uuid.'.json';
+
+            if (!is_file($mapFile)) {
                 return new JsonResponse(['success' => false, 'error' => 'Upload not found'], 404);
             }
 
             $data = json_decode((string) file_get_contents($mapFile), true);
-            $series = $data['series'] ?? null;
 
-            if (!$series) {
+            if (!is_array($data) || empty($data['series']) || empty($data['userId'])) {
                 return new JsonResponse(['success' => false, 'error' => 'Invalid mapping'], 400);
             }
 
-            $fileName = $request->get('fileName');
-            if (!is_string($fileName) || '' === $fileName) {
+            $userId = (string) $data['userId'];
+            $authType = $data['authType'] ?? null;
+
+            if ('lti' === $authType) {
+                if (!$request->hasPreviousSession()) {
+                    return new JsonResponse(['success' => false, 'error' => 'LTI session required'], 401);
+                }
+
+                $sessionUserId = (string) $request->getSession()->get('lti_upload_user_id', '');
+
+                if ('' === $sessionUserId || !hash_equals($userId, $sessionUserId)) {
+                    return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
+                }
+
+                $user = $this->documentManager->getRepository(User::class)->find($userId);
+            } elseif ('sso' === $authType) {
+                $username = (string) $request->request->get('username', '');
+                $email = (string) $request->request->get('email', '');
+                $hash = (string) $request->request->get('hash', '');
+
+                if (!$username && !$email) {
+                    return new JsonResponse(['success' => false, 'error' => 'Missing authentication'], 401);
+                }
+
+                if (!$hash) {
+                    $hash = $this->configurationService->generateHashWithValue($email, $username);
+                }
+
+                $user = $this->ssoService->getAndValidateUser(
+                    $email,
+                    $username,
+                    $request->headers->get('referer'),
+                    $hash,
+                    $request->isSecure()
+                );
+
+                if (!$user || $user instanceof Response || (string) $user->getId() !== $userId) {
+                    return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
+                }
+            } else {
+                return new JsonResponse(['success' => false, 'error' => 'Invalid authentication type'], 401);
+            }
+
+            if (!$user) {
+                return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
+            }
+
+            $fileName = $request->request->get('fileName');
+
+            if (!is_string($fileName) || '' === $fileName
+                || false !== strpos($fileName, '..')
+                || false !== strpbrk($fileName, '/\\')) {
                 return new JsonResponse(['success' => false, 'error' => 'Invalid file name'], 400);
             }
 
-            // Prevent directory traversal and enforce simple file names
-            if (false !== strpos($fileName, '..') || false !== strpbrk($fileName, '/\\')) {
-                return new JsonResponse(['success' => false, 'error' => 'Invalid file name'], 400);
+            if (!isset($data['fileName'], $data['uploadLength'])
+                || $fileName !== $data['fileName']) {
+                return new JsonResponse(['success' => false, 'error' => 'File does not match upload'], 400);
             }
 
-            $fileName = basename($fileName);
+            $filePath = $basePath.DIRECTORY_SEPARATOR.$data['series']
+                .DIRECTORY_SEPARATOR.$fileName;
+
+            if (!is_file($filePath)
+                || filesize($filePath) !== (int) $data['uploadLength']) {
+                return new JsonResponse(['success' => false, 'error' => 'Upload is incomplete'], 409);
+            }
 
             $this->uploadDispatcherService->dispatchUploadFromInbox(
                 $user,
                 $fileName,
-                $series,
-                $request->get('profile', 'master_copy')
+                $data['series'],
+                $request->request->get('profile', 'master_copy')
             );
 
             unlink($mapFile);
-        } catch (\Exception $e) {
-            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 400);
-        }
 
-        return new JsonResponse(['success' => true]);
+            return new JsonResponse(['success' => true]);
+        } catch (\Throwable $e) {
+            $this->logger->error('Moodle dispatch import: '.$e->getMessage());
+
+            return new JsonResponse(['success' => false, 'error' => 'Import failed'], 400);
+        }
     }
 
     private function validateFileExtension(Request $request): void
@@ -310,5 +386,24 @@ class MoodleServerController extends AbstractController
         $cleanSeries = preg_replace('/[^a-zA-Z0-9_\-]/', '', $series);
 
         return $cleanSeries ?? '';
+    }
+
+    private function validateLtiUpload(string $userId, string $expires, string $signature): ?User
+    {
+        $expiration = (int) $expires;
+
+        if ($expiration <= time() || $expiration > time() + 3600) {
+            return null;
+        }
+
+        $payload = 'lti_upload:'.$userId.':'.$expires;
+
+        $expectedSignature = hash_hmac('sha256', $payload, $this->secret);
+
+        if (!hash_equals($expectedSignature, $signature)) {
+            return null;
+        }
+
+        return $this->documentManager->getRepository(User::class)->find($userId);
     }
 }
