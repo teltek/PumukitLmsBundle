@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
+use Doctrine\Bundle\MongoDBBundle\Attribute\MapDocument;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\CoreBundle\Services\PaginationService;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\WebTVBundle\Controller\SearchController as BaseSearchController;
 use Pumukit\WebTVBundle\Services\BreadcrumbsService;
 use Pumukit\WebTVBundle\Services\SearchService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/openedx")
- * @Route("/lms")
- */
+#[Route('/openedx')]
+#[Route('/lms')]
 class SearchController extends BaseSearchController
 {
     public function __construct(
@@ -49,13 +47,9 @@ class SearchController extends BaseSearchController
         );
     }
 
-    /**
-     * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false})
-     * @Route("/search/public/multimediaobjects")
-     *
-     * @ParamConverter("blockedTag", options={"mapping": {"tagCod": "cod"}})
-     */
-    public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, bool $useTagAsGeneral = false): Response
+    #[Route('/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}', defaults: ['tagCod' => null, 'useTagAsGeneral' => false])]
+    #[Route('/search/public/multimediaobjects')]
+    public function multimediaObjectsAction(Request $request, #[MapDocument(mapping: ['tagCod' => 'cod'])] ?Tag $blockedTag = null, bool $useTagAsGeneral = false): Response
     {
         $request->attributes->set('only_public', true);
 

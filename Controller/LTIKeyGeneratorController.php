@@ -7,7 +7,7 @@ namespace Pumukit\LmsBundle\Controller;
 use Pumukit\LmsBundle\Services\LTIKeyConfiguration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 final class LTIKeyGeneratorController extends AbstractController
 {
@@ -18,9 +18,7 @@ final class LTIKeyGeneratorController extends AbstractController
         $this->LTIKeyConfiguration = $LTIKeyConfiguration;
     }
 
-    /**
-     * @Route(".well-known/lti/jwks.json", name="lti_tool_jwks", methods={"GET"})
-     */
+    #[Route('.well-known/lti/jwks.json', name: 'lti_tool_jwks', methods: ['GET'])]
     public function jwks(): JsonResponse
     {
         return new JsonResponse($this->LTIKeyConfiguration->jwksFromJwkKey());

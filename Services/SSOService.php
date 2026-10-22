@@ -60,9 +60,9 @@ class SSOService
         EventDispatcherInterface $dispatcher,
         Environment $templating,
         bool $checkLDAPInfoToUpdatePermissionProfile,
-        LDAPService $ldapService = null,
-        RequestStack $requestStack = null,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ?LDAPService $ldapService = null,
+        ?RequestStack $requestStack = null
     ) {
         $this->documentManager = $documentManager;
         $this->permissionProfileService = $permissionProfileService;
@@ -81,7 +81,7 @@ class SSOService
 
     public function login(UserInterface $user, Request $request): void
     {
-        $token = new UsernamePasswordToken($user, $user->getPassword(), 'public', $user->getRoles());
+        $token = new UsernamePasswordToken($user, 'public', $user->getRoles());
         $this->tokenStorage->setToken($token);
         $event = new InteractiveLoginEvent($request, $token);
         $this->dispatcher->dispatch($event, 'security.interactive_login');
@@ -175,7 +175,7 @@ class SSOService
         $user->setOrigin(self::USER_ORIGIN);
         $user->setEnabled(true);
 
-        if ($this->requestStack && ($req = $this->requestStack->getMasterRequest())) {
+        if ($this->requestStack && ($req = $this->requestStack->getMainRequest())) {
             $user->setProperty('lms_origin', $req->headers->get('referer'));
         }
 

@@ -9,7 +9,7 @@ use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class EmbedLMSController extends AbstractController
 {
@@ -20,9 +20,7 @@ class EmbedLMSController extends AbstractController
         $this->documentManager = $documentManager;
     }
 
-    /**
-     * @Route("/lms/embed", name="pumukit_lms_embed", methods={"POST"})
-     */
+    #[Route('/lms/embed', name: 'pumukit_lms_embed', methods: ['POST'])]
     public function embedLms(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);

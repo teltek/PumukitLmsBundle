@@ -32,9 +32,9 @@ class LTIUserCreator extends SSOService
         EventDispatcherInterface $dispatcher,
         Environment $templating,
         bool $checkLDAPInfoToUpdatePermissionProfile,
-        LDAPService $ldapService = null,
-        RequestStack $requestStack = null,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ?LDAPService $ldapService = null,
+        ?RequestStack $requestStack = null
     ) {
         parent::__construct(
             $documentManager,
@@ -47,9 +47,9 @@ class LTIUserCreator extends SSOService
             $dispatcher,
             $templating,
             $checkLDAPInfoToUpdatePermissionProfile,
+            $logger,
             $ldapService,
-            $requestStack,
-            $logger
+            $requestStack
         );
         $this->documentManager = $documentManager;
     }

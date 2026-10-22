@@ -12,7 +12,7 @@ use Pumukit\LmsBundle\Services\LTIUserCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class LTILaunchController extends AbstractController
@@ -29,9 +29,7 @@ class LTILaunchController extends AbstractController
         $this->ltiUserCreator = $ltiUserCreator;
     }
 
-    /**
-     * @Route("/lti/launch", name="lti_tool_launch", methods={"GET","POST"})
-     */
+    #[Route('/lti/launch', name: 'lti_tool_launch', methods: ['GET', 'POST'])]
     public function launch(Request $request): Response
     {
         $token = $request->request->get('id_token');

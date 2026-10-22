@@ -6,7 +6,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\LmsBundle\Document\LTIClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class LTILoginController extends AbstractController
 {
@@ -17,9 +17,7 @@ class LTILoginController extends AbstractController
         $this->documentManager = $documentManager;
     }
 
-    /**
-     * @Route("/lti/login", name="lti_tool_login", methods={"POST", "GET"})
-     */
+    #[Route('/lti/login', name: 'lti_tool_login', methods: ['POST', 'GET'])]
     public function login(Request $request)
     {
         $data = $request->request->all();

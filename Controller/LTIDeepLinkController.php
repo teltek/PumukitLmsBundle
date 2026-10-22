@@ -13,7 +13,7 @@ use Pumukit\LmsBundle\Services\LTIKeyConfiguration;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -32,9 +32,7 @@ class LTIDeepLinkController extends AbstractController
         $this->LTIKeyConfiguration = $LTIKeyConfiguration;
     }
 
-    /**
-     * @Route("/lti/deep_link", name="lti_tool_deep_link", methods={"GET","POST"})
-     */
+    #[Route('/lti/deep_link', name: 'lti_tool_deep_link', methods: ['GET', 'POST'])]
     public function deepLink(Request $request)
     {
         $id = $request->query->get('id');

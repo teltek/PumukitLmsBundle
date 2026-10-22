@@ -9,7 +9,7 @@ use Pumukit\LmsBundle\Services\LTIRegister;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 final class LTIAutoRegisterController extends AbstractController
 {
@@ -22,9 +22,7 @@ final class LTIAutoRegisterController extends AbstractController
         $this->ltiRegister = $ltiRegister;
     }
 
-    /**
-     * @Route("/lti/register", name="lti_tool_register", methods={"POST","GET"})
-     */
+    #[Route('/lti/register', name: 'lti_tool_register', methods: ['POST', 'GET'])]
     public function register(Request $request): Response
     {
         $params = $request->query->all();

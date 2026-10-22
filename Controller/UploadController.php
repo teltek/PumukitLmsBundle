@@ -10,11 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @Route("/openedx/sso")
- */
+#[Route('/openedx/sso')]
 class UploadController extends AbstractController
 {
     private $SSOService;
@@ -31,9 +29,7 @@ class UploadController extends AbstractController
         $this->defaultUploadProfile = $defaultUploadProfile;
     }
 
-    /**
-     * @Route("/upload", name="pumukit_lms_sso_upload")
-     */
+    #[Route('/upload', name: 'pumukit_lms_sso_upload')]
     public function upload(Request $request)
     {
         $email = $request->get('email');

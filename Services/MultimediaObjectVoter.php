@@ -29,7 +29,7 @@ class MultimediaObjectVoter extends Voter
         $this->requestStack = $requestStack;
     }
 
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
         if (self::PLAY !== $attribute) {
@@ -44,7 +44,7 @@ class MultimediaObjectVoter extends Voter
         return true;
     }
 
-    protected function voteOnAttribute($attribute, $multimediaObject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $multimediaObject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
@@ -57,7 +57,7 @@ class MultimediaObjectVoter extends Voter
 
     protected function canPlay($multimediaObject, $user = null): bool
     {
-        $req = $this->requestStack->getMasterRequest();
+        $req = $this->requestStack->getMainRequest();
 
         if (!$this->mmobjService->isHidden($multimediaObject, PumukitLmsBundle::LMS_TAG_CODE)) {
             return false;

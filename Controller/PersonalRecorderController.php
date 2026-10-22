@@ -13,11 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @Route("/openedx/sso")
- */
+#[Route('/openedx/sso')]
 class PersonalRecorderController extends AbstractController
 {
     public const ADMIN_PERSONAL_RECORDER_ROUTE = '/admin/personalrecorder';
@@ -36,9 +34,7 @@ class PersonalRecorderController extends AbstractController
         $this->configurationService = $configurationService;
     }
 
-    /**
-     * @Route("/personal_recorder", name="pumukit_lms_sso_personalrecorder")
-     */
+    #[Route('/personal_recorder', name: 'pumukit_lms_sso_personalrecorder')]
     public function personalRecorder(Request $request)
     {
         if (!class_exists(PumukitPersonalRecorderBundle::class)) {

@@ -46,7 +46,7 @@ EOT
         if (!$this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => PumukitLmsBundle::LMS_TAG_CODE])) {
             $output->writeln('Tag PUCHLMS not found. Please initialize it using pumukit:lms:init:pubchannel command');
 
-            return -1;
+            return Command::FAILURE;
         }
 
         if (!$multimediaObjects = $this->getAllMultimediaObjects()) {

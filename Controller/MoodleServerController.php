@@ -17,13 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use TusPhp\Middleware\Cors;
 use TusPhp\Tus\Server as TusServer;
 
-/**
- * @Route("/moodle")
- */
+#[Route('/moodle')]
 class MoodleServerController extends AbstractController
 {
     private $documentManager;
@@ -45,11 +43,9 @@ class MoodleServerController extends AbstractController
         $this->secret = $secret;
     }
 
-    /**
-     * @Route("/tus", name="moodle_tus_post")
-     * @Route("/tus/lti/{userId}/{expires}/{signature}", name="moodle_tus_lti", methods={"POST"}, priority=10, requirements={"userId"="[a-fA-F0-9]+", "expires"="\d+", "signature"="[a-fA-F0-9]{64}"})
-     * @Route("/tus/{token}", name="moodle_tus_post_token", requirements={"token"=".+"}, priority=-10)
-     */
+    #[Route('/tus', name: 'moodle_tus_post')]
+    #[Route('/tus/lti/{userId}/{expires}/{signature}', name: 'moodle_tus_lti', methods: ['POST'], priority: 10, requirements: ['userId' => '[a-fA-F0-9]+', 'expires' => '\d+', 'signature' => '[a-fA-F0-9]{64}'])]
+    #[Route('/tus/{token}', name: 'moodle_tus_post_token', requirements: ['token' => '.+'], priority: -10)]
     public function moodleServer(Request $request): Response
     {
         try {
@@ -219,9 +215,7 @@ class MoodleServerController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/dispatchImport", name="moodle_dispatch_import", methods={"POST"})
-     */
+    #[Route('/dispatchImport', name: 'moodle_dispatch_import', methods: ['POST'])]
     public function moodleDispatchImport(Request $request): JsonResponse
     {
         $uuid = (string) $request->request->get('uuid', '');

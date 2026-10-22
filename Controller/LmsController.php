@@ -17,13 +17,11 @@ use Pumukit\WebTVBundle\PumukitWebTVBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @Route("/openedx/openedx")
- * @Route("/lms")
- */
+#[Route('/openedx/openedx')]
+#[Route('/lms')]
 class LmsController extends AbstractController
 {
     private $templateErrors = [
@@ -58,11 +56,9 @@ class LmsController extends AbstractController
         $this->pumukitInfo = $pumukitInfo;
     }
 
-    /**
-     * @Route("/embed", name="pumukit_lms_openedx_embed")
-     * @Route("/embed/", name="pumukit_lms_openedx_embed_2")
-     * @Route("/embed/{id}", name="pumukit_lms_openedx_embed_3")
-     */
+    #[Route('/embed', name: 'pumukit_lms_openedx_embed')]
+    #[Route('/embed/', name: 'pumukit_lms_openedx_embed_2')]
+    #[Route('/embed/{id}', name: 'pumukit_lms_openedx_embed_3')]
     public function iframeAction(Request $request): Response
     {
         $options = $this->getOptionsParameters($request);
@@ -113,11 +109,9 @@ class LmsController extends AbstractController
         return $this->renderTemplateError(Response::HTTP_NOT_FOUND, $options);
     }
 
-    /**
-     * @Route("/playlist/embed", name="pumukit_lms_openedx_playlist_embed")
-     * @Route("/playlist/embed/", name="pumukit_lms_openedx_playlist_embed_2")
-     * @Route("/playlist/embed/{id}", name="pumukit_lms_openedx_playlist_embed_3")
-     */
+    #[Route('/playlist/embed', name: 'pumukit_lms_openedx_playlist_embed')]
+    #[Route('/playlist/embed/', name: 'pumukit_lms_openedx_playlist_embed_2')]
+    #[Route('/playlist/embed/{id}', name: 'pumukit_lms_openedx_playlist_embed_3')]
     public function iFramePlaylistAction(Request $request): Response
     {
         $options = $this->getOptionsParameters($request);

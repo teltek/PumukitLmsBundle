@@ -8,11 +8,9 @@ use Pumukit\LmsBundle\Services\SSOService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @Route("/openedx/sso")
- */
+#[Route('/openedx/sso')]
 class ManagerController extends AbstractController
 {
     public const ADMIN_SERIES_ROUTE = 'pumukitnewadmin_series_index';
@@ -26,9 +24,7 @@ class ManagerController extends AbstractController
         $this->SSOService = $SSOService;
     }
 
-    /**
-     * @Route("/manager", name="pumukit_lms_sso_manager")
-     */
+    #[Route('/manager', name: 'pumukit_lms_sso_manager')]
     public function manager(Request $request)
     {
         $session = $request->getSession();
