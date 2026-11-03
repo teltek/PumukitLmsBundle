@@ -68,7 +68,7 @@ class LTIDeepLinkController extends AbstractController
             'https://purl.imsglobal.org/spec/lti/claim/message_type' => 'LtiDeepLinkingResponse',
             'https://purl.imsglobal.org/spec/lti/claim/version' => '1.3.0',
             'https://purl.imsglobal.org/spec/lti-dl/claim/data' => $session->get('lti_deep_link_return_data'),
-            'https://purl.imsglobal.org/spec/lti-dl/claim/msg ' => 'Content added',
+            'https://purl.imsglobal.org/spec/lti-dl/claim/msg' => 'Content added',
             'https://purl.imsglobal.org/spec/lti-dl/claim/log' => 'PuMuKIT - Media with ID '.$id.' was added',
             'https://purl.imsglobal.org/spec/lti-dl/claim/content_items' => [
                 $ltiContent,

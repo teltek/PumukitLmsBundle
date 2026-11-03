@@ -54,15 +54,17 @@ class LTIUserCreator extends SSOService
         $this->documentManager = $documentManager;
     }
 
-    public function createUserFromResponse(string $userId, string $username, string $email, string $fullname, array $roles): User
+    public function createUserFromResponse(string $userId, string $username, string $email, string $fullname, ?string $learnerProfile = null): User
     {
         $user = $this->searchUser($username, $email);
 
         if (!$user instanceof User) {
-            return $this->createUserByUsernameAndEmail($username, $email, $fullname);
+            return $this->createUserByUsernameAndEmail($username, $email, $fullname, $learnerProfile);
         }
 
-        $this->promoteUser($user);
+        if (null === $learnerProfile) {
+            $this->promoteUser($user);
+        }
 
         return $user;
     }

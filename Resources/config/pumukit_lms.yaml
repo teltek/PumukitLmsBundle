@@ -85,3 +85,18 @@ services:
       $secret: '%kernel.secret%'
 
   Pumukit\LmsBundle\Twig\InboxLmsExtension: ~
+
+  Pumukit\LmsBundle\Services\SignedToken:
+    arguments:
+      $secret: '%kernel.secret%'
+
+  Pumukit\LmsBundle\Services\LtiLaunchValidator:
+    arguments:
+      $environment: '%kernel.environment%'
+
+  Pumukit\LmsBundle\Controller\LTILaunchController:
+    arguments:
+      $learnerProfile: '%pumukit_lms.lti_learner_profile%'
+    tags: ['controller.service_arguments']
+
+  Pumukit\LmsBundle\Twig\LtiRecorderExtension: ~

@@ -1,0 +1,8 @@
+{% set lms_recorder_url = lms_lti_recorder_url() %}
+{% if lms_recorder_url %}
+    <div class="text-end my-2">
+        <a class="btn btn-danger" href="{{ lms_recorder_url }}" target="_blank" rel="noopener">
+            <i class="fa-solid fa-video" aria-hidden="true"></i> {{ 'Record'|trans }}
+        </a>
+    </div>
+{% endif %}

@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\Loader;
 
 class PumukitLmsExtension extends Extension
 {
+    public const NAKED_MENU_TEMPLATE = '@PumukitLms/LTI/naked_menu.html.twig';
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
@@ -27,6 +29,10 @@ class PumukitLmsExtension extends Extension
         $container->setParameter('pumukit_lms.default_upload_profile', $config['default_upload_profile']);
         $container->setParameter('pumukit_lms.lms_upload_url', $config['lms_upload_url']);
         $container->setParameter('pumukit_lms.domains', $config['domains']);
+        $container->setParameter('pumukit_lms.lti_learner_profile', $config['lti_learner_profile']);
+
+        $templates = $container->hasParameter('pumukit.naked_menu_templates') ? $container->getParameter('pumukit.naked_menu_templates') : [];
+        $container->setParameter('pumukit.naked_menu_templates', array_values(array_unique([...$templates, self::NAKED_MENU_TEMPLATE])));
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('pumukit_lms.yaml');

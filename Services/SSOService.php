@@ -153,7 +153,7 @@ class SSOService
         return $this->createUserByUsernameAndEmail($username, $email, $fullName);
     }
 
-    public function createUserByUsernameAndEmail($username, $email, $fullName): User
+    public function createUserByUsernameAndEmail($username, $email, $fullName, ?string $permissionProfileName = null): User
     {
         $user = new User();
         $user->setUsername($username);
@@ -170,7 +170,7 @@ class SSOService
             $user->setFullname($username);
         }
 
-        $permissionProfile = $this->permissionProfileService->getByName(self::PERMISSION_PROFILE_AUTO);
+        $permissionProfile = $this->permissionProfileService->getByName($permissionProfileName ?? self::PERMISSION_PROFILE_AUTO);
         $user->setPermissionProfile($permissionProfile);
         $user->setOrigin(self::USER_ORIGIN);
         $user->setEnabled(true);
