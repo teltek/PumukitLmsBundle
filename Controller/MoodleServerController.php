@@ -12,6 +12,7 @@ use Pumukit\CoreBundle\Utils\BlackListExtensions;
 use Pumukit\CoreBundle\Utils\MediaMimeTypeUtils;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Services\UploadAuthorization;
+use Pumukit\LmsBundle\Utils\RequestParameter;
 use Pumukit\SchemaBundle\Document\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -94,7 +95,7 @@ class MoodleServerController extends AbstractController
                 $username = $request->query->get('username');
                 $hash = $request->query->get('hash');
                 $email = $request->query->get('email');
-                $series = $request->get('series');
+                $series = RequestParameter::get($request, 'series');
 
                 if (!$series) {
                     return new Response('Missing series', 400);

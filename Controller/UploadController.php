@@ -6,6 +6,7 @@ namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
+use Pumukit\LmsBundle\Utils\RequestParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,9 +33,9 @@ class UploadController extends AbstractController
     #[Route('/upload', name: 'pumukit_lms_sso_upload')]
     public function upload(Request $request)
     {
-        $email = $request->get('email');
-        $username = $request->get('username');
-        $hash = $request->get('hash');
+        $email = RequestParameter::get($request, 'email');
+        $username = RequestParameter::get($request, 'username');
+        $hash = RequestParameter::get($request, 'hash');
 
         if (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$this->isGranted('ROLE_SCOPE_PERSONAL')) {
             $user = $this->SSOService->getAndValidateUser(

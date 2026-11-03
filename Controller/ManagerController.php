@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\LmsBundle\Services\SSOService;
+use Pumukit\LmsBundle\Utils\RequestParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,9 +30,9 @@ class ManagerController extends AbstractController
     {
         $session = $request->getSession();
 
-        $email = $request->get('email');
-        $username = $request->get('username');
-        $hash = $request->get('hash');
+        $email = RequestParameter::get($request, 'email');
+        $username = RequestParameter::get($request, 'username');
+        $hash = RequestParameter::get($request, 'hash');
 
         if ($email || $username) {
             if (
@@ -70,11 +71,11 @@ class ManagerController extends AbstractController
             $this->SSOService->login($user, $request);
         }
 
-        if ($request->get('playlist')) {
+        if (RequestParameter::get($request, 'playlist')) {
             return $this->redirectToRoute(self::ADMIN_PLAYLIST_ROUTE);
         }
 
-        if ($mmobjId = $request->get('multimediaObject')) {
+        if ($mmobjId = RequestParameter::get($request, 'multimediaObject')) {
             return $this->redirectToRoute(self::ADMIN_MULTIMEDIAOBJECT_ROUTE, ['id' => $mmobjId]);
         }
 

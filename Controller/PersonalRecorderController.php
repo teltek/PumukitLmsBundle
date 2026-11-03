@@ -7,6 +7,7 @@ namespace Pumukit\LmsBundle\Controller;
 use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
+use Pumukit\LmsBundle\Utils\RequestParameter;
 use Pumukit\LmsBundle\Utils\SeriesUtils;
 use Pumukit\PersonalRecorderBundle\PumukitPersonalRecorderBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,10 +44,10 @@ class PersonalRecorderController extends AbstractController
 
         if (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$this->isGranted('ROLE_SCOPE_PERSONAL')) {
             $user = $this->SSOService->getAndValidateUser(
-                $request->get('email'),
-                $request->get('username'),
+                RequestParameter::get($request, 'email'),
+                RequestParameter::get($request, 'username'),
                 $request->headers->get('referer'),
-                $request->get('hash'),
+                RequestParameter::get($request, 'hash'),
                 $request->isSecure()
             );
             if ($user instanceof Response) {

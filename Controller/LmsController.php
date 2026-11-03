@@ -10,6 +10,7 @@ use Pumukit\EncoderBundle\Document\Job;
 use Pumukit\EncoderBundle\Services\ProfileService;
 use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\LmsBundle\Services\ConfigurationService;
+use Pumukit\LmsBundle\Utils\RequestParameter;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Series;
 use Pumukit\SchemaBundle\Services\MultimediaObjectService;
@@ -161,7 +162,7 @@ class LmsController extends AbstractController
     {
         return [
             'email' => $this->pumukitInfo['email'],
-            'id' => $request->get('id') ?? $request->attributes->get('id'),
+            'id' => RequestParameter::get($request, 'id') ?? $request->attributes->get('id'),
         ];
     }
 
@@ -182,7 +183,7 @@ class LmsController extends AbstractController
             }
         }
 
-        if (!$this->configurationService->isValidHash($request->get('hash'), '', null, true)) {
+        if (!$this->configurationService->isValidHash(RequestParameter::get($request, 'hash'), '', null, true)) {
             $options['error_message'] = 'Hash not valid';
 
             return $this->renderTemplateError(Response::HTTP_FORBIDDEN, $options);
