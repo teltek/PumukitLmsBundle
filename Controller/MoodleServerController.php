@@ -10,8 +10,8 @@ use Pumukit\CoreBundle\Services\InboxService;
 use Pumukit\CoreBundle\Services\UploadDispatcherService;
 use Pumukit\CoreBundle\Utils\BlackListExtensions;
 use Pumukit\CoreBundle\Utils\MediaMimeTypeUtils;
-use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\SSOService;
+use Pumukit\LmsBundle\Services\UploadAuthorization;
 use Pumukit\SchemaBundle\Document\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,24 +24,14 @@ use TusPhp\Tus\Server as TusServer;
 #[Route('/moodle')]
 class MoodleServerController extends AbstractController
 {
-    private $documentManager;
-    private $logger;
-    private $ssoService;
-    private $inboxService;
-    private $uploadDispatcherService;
-    private $configurationService;
-    private $secret;
-
-    public function __construct(DocumentManager $documentManager, LoggerInterface $logger, SSOService $ssoService, InboxService $inboxService, UploadDispatcherService $uploadDispatcherService, ConfigurationService $configurationService, string $secret)
-    {
-        $this->documentManager = $documentManager;
-        $this->logger = $logger;
-        $this->ssoService = $ssoService;
-        $this->inboxService = $inboxService;
-        $this->uploadDispatcherService = $uploadDispatcherService;
-        $this->configurationService = $configurationService;
-        $this->secret = $secret;
-    }
+    public function __construct(
+        private readonly DocumentManager $documentManager,
+        private readonly LoggerInterface $logger,
+        private readonly SSOService $ssoService,
+        private readonly InboxService $inboxService,
+        private readonly UploadDispatcherService $uploadDispatcherService,
+        private readonly UploadAuthorization $uploadAuthorization,
+    ) {}
 
     #[Route('/tus', name: 'moodle_tus_post')]
     #[Route('/tus/lti/{userId}/{expires}/{signature}', name: 'moodle_tus_lti', methods: ['POST'], priority: 10, requirements: ['userId' => '[a-fA-F0-9]+', 'expires' => '\d+', 'signature' => '[a-fA-F0-9]{64}'])]
@@ -111,23 +101,22 @@ class MoodleServerController extends AbstractController
                 }
 
                 if ($isLtiUpload) {
-                    $user = $this->validateLtiUpload(
+                    $user = $this->uploadAuthorization->verify(
                         (string) $request->attributes->get('userId'),
                         (string) $request->attributes->get('expires'),
                         (string) $request->attributes->get('signature')
                     );
 
                     if (!$user) {
-                        return new Response('Unauthorized LTI upload', 401);
+                        return new Response('Unauthorized upload', 401);
                     }
                 } else {
-                    // Moodle tradicional
                     if (!$username && !$email) {
                         return new Response('Missing username and email', 400);
                     }
 
                     if (!$hash) {
-                        $hash = $this->configurationService->generateHashWithValue($email, $username);
+                        return new Response('Missing hash', 401);
                     }
 
                     $user = $this->ssoService->getAndValidateUser(
@@ -148,6 +137,9 @@ class MoodleServerController extends AbstractController
                 $cleanSeries = $this->sanitizeSeries((string) $series);
                 if ('' === $cleanSeries) {
                     return new Response('Invalid series', 400);
+                }
+                if (!$this->uploadAuthorization->canUploadTo($user, $cleanSeries)) {
+                    return new Response('Series not allowed', 403);
                 }
 
                 $seriesPath = $basePath.DIRECTORY_SEPARATOR.$cleanSeries;
@@ -248,11 +240,11 @@ class MoodleServerController extends AbstractController
             $authType = $data['authType'] ?? null;
 
             if ('lti' === $authType) {
-                if (!$request->hasPreviousSession()) {
-                    return new JsonResponse(['success' => false, 'error' => 'LTI session required'], 401);
+                $sessionUser = $this->getUser();
+                $sessionUserId = $sessionUser instanceof User ? (string) $sessionUser->getId() : '';
+                if ('' === $sessionUserId && $request->hasPreviousSession()) {
+                    $sessionUserId = (string) $request->getSession()->get('lti_upload_user_id', '');
                 }
-
-                $sessionUserId = (string) $request->getSession()->get('lti_upload_user_id', '');
 
                 if ('' === $sessionUserId || !hash_equals($userId, $sessionUserId)) {
                     return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
@@ -264,12 +256,8 @@ class MoodleServerController extends AbstractController
                 $email = (string) $request->request->get('email', '');
                 $hash = (string) $request->request->get('hash', '');
 
-                if (!$username && !$email) {
+                if ((!$username && !$email) || !$hash) {
                     return new JsonResponse(['success' => false, 'error' => 'Missing authentication'], 401);
-                }
-
-                if (!$hash) {
-                    $hash = $this->configurationService->generateHashWithValue($email, $username);
                 }
 
                 $user = $this->ssoService->getAndValidateUser(
@@ -380,24 +368,5 @@ class MoodleServerController extends AbstractController
         $cleanSeries = preg_replace('/[^a-zA-Z0-9_\-]/', '', $series);
 
         return $cleanSeries ?? '';
-    }
-
-    private function validateLtiUpload(string $userId, string $expires, string $signature): ?User
-    {
-        $expiration = (int) $expires;
-
-        if ($expiration <= time() || $expiration > time() + 3600) {
-            return null;
-        }
-
-        $payload = 'lti_upload:'.$userId.':'.$expires;
-
-        $expectedSignature = hash_hmac('sha256', $payload, $this->secret);
-
-        if (!hash_equals($expectedSignature, $signature)) {
-            return null;
-        }
-
-        return $this->documentManager->getRepository(User::class)->find($userId);
     }
 }

@@ -14,10 +14,6 @@ services:
     resource: '../../Controller/'
     tags: ['controller.service_arguments']
 
-  Pumukit\LmsBundle\Controller\MoodleServerController:
-    arguments:
-      $secret: '%kernel.secret%'
-    tags: ['controller.service_arguments']
 
   Pumukit\LmsBundle\Controller\SearchController:
     class: Pumukit\LmsBundle\Controller\SearchController
@@ -84,8 +80,8 @@ services:
   Pumukit\LmsBundle\Services\LTIKeyConfiguration:
     class: Pumukit\LmsBundle\Services\LTIKeyConfiguration
 
-  Pumukit\LmsBundle\Twig\InboxLmsExtension:
+  Pumukit\LmsBundle\Services\UploadAuthorization:
     arguments:
-        $secret: '%kernel.secret%'
-    tags:
-        - { name: twig.extension }
+      $secret: '%kernel.secret%'
+
+  Pumukit\LmsBundle\Twig\InboxLmsExtension: ~

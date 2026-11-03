@@ -5,29 +5,19 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Twig;
 
 use Pumukit\LmsBundle\Services\InboxLmsService;
+use Pumukit\LmsBundle\Services\UploadAuthorization;
+use Pumukit\SchemaBundle\Document\User;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class InboxLmsExtension extends AbstractExtension
 {
-    private InboxLmsService $inboxLmsService;
-    private RequestStack $requestStack;
-    private Security $security;
-    private string $secret;
-
     public function __construct(
-        InboxLmsService $inboxLmsService,
-        RequestStack $requestStack,
-        Security $security,
-        string $secret
-    ) {
-        $this->inboxLmsService = $inboxLmsService;
-        $this->requestStack = $requestStack;
-        $this->security = $security;
-        $this->secret = $secret;
-    }
+        private readonly InboxLmsService $inboxLmsService,
+        private readonly Security $security,
+        private readonly UploadAuthorization $uploadAuthorization,
+    ) {}
 
     public function getFunctions(): array
     {
@@ -39,31 +29,13 @@ class InboxLmsExtension extends AbstractExtension
     public function getInboxLmsUploadURL(): string
     {
         $url = $this->inboxLmsService->inboxLmsUploadURL();
-        $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
-
-        if (!$request || !$user || !$request->hasPreviousSession()) {
+        if (!$user instanceof User) {
             return $url;
         }
 
-        $session = $request->getSession();
+        [$userId, $expires, $signature] = $this->uploadAuthorization->sign($user);
 
-        if (!$session->has('lti_client_id')) {
-            return $url;
-        }
-
-        $userId = (string) $user->getId();
-        $expires = time() + 3600;
-
-        $payload = 'lti_upload:'.$userId.':'.$expires;
-        $signature = hash_hmac('sha256', $payload, $this->secret);
-
-        return rtrim($url, '/')
-            .'/lti/'
-            .rawurlencode($userId)
-            .'/'
-            .$expires
-            .'/'
-            .$signature;
+        return rtrim($url, '/').'/lti/'.rawurlencode($userId).'/'.$expires.'/'.$signature;
     }
 }

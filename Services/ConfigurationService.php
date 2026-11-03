@@ -123,7 +123,7 @@ class ConfigurationService
             $hashToday = md5($value.$this->getPassword().$today.$this->getNakedBackofficeDomain());
             $hashYesterday = md5($value.$this->getPassword().$yesterday.$this->getNakedBackofficeDomain());
 
-            return $hash === $hashToday || $hash === $hashYesterday;
+            return hash_equals($hashToday, $hash) || hash_equals($hashYesterday, $hash);
         };
 
         if ($isEmbed) {
