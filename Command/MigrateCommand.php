@@ -9,11 +9,13 @@ use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\SchemaBundle\Services\TagService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'pumukit:lms:migrate', description: 'Migrate PUCHMOODLE tag of MultimediaObject to PUCHLMS tag')]
 class MigrateCommand extends Command
 {
     private $documentManager;
@@ -31,8 +33,6 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('pumukit:lms:migrate')
-            ->setDescription('Migrate PUCHMOODLE tag of MultimediaObject to PUCHLMS tag')
             ->setHelp(
                 <<<'EOT'
 Migrate PUCHMOODLE tag of MultimediaObject to PUCHLMS tag
@@ -41,7 +41,7 @@ EOT
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => PumukitLmsBundle::LMS_TAG_CODE])) {
             $output->writeln('Tag PUCHLMS not found. Please initialize it using pumukit:lms:init:pubchannel command');

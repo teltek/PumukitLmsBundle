@@ -36,13 +36,6 @@ services:
 
   Pumukit\LmsBundle\Command\:
     resource: '../../Command/'
-    tags: ['console.command']
-
-  Pumukit\LmsBundle\Command\LmsInitResourcesCommand:
-    class: Pumukit\LmsBundle\Command\LmsInitResourcesCommand
-    arguments:
-      $rootPath: '%kernel.project_dir%'
-    tags: ['console.command']
 
   Pumukit\LmsBundle\Services\ConfigurationService:
     class: Pumukit\LmsBundle\Services\ConfigurationService
@@ -79,16 +72,6 @@ services:
     class: Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener
     tags:
       - { name: "kernel.event_listener", event: "personalrecorder.create", method: "postCreateMultimediaObject" }
-
-  Pumukit\LmsBundle\EventListener\WizardEventListener:
-    class: Pumukit\LmsBundle\EventListener\WizardEventListener
-    tags:
-      - { name: "kernel.event_listener", event: "wizard.form.submit", method: "postCreateMultimediaObject" }
-
-  Pumukit\LmsBundle\EventListener\FilterListener:
-    class: Pumukit\LmsBundle\EventListener\FilterListener
-    tags:
-      - { name: "kernel.event_listener", event: "kernel.request" }
 
   Pumukit\LmsBundle\Services\LTIRegister:
     class: Pumukit\LmsBundle\Services\LTIRegister

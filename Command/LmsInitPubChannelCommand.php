@@ -7,10 +7,12 @@ namespace Pumukit\LmsBundle\Command;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\Tag;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'pumukit:lms:init:pubchannel', description: 'Loads the LMS pubchannel to your database')]
 class LmsInitPubChannelCommand extends Command
 {
     private $documentManager;
@@ -24,8 +26,6 @@ class LmsInitPubChannelCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('pumukit:lms:init:pubchannel')
-            ->setDescription('Loads the LMS pubchannel to your database')
             ->setHelp(
                 <<<'EOT'
 Command to load the PUCHLMS pubchannel to the db. Required to publish objects exclusively on the LMS platform.
@@ -34,7 +34,7 @@ EOT
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $lmsPublicationChannelTag = $this->createTagWithCode(PumukitLmsBundle::LMS_TAG_CODE, 'LMS', 'PUBCHANNELS', false);
         $this->documentManager->persist($lmsPublicationChannelTag);

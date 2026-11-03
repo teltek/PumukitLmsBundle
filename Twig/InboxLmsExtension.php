@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Twig;
 
 use Pumukit\LmsBundle\Services\InboxLmsService;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

@@ -6,21 +6,13 @@ namespace Pumukit\LmsBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class PumukitLmsExtension extends Extension implements PrependExtensionInterface
+class PumukitLmsExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('pumukit_lms.yaml');
-    }
-
-    public function prepend(ContainerBuilder $container): void
-    {
-        $configs = $container->getExtensionConfig($this->getAlias());
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $container->setParameter('pumukit_lms.check_ldap_info_for_permission_profile', $config['check_ldap_info_for_permission_profile']);
@@ -35,5 +27,8 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('pumukit_lms.default_upload_profile', $config['default_upload_profile']);
         $container->setParameter('pumukit_lms.lms_upload_url', $config['lms_upload_url']);
         $container->setParameter('pumukit_lms.domains', $config['domains']);
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('pumukit_lms.yaml');
     }
 }
