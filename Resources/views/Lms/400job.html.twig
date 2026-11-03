@@ -1,7 +1,7 @@
 {% extends '@PumukitLms/layout.html.twig' %}
 
 {% block iframe_content %}
-    <p>
+    <p data-controller="lms--reload">
         {% if not job %}
             {{ "Creating transcoding job to process the video..." }}
         {% elseif job.status == constant('Pumukit\\EncoderBundle\\Document\\Job::STATUS_FINISHED') %}
@@ -16,10 +16,4 @@
             {{ "The transcoding job of the video is paused. Wait for the transcoding job to start."|trans({}, "messages", app.request.getLocale()|default('en')) }}
         {% endif %}
     </p>
-    <script>
-        setTimeout(function () {
-            window.location.reload()
-        }, 5000);
-    </script>
-
 {% endblock %}

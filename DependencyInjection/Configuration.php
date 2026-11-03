@@ -9,13 +9,23 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    public const INSECURE_PASSWORD = 'ThisIsASecretPasswordChangeMe';
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('pumukit_lms');
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
+            ->validate()
+            ->ifTrue(static fn (array $config): bool => $config['enable'] && in_array(trim((string) $config['password']), ['', self::INSECURE_PASSWORD], true))
+            ->thenInvalid('pumukit_lms needs its own password, shared with the LMS plugins, when it is enabled')
+            ->end()
             ->children()
+            ->booleanNode('enable')
+            ->defaultTrue()
+            ->info('If false, the LMS routes give 404 and the password is not required')
+            ->end()
             ->scalarNode('allow_create_users_from_request')
             ->defaultTrue()
             ->end()
@@ -24,8 +34,8 @@ class Configuration implements ConfigurationInterface
             ->info('Check group key and PAS/PDI key to update permission profile to auto publisher')
             ->end()
             ->scalarNode('password')
-            ->defaultValue('ThisIsASecretPasswordChangeMe')
-            ->info('shared secret between LMS and Pumukit')
+            ->defaultNull()
+            ->info('Shared secret between the LMS plugins and PuMuKIT. Required when the bundle is enabled')
             ->end()
             ->scalarNode('role')
             ->defaultValue('owner')

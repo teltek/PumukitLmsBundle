@@ -2,28 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-        .player_overlay {
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: #555;
-            pointer-events: none;
-            color: #fff;
-        }
-
-        .centered_message {
-            text-align: center;
-            position: relative;
-            padding: 0px 120px;
-            height: 100%;
-            display: flex;
-            align-items: center; /* Vertical center alignment */
-            justify-content: center; /* Horizontal center alignment */
-        }
-    </style>
+    <link href="{{ asset('bundles/pumukitlms/css/lms.css') }}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block body_base %}
     <div class="player_overlay">

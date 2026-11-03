@@ -63,6 +63,9 @@ class LmsController extends AbstractController
     public function iframeAction(Request $request): Response
     {
         $options = $this->getOptionsParameters($request);
+        if (!$this->hasValidId($options)) {
+            return $this->renderTemplateError(Response::HTTP_NOT_FOUND, $options);
+        }
         $multimediaObject = $this->documentManager->getRepository(MultimediaObject::class)->findOneBy([
             '_id' => $options['id'],
         ]);
@@ -116,6 +119,9 @@ class LmsController extends AbstractController
     public function iFramePlaylistAction(Request $request): Response
     {
         $options = $this->getOptionsParameters($request);
+        if (!$this->hasValidId($options)) {
+            return $this->renderTemplateError(Response::HTTP_NOT_FOUND, $options);
+        }
         $validateAccess = $this->validateAccess($request, $options);
         if ($validateAccess instanceof Response) {
             return $validateAccess;
@@ -124,6 +130,9 @@ class LmsController extends AbstractController
         $series = $this->documentManager->getRepository(Series::class)->findOneBy([
             '_id' => $options['id'],
         ]);
+        if (!$series instanceof Series) {
+            return $this->renderTemplateError(Response::HTTP_NOT_FOUND, $options);
+        }
 
         return $this->renderPlaylistIframe($request, $series);
     }
@@ -156,6 +165,11 @@ class LmsController extends AbstractController
         $endpoint = $this->router->match($url);
 
         return $endpoint['_controller'];
+    }
+
+    private function hasValidId(array $options): bool
+    {
+        return is_string($options['id']) && 1 === preg_match('/^[a-f\d]{24}$/i', $options['id']);
     }
 
     private function getOptionsParameters(Request $request): array

@@ -56,7 +56,7 @@ class ConfigurationService
 
     public function getNakedBackofficeDomain(): string
     {
-        return $this->nakedBackofficeDomain;
+        return (string) $this->nakedBackofficeDomain;
     }
 
     public function getNakedBackofficeBackground(): string
@@ -69,7 +69,7 @@ class ConfigurationService
         return $this->nakedBackofficeColor;
     }
 
-    public function getNakedCustomCssUrl(): string
+    public function getNakedCustomCssUrl(): ?string
     {
         return $this->nakedCustomCssUrl;
     }

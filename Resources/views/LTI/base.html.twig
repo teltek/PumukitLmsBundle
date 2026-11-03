@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|default('en') }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PuMuKIT LMS External Tool</title>
+    <link rel="stylesheet" href="{{ asset('bundles/pumukitcore/vendor/bootstrap5/css/bootstrap.min.css') }}">
+    <script src="{{ asset('bundles/pumukitlms/js/lti.js') }}"></script>
+</head>
+<body>
+<div class="container text-center py-5">
+    <h1 class="mb-4">PuMuKIT LMS External Tool</h1>
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

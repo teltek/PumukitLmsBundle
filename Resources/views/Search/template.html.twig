@@ -2,112 +2,48 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/pumukitwebtv/css/bootstrap-datetimepicker.min.css') }}" type="text/css" rel="stylesheet" media="screen"/>
-
-    <style>
-        .moodle_title {
-            font-family: RobotoDraft,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
-            font-weight: 300;
-        }
-    </style>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('bundles/pumukitwebtv/js/moment-with-locales.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('bundles/pumukitwebtv/js/bootstrap-datetimepicker.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('bundles/pumukitwebtv/js/modernizr-custom.js') }}" type="text/javascript"></script>
-
-    <script>
-        $(function(){
-
-            $('.search-form').find('a:last').hide(); // hide 'Search by series'
-            $(document).on('click', '#btn-pumukit', function(e) {
-                e.preventDefault();
-                $('.modal-body-shared-videos').html('');
-                if (window.parent && $(this).data('url')) {
-                    var url = $(this).data('url').replace('/video/', '/iframe/');
-                    window.parent.postMessage({url: url}, '*');
-                }
-            });
-
-            $(document).on('click', '.close-modal', function(e) {
-                $('.modal-body-shared-videos').html('');
-            });
-
-            $('.multimediaobject').on('click', function(e) {
-                e.preventDefault();
-                if (window.parent && e.currentTarget.href) {
-                    var url = e.currentTarget.href.replace('/video/', '/iframe/');
-                    const checkClasses = ['image', 'document', 'external'];
-
-                    if (checkClasses.some(classes => e.currentTarget.classList.contains(classes))) {
-                        url = e.currentTarget.href.replace('/video/', '/iframe/player/');
-                    }
-
-                    $('.modal-body-shared-videos').html(
-                        '<div class="embed-responsive embed-responsive-16by9">' +
-                        '<iframe id="pmk-iframe" src="' + url + '" frameborder="0" width="100%" class="embed-responsive-item" scrolling="no" allowfullscreen=""/></iframe>' +
-                        '</div>'
-                    );
-
-                    $('.modal-footer').html(
-                        '<button type="button" class="btn btn-default btn-raised close-modal" data-dismiss="modal">{{ "Close"|trans }}</button>'
-                        +
-                        '<button type="button" id="btn-pumukit" data-url="' + url + '" class="btn btn-pumukit btn-raised" data-dismiss="modal">{{ "Publish"|trans }}</button>'
-                    );
-
-                    $('#sharedVideosModal').modal('show');
-                }
-            });
-
-        });
-    </script>
+    <link href="{{ asset('bundles/pumukitlms/css/lms.css') }}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block body_base %}
-    <div class="col-xs-12">
+    <div class="col-12" data-controller="lms--search">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 {% if blocked_tag is defined and blocked_tag is not null %}
                     <h3 class="moodle_title">{{ blocked_tag.title }}</h3>
                 {% else %}
                     <h3 class="moodle_title">
                         {% if template_title is defined %}
                             {{ "Search all videos" |trans }}
+                        {% elseif type == "series" %}
+                            {% trans %}Series search{% endtrans %}
                         {% else %}
-                            {% if type == "series" %}
-                                {% trans %}Series search{% endtrans %}
-                            {% else %}
-                                {% trans %}Multimedia objects search{% endtrans %}
-                            {% endif %}
+                            {% trans %}Multimedia objects search{% endtrans %}
                         {% endif %}
                     </h3>
                 {% endif %}
             </div>
         </div>
         <div class="row">
-            {% include '@PumukitWebTV/Search/template_title.html.twig'  %}
+            {% include '@PumukitWebTV/Search/template_title.html.twig' %}
             {% include '@PumukitWebTV/Search/template_list.html.twig' %}
             {% include '@PumukitWebTV/Misc/pager.html.twig' %}
         </div>
 
-        <div class="pmk-modal modal fade" id="sharedVideosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="sharedVideosModal" tabindex="-1" aria-labelledby="sharedVideosModalLabel" aria-hidden="true" data-lms--search-target="modal">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content ">
-                    <div class="modal-header" style="border-bottom:transparent">
-                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h3 class="moodle_title modal-title pumukitnewadmin-modal-title-margin" id="myModalLabel">{% trans %}Multimedia object preview{% endtrans %}</h3>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="moodle_title modal-title fs-5" id="sharedVideosModalLabel">{% trans %}Multimedia object preview{% endtrans %}</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'Close'|trans }}"></button>
                     </div>
-                    <div class="modal-body modal-body-shared-videos">
-
-                    </div>
+                    <div class="modal-body" data-lms--search-target="preview"></div>
                     <div class="modal-footer">
-
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close'|trans }}</button>
+                        <button type="button" class="btn btn-primary" data-action="lms--search#publish">{{ 'Publish'|trans }}</button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 {% endblock %}
