@@ -18,6 +18,21 @@ To register a new LTI tool, you need to create a new LTI tool in the LMS admin p
 
 Once the LTI tool is registered and active, you can use the LTI tool in the LMS platform adding the External Tool generated where you want to use it.
 
+## Security
+
+The launches are validated: the client is found by the issuer and the audience of the token, the token is checked
+with the keys of the platform (`jwks_uri` of its OpenID configuration), and its audience, nonce, deployment and LTI
+version must match the ones of the login, which is tied to the launch with a signed state that can be used once.
+
+Only the users with an LTI instructor, content developer or administrator role are created or promoted in PuMuKIT.
+The learners watch the embedded videos without becoming users, unless `lti_learner_profile` is set.
+
+## Personal recorder
+
+The LMS iframes do not allow the screen capture (Moodle does not add `display-capture` to them), so the naked
+back-office opened from LTI shows a "Record" button that opens the personal recorder in a new tab, logged in with a
+link valid five minutes that can be used once.
+
 ## Important
 
 This LTI integration is based on the LTI 1.3 and use deep linking to connect the LMS platform with PuMuKIT.

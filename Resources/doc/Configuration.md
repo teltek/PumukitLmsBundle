@@ -1,27 +1,36 @@
 # Configuration
 
-```
+```yaml
 pumukit_lms:
-    check_ldap_info_for_permission_profile: true
-    password: 'ThisIsASecretPasswordChangeMe'
-    role: 'owner'
-    naked_backoffice_domain: false
+    enable: true
+    password: 'the-secret-shared-with-the-plugins'
+    naked_backoffice_domain: 'lms.pumukit.example.org'
     naked_backoffice_background: 'white'
     naked_backoffice_color: '#ED6D00'
     naked_custom_css_url: null
-    default_series_title: 'My LMS Uploads'
     domains:
-        - lms.mydomain.com
-        - cms.mydomain.com
-        - test.moodle.com
+        - moodle.example.org
+        - '.*\.example\.org'
+    default_series_title: 'My LMS Uploads'
+    default_upload_profile: broadcastable
+    lms_upload_url: 'https://lms.pumukit.example.org/moodle/tus'
+    lti_learner_profile: null
+    allow_create_users_from_request: true
+    check_ldap_info_for_permission_profile: true
+    role: 'owner'
 ```
 
-* `check_ldap_info_for_permission_profile`: Check LDAP group key and PDI/PAS key to update user to auto publisher.
-* `password`: Shared secret between LMS and Pumukit
-* `role`: Role used to filter persons in multimedia object
-* `naked_backoffice_domain`: Domain or subdomain used to access into the naked backoffice
-* `naked_backoffice_background`: CSS color used in the naked backoffice background
-* `naked_backoffice_color`: CSS color used in the naked backoffice as main color
-* `naked_custom_css_url`: Custom CSS URL
-* `default_series_title`: Series title for Multimedia Objects uploaded from LMS
-* `domains`: Domains of the platforms connected to this PuMuKIT
+| Option | Default | Description |
+|--------|---------|-------------|
+| `enable` | `true` | If false, the LMS routes give 404 and `password` is not required |
+| `password` | required if enabled | Secret shared with the LMS plugins to compute the `hash`. The old default `ThisIsASecretPasswordChangeMe` is rejected |
+| `naked_backoffice_domain` | `''` | Domain of the naked back-office. Its session cookie is sent with `SameSite=None; Secure` so that it works inside the LMS iframe. The core `pumukit.naked_backoffice_*` parameters must have the same values |
+| `naked_backoffice_background`, `naked_backoffice_color`, `naked_custom_css_url` | `white`, `#ED6D00`, `null` | Colors and CSS of the naked back-office |
+| `domains` | `[]` | Regular expressions of the hosts of the LMS platforms allowed to log in, embed and register LTI tools; `*` allows any |
+| `default_series_title` | `My LMS Uploads` | Series of the uploads of the users without personal series |
+| `default_upload_profile` | `broadcastable` | Encoder profile of the uploads: `master_copy`, `master_encoded` or `broadcastable` |
+| `lms_upload_url` | `tus` | tus endpoint of the naked back-office wizard, usually `https://{naked domain}/moodle/tus` |
+| `lti_learner_profile` | `null` | Permission profile of the LTI learners. If null, the learners watch the embedded videos without becoming users. `Auto Publisher` restores the behaviour of 5.x |
+| `allow_create_users_from_request` | `true` | Create the users of the plugins that are not in LDAP |
+| `check_ldap_info_for_permission_profile` | `true` | Check the LDAP group (PAS/PDI) before promoting a Viewer to Auto Publisher |
+| `role` | `owner` | Role of the people that own the multimedia objects |

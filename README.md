@@ -1,132 +1,107 @@
 # PumukitLmsBundle
 
-Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT Video Platform](https://github.com/pumukit/PuMuKIT/blob/master/README.md).
+Bundle for the [PuMuKIT Video Platform 6.0](https://github.com/pumukit/PuMuKIT/tree/6.0.x) or higher. It connects
+PuMuKIT with the LMS platforms:
 
-The goal of this bundle is to merge the common APIs between the [Moodle bundle](https://github.com/teltek/PuMuKIT2-moodle-bundle) and the [OpenEDX bundle](https://github.com/teltek/PuMuKIT2-open-edx-bundle) into single generic bundle.
+- the Moodle plugins ([Atto editor](https://github.com/teltek/moodle-atto_pumukitmedia) and
+  [filter](https://github.com/teltek/moodle-filter_pumukitmedia)), see [the plugin list](Resources/doc/PLUGIN_LIST.md);
+- the [Open edX XBlock](https://github.com/teltek/pumukit2-opencast-video-xblock);
+- any LTI 1.3 platform with deep linking, see [LTI](Resources/doc/LTI.md).
 
-This code includes:
-* An Atto Editor integration for Moodle (/Resources/data/pumoodle/editor/atto/plugins)
-* A common API and endpoints that are shared for OpenEDX and Moodle
+The teachers work in the naked back-office (the PuMuKIT back-office without menu, served on its own domain) inside
+an iframe of the LMS, and the videos are embedded in the courses with `/openedx/openedx/embed`.
 
-For the OpenEDX integration, an XBlock is also needed:
-- [PuMuKIT2 Opencast Video XBlock](https://github.com/teltek/pumukit2-opencast-video-xblock)
-
-The new Atto Editor integration for Moodle is meant to replace the classical integration through a mix of repository/filter/block plugins [here](https://github.com/teltek/PuMuKIT2-moodle-bundle)
-At the moment, there are a couple of missing features:
-* Moodle Playlists support
-* Search and publish public videos (published on the WebTV channel)
-
-## Installation steps
-
-### Requirements
-
-Steps 1 and 2 requires you to have Composer installed globally, as explained
-in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.
-
-### Step 1: Introduce repository in the root project composer.json
-
-Open a command console, enter your project directory and execute the
-following command to add this repo:
+## Installation
 
 ```bash
-$ composer config repositories.pumukitlmsbundle vcs https://github.com/teltek/pumukit-lms-bundle.git
+composer require teltek/pumukit-lms-bundle
 ```
 
-### Step 2: Download the Bundle
+If Symfony Flex does not do it, add the bundle to `config/bundles.php` and import its routes, for example in
+`config/routes/pumukit_lms.yaml`:
 
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
-
-```bash
-$ composer require teltek/pumukit-lms-bundle dev-master
+```php
+Pumukit\LmsBundle\PumukitLmsBundle::class => ['all' => true],
 ```
 
-### Step 3: Install the Bundle
-
-Add the next line on bundles.php file:
-
-```
-Pumukit\LmsBundle\PumukitLmsBundle::class => ['all' => true]
-```
-
-Add the next lines on config/routes/annotations.yaml file:
-
-```
+```yaml
 pumukit_lms:
     resource: "@PumukitLmsBundle/Resources/config/routing.yml"
     prefix:   /
 ```
 
-### Step 4: Configure Bundle
-
-Go to [Resources/doc/Configuration.md](Resources/doc/Configuration.md)
-
-### Step 5: Install LMS Publication Channel
-
-Install the LMS Publication Channel with tag code PUCHLMS.
+Configure it as explained in [Resources/doc/Configuration.md](Resources/doc/Configuration.md) and create the LMS
+publication channel:
 
 ```bash
-$ cd /path/to/pumukit/
-$ php bin/console pumukit:lms:init:pubchannel
+php bin/console pumukit:lms:init:pubchannel
 ```
 
-### Step 6: Add the PUCHLMS tag code to the desire encoder profiles
+Add `PUCHLMS` to the targets of the encoder profiles that the LMS videos need, for example in
+`config/packages/pumukit_encoder.yaml`:
 
-Edit your `config/packages/pumukit_encoder.yaml` profile to add the PUCHLMS tag code to the desire encoder profiles,
-so in case a multimedia object has this Tag, the Tracks with those profiles will be generated.
-
-For example, if you want to generate a `video_h264` Track each time the LMS Publication Channel is
-added to a Multimedia Object, you should add the tag code this way:
-
-```bash
+```yaml
 pumukit_encoder:
-    ...
     profiles:
         video_h264:
-	    ...
             target: PUCHWEBTV PUCHPODCAST PUCHLMS
-
-```
-
-For PuMuKIT the latest version ( higher than 2.3.x ) , add this configuration to `config/packages/pumukit_encoder.yaml` as well:
-
-``` bash
-pumukit_encoder:
     target_default_profiles:
         PUCHLMS:
             video: "video_h264"
 ```
 
-### Step 7: (Optional) Set the permissions
-
-Add the "Init Multimedia Objects in published status" role to those users with a
-permission profile with personal scope, if you want them to publish their own
-videos immediately. Example for "Auto Publisher" permission profile:
+To let the users with personal scope publish their videos at once, give them `ROLE_INIT_STATUS_PUBLISHED`:
 
 ```bash
-php app/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBLISHED
+php bin/console pumukit:permission:update "Auto Publisher" ROLE_INIT_STATUS_PUBLISHED
 ```
 
-### Step 8: Override `PumukitNewAdminBundle:MultimediaObject:list.html.twig` template
+## Routes
 
-Run the pumukit:lms:init:resources command the branch corresponding to your PuMuKIT version:
+The plugins depend on these routes, which keep their parameters:
 
-```bash
-php bin/console pumukit:lms:init:resources 4.x
-```
+| Route | Used by |
+|-------|---------|
+| `/openedx/sso/manager`, `/openedx/sso/upload`, `/openedx/sso/personal_recorder` | Login of the plugins with `email` or `username` and `hash` |
+| `/openedx/openedx/embed/{id}`, `/openedx/openedx/playlist/embed/{id}` | Player of the embedded videos and playlists, with `hash` |
+| `/openedx/search/public/multimediaobjects` | Search of public videos; "Publish" sends `postMessage({url})` to the LMS |
+| `/lms/embed` | Marks a video as embedded in an LMS |
+| `/moodle/tus`, `/moodle/dispatchImport` | Upload of the naked back-office wizard |
+| `/lti/register`, `/lti/login`, `/lti/launch`, `/lti/deep_link`, `/.well-known/lti/jwks.json` | LTI 1.3 |
+| `/lti/recorder/{token}` | Personal recorder opened from LTI |
 
-If your current version gives an error, please open an issue on GitHub.
+The `hash` is `md5(value + password + date(d/m/Y) + naked_backoffice_domain)`, where the value is the email or the
+username of the user (or empty for the player), and it is valid the day it is generated and the next one.
 
-Clear cache:
+## Upload from the naked back-office
 
-```bash
-php bin/console cache:clear
-php bin/console cache:clear --env=prod
-```
+The wizard of the naked back-office uploads with tus to `/moodle/tus` on a URL signed for the logged in user, valid
+one hour, and imports the file with `/moodle/dispatchImport`, which checks that the same user is logged in. The
+user can only upload to their series, their personal series or the LMS series; the global users, to any series.
+External callers can still use `/moodle/tus` with `username` or `email` and the `hash`.
 
-## Documentation
+## Upgrade from 3.x (PuMuKIT 5)
 
-1. [Configuration](Resources/doc/Configuration.md)
+- The bundle requires PHP 8.5 and PuMuKIT 6.0.
+- **`password` is required** when the bundle is enabled, and the old default value is rejected: set the one shared
+  with the plugins.
+- **Remove the overrides of `templates/bundles/PumukitNewAdminBundle/MultimediaObject/lms_options.html.twig`** and
+  the other templates copied by `pumukit:lms:init:resources`, which is removed: PuMuKIT 6.0 has the "Publish to LMS"
+  button.
+- **LTI:** the launches are validated (issuer and client of the token, signature with the keys of the platform,
+  audience, nonce, a signed state and deployment) and only the LTI instructors, content developers and
+  administrators are created as PuMuKIT users. The learners watch the embedded videos without becoming users; set
+  `lti_learner_profile: 'Auto Publisher'` to create them as before. The launch of an embedded video renews its hash,
+  so the videos added with deep linking do not stop working after two days.
+- **LTI personal recorder:** the naked back-office opened from LTI shows a "Record" button that opens the personal
+  recorder in a new tab, because the LMS iframes do not allow the screen capture. It needs PuMuKIT 6.0 with the
+  `pumukit.naked_menu_templates` list.
+- **Upload:** the uploads without `hash` are rejected (before, the server computed it, so anybody could upload as any
+  user), and the uploads to the series of other users are rejected.
+- **Session in the iframe:** the session cookie of the naked domain is sent with `SameSite=None; Secure`, so the
+  session works inside the LMS iframe whatever `framework.session.cookie_samesite` says.
+- The search page for the LMS and the LTI pages use Bootstrap 5 and no inline scripts. The `/openedx/openedx/embed`
+  and `/openedx/openedx/playlist/embed` requests with an unknown or malformed id give 404 instead of 500.
+- New `enable` option: if false, the LMS routes give 404.
 
-2.- [Plugin list](Resources/doc/PLUGIN_LIST.md)
+See [Resources/doc/MIGRATION.md](Resources/doc/MIGRATION.md) for the upgrade from 2.x.
