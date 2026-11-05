@@ -91,6 +91,30 @@ class ConfigurationService
         return $this->validateRegexDomain($this->domainsPatterns, $currentDomain);
     }
 
+    public function allowsAnyDomain(): bool
+    {
+        return in_array('*', $this->domainsPatterns, true);
+    }
+
+    public function isAllowedLmsUrl(string $url): bool
+    {
+        $parts = parse_url($url);
+        if (!is_array($parts) || 'https' !== ($parts['scheme'] ?? null) || isset($parts['user']) || str_contains($url, '\\')) {
+            return false;
+        }
+
+        $host = (string) ($parts['host'] ?? '');
+        while ('' !== $host) {
+            if ($this->validateRegexDomain($this->domainsPatterns, $host)) {
+                return true;
+            }
+            $dot = strpos($host, '.');
+            $host = false === $dot ? '' : substr($host, $dot + 1);
+        }
+
+        return false;
+    }
+
     public function generateHash(string $email): string
     {
         $date = date('d/m/Y');

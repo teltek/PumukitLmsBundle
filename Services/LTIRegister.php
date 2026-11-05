@@ -7,6 +7,7 @@ namespace Pumukit\LmsBundle\Services;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\LmsBundle\Document\LTIClient;
 use Pumukit\LmsBundle\PumukitLmsBundle;
+use Symfony\Component\HttpClient\NoPrivateNetworkHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class LTIRegister
@@ -16,10 +17,10 @@ class LTIRegister
     private $verify_peer;
     private $domain;
 
-    public function __construct(DocumentManager $documentManager, HttpClientInterface $httpClient, string $domain)
+    public function __construct(DocumentManager $documentManager, HttpClientInterface $httpClient, ConfigurationService $configurationService, string $domain)
     {
         $this->documentManager = $documentManager;
-        $this->client = $httpClient;
+        $this->client = $configurationService->allowsAnyDomain() ? new NoPrivateNetworkHttpClient($httpClient) : $httpClient;
         $this->verify_peer = 'dev' !== getenv('APP_ENV');
         $this->domain = $domain;
     }
@@ -51,6 +52,7 @@ class LTIRegister
             $openIdConfiguration,
             [
                 'verify_peer' => $this->verify_peer,
+                'max_redirects' => 0,
             ]
         );
 
@@ -71,6 +73,7 @@ class LTIRegister
                     'Authorization' => 'Bearer '.$token,
                 ],
                 'verify_peer' => $this->verify_peer,
+                'max_redirects' => 0,
                 'body' => $this->createRegistrationJSON(),
             ]
         );
@@ -94,9 +97,9 @@ class LTIRegister
         return $parsedUrl['host'];
     }
 
-    private function validateOpenIdResult(array $responseResult): void
+    private function validateOpenIdResult(mixed $responseResult): void
     {
-        if (!isset($responseResult['registration_endpoint'])) {
+        if (!is_array($responseResult) || !is_string($responseResult['issuer'] ?? null) || !is_string($responseResult['registration_endpoint'] ?? null)) {
             throw new \Exception('Missing OpenId required configuration.');
         }
     }

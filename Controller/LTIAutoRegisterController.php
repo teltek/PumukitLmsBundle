@@ -43,6 +43,10 @@ final class LTIAutoRegisterController extends AbstractController
             throw new BadRequestHttpException('Missing registration_token required parameter.');
         }
 
+        if (!$this->configurationService->isAllowedLmsUrl($params['openid_configuration'])) {
+            throw new AccessDeniedHttpException('Invalid openid_configuration.');
+        }
+
         try {
             $openIdConfiguration = $this->ltiRegister->openIdRequestConfiguration($params['openid_configuration']);
         } catch (\Exception $exception) {
@@ -53,7 +57,15 @@ final class LTIAutoRegisterController extends AbstractController
             throw new AccessDeniedHttpException('Invalid issuer.');
         }
 
-        $registration = $this->ltiRegister->register($openIdConfiguration['registration_endpoint'], $params['registration_token']);
+        if (!$this->configurationService->isAllowedLmsUrl($openIdConfiguration['registration_endpoint'])) {
+            throw new AccessDeniedHttpException('Invalid registration_endpoint.');
+        }
+
+        try {
+            $registration = $this->ltiRegister->register($openIdConfiguration['registration_endpoint'], $params['registration_token']);
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException('The registration failed.', $exception);
+        }
         $this->ltiRegister->createRegistrationEntry($params, $openIdConfiguration, $registration);
 
         return $this->render('@PumukitLms/LTI/registration_response.html.twig');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\Tests\Controller;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\LTIKeyConfiguration;
 use Pumukit\LmsBundle\Services\LTIRegister;
 use Pumukit\LmsBundle\Tests\LmsTestCase;
@@ -59,6 +60,8 @@ class InvalidRequestsTest extends LmsTestCase
         $register = $this->createStub(LTIRegister::class);
         $register->method('openIdRequestConfiguration')->willThrowException(new \RuntimeException('Unreachable'));
         static::getContainer()->set(LTIRegister::class, $register);
+        $configuration = static::getContainer()->get(ConfigurationService::class);
+        (new \ReflectionProperty($configuration, 'domainsPatterns'))->setValue($configuration, ['lms\.invalid']);
 
         $this->client->request('GET', '/lti/register?openid_configuration=https://lms.invalid/openid&registration_token=token');
 
