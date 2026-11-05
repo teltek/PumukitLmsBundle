@@ -10,6 +10,9 @@ You need to generate private and public key RSA256 and store it on '__PROJECT_DI
 
 ## Registration
 
+The automatic registration (`/lti/register`) only reads `https` addresses of a domain of `pumukit_lms.domains` or of a subdomain of it, without
+following redirects, and it checks the `issuer` and the `registration_endpoint` that it receives in the same way. With `*` in `domains`, it does not reach internal addresses.
+
 To register a new LTI tool, you need to create a new LTI tool in the LMS admin panel. PuMuKIT provides an auto register endpoint to register the LTI tool in the LMS  `{naked-domain}/lti/register`.
 
 {naked-domain} is the domain of your PuMuKIT single backoffice defined on naked_backoffice_domain parameter in parameters.yml.
