@@ -7,6 +7,7 @@ namespace Pumukit\LmsBundle\Controller;
 use Pumukit\LmsBundle\Services\LTIKeyConfiguration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class LTIKeyGeneratorController extends AbstractController
@@ -21,6 +22,10 @@ final class LTIKeyGeneratorController extends AbstractController
     #[Route('.well-known/lti/jwks.json', name: 'lti_tool_jwks', methods: ['GET'])]
     public function jwks(): JsonResponse
     {
+        if (!$this->LTIKeyConfiguration->hasKeys()) {
+            throw new NotFoundHttpException('The LTI keys are not configured.');
+        }
+
         return new JsonResponse($this->LTIKeyConfiguration->jwksFromJwkKey());
     }
 }

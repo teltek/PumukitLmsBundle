@@ -30,9 +30,9 @@ class ManagerController extends AbstractController
     {
         $session = $request->getSession();
 
-        $email = RequestParameter::get($request, 'email');
-        $username = RequestParameter::get($request, 'username');
-        $hash = RequestParameter::get($request, 'hash');
+        $email = RequestParameter::getString($request, 'email');
+        $username = RequestParameter::getString($request, 'username');
+        $hash = RequestParameter::getString($request, 'hash');
 
         if ($email || $username) {
             if (
@@ -57,7 +57,7 @@ class ManagerController extends AbstractController
 
         if ($forceReLogin) {
             $user = $this->SSOService->getAndValidateUser(
-                $email ?? '',
+                $email,
                 $username,
                 $request->headers->get('referer'),
                 $hash,

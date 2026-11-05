@@ -6,13 +6,15 @@ namespace Pumukit\LmsBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Firebase\JWT\JWT;
-use MongoDB\BSON\ObjectId;
 use Pumukit\LmsBundle\Document\LTIClient;
 use Pumukit\LmsBundle\Services\ConfigurationService;
 use Pumukit\LmsBundle\Services\LTIKeyConfiguration;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -35,21 +37,22 @@ class LTIDeepLinkController extends AbstractController
     #[Route('/lti/deep_link', name: 'lti_tool_deep_link', methods: ['GET', 'POST'])]
     public function deepLink(Request $request)
     {
-        $id = $request->query->get('id');
-        if (!$id) {
-            throw new \Exception('ID not found on DeepLink Request');
+        $id = $request->query->getString('id');
+        if ('' === $id) {
+            throw new BadRequestHttpException('ID not found on DeepLink Request');
         }
 
-        $multimediaObject = $this->documentManager->getRepository(MultimediaObject::class)->findOneBy(['_id' => $id]);
+        $multimediaObject = $this->isObjectId($id) ? $this->documentManager->getRepository(MultimediaObject::class)->find($id) : null;
         if (!$multimediaObject) {
-            throw new \Exception('Multimedia object not found.');
+            throw new NotFoundHttpException('Multimedia object not found.');
         }
 
         $session = $request->getSession();
 
-        $ltiClient = $this->documentManager->getRepository(LTIClient::class)->findOneBy(['_id' => new ObjectId($session->get('lti_client_id'))]);
+        $clientId = (string) $session->get('lti_client_id');
+        $ltiClient = $this->isObjectId($clientId) ? $this->documentManager->getRepository(LTIClient::class)->find($clientId) : null;
         if (!$ltiClient) {
-            throw new \Exception('Client not valid.');
+            throw new AccessDeniedHttpException('Client not valid.');
         }
 
         $ltiContent = $this->generateLTIContentLink($multimediaObject);
@@ -102,5 +105,10 @@ class LTIDeepLinkController extends AbstractController
                 'documentTarget' => 'iframe',
             ],
         ];
+    }
+
+    private function isObjectId(string $id): bool
+    {
+        return 1 === preg_match('/^[a-f\d]{24}$/i', $id);
     }
 }

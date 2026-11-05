@@ -33,9 +33,9 @@ class UploadController extends AbstractController
     #[Route('/upload', name: 'pumukit_lms_sso_upload')]
     public function upload(Request $request)
     {
-        $email = RequestParameter::get($request, 'email');
-        $username = RequestParameter::get($request, 'username');
-        $hash = RequestParameter::get($request, 'hash');
+        $email = RequestParameter::getString($request, 'email');
+        $username = RequestParameter::getString($request, 'username');
+        $hash = RequestParameter::getString($request, 'hash');
 
         if (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$this->isGranted('ROLE_SCOPE_PERSONAL')) {
             $user = $this->SSOService->getAndValidateUser(

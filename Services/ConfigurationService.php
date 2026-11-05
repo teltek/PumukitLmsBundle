@@ -86,7 +86,7 @@ class ConfigurationService
 
     public function isAllowedDomain(string $domain): bool
     {
-        $currentDomain = parse_url($domain, PHP_URL_HOST);
+        $currentDomain = (string) parse_url($domain, PHP_URL_HOST);
 
         return $this->validateRegexDomain($this->domainsPatterns, $currentDomain);
     }

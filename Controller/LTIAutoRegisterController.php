@@ -9,6 +9,8 @@ use Pumukit\LmsBundle\Services\LTIRegister;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class LTIAutoRegisterController extends AbstractController
@@ -27,23 +29,28 @@ final class LTIAutoRegisterController extends AbstractController
     {
         $params = $request->query->all();
 
-        if (!isset($params['openid_configuration'])) {
-            throw new \Exception('Missing openid_configuration required parameter.');
+        if (!is_string($params['openid_configuration'] ?? null)) {
+            throw new BadRequestHttpException('Missing openid_configuration required parameter.');
         }
 
         if (str_contains($params['openid_configuration'], 'blackboard')) {
-            $blackboardParams = parse_url($params['openid_configuration'], PHP_URL_QUERY);
+            $blackboardParams = (string) parse_url($params['openid_configuration'], PHP_URL_QUERY);
             $explode = explode('registrationToken=', $blackboardParams);
-            $params['registration_token'] = $explode[1];
+            $params['registration_token'] = $explode[1] ?? null;
         }
 
-        if (!isset($params['registration_token'])) {
-            throw new \Exception('Missing registration_token required parameter.');
+        if (!is_string($params['registration_token'] ?? null)) {
+            throw new BadRequestHttpException('Missing registration_token required parameter.');
         }
 
-        $openIdConfiguration = $this->ltiRegister->openIdRequestConfiguration($params['openid_configuration']);
+        try {
+            $openIdConfiguration = $this->ltiRegister->openIdRequestConfiguration($params['openid_configuration']);
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException('The openid_configuration cannot be read.', $exception);
+        }
+
         if (!$this->configurationService->isAllowedDomain($openIdConfiguration['issuer'])) {
-            throw new \Exception('Invalid issuer.');
+            throw new AccessDeniedHttpException('Invalid issuer.');
         }
 
         $registration = $this->ltiRegister->register($openIdConfiguration['registration_endpoint'], $params['registration_token']);

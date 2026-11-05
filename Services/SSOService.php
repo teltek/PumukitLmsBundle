@@ -185,8 +185,13 @@ class SSOService
         return $user;
     }
 
-    public function getAndValidateUser(string $email, string $username, string $host, string $hash, bool $isSecure)
+    public function getAndValidateUser(?string $email, ?string $username, ?string $host, ?string $hash, bool $isSecure)
     {
+        $email ??= '';
+        $username ??= '';
+        $host ??= '';
+        $hash ??= '';
+
         if (!$this->configurationService->getNakedBackofficeDomain()) {
             return $this->genError('The domain "pumukit.naked_backoffice_domain" is not configured.');
         }
@@ -201,7 +206,7 @@ class SSOService
             return $this->genError('Not email or username parameter.');
         }
 
-        if (!$this->configurationService->isAllowedDomain($host)) {
+        if ('' === $host || !$this->configurationService->isAllowedDomain($host)) {
             return $this->genError('Invalid Domain!');
         }
 

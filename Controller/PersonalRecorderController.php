@@ -44,10 +44,10 @@ class PersonalRecorderController extends AbstractController
 
         if (!$this->isGranted('ROLE_SCOPE_GLOBAL') && !$this->isGranted('ROLE_SCOPE_PERSONAL')) {
             $user = $this->SSOService->getAndValidateUser(
-                RequestParameter::get($request, 'email'),
-                RequestParameter::get($request, 'username'),
+                RequestParameter::getString($request, 'email'),
+                RequestParameter::getString($request, 'username'),
                 $request->headers->get('referer'),
-                RequestParameter::get($request, 'hash'),
+                RequestParameter::getString($request, 'hash'),
                 $request->isSecure()
             );
             if ($user instanceof Response) {

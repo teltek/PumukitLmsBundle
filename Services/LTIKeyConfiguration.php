@@ -16,6 +16,11 @@ class LTIKeyConfiguration
         $this->kernelProjectDir = $kernelProjectDir;
     }
 
+    public function hasKeys(): bool
+    {
+        return is_file($this->privateKey());
+    }
+
     public function privateKeyContent(): string
     {
         return file_get_contents($this->kernelProjectDir.'/config/lti/keys/private.pem');
