@@ -75,7 +75,7 @@ class Configuration implements ConfigurationInterface
             ->info('Permission profile of the LTI learners. If null, the learners only watch the videos and are not created as users. "Auto Publisher" restores the behaviour of 5.x')
             ->end()
             ->arrayNode('domains')
-            ->info('Domains to connected to this PuMuKIT')
+            ->info('Domains connected to this PuMuKIT. They can also embed the backoffice in an iframe')
             ->prototype('scalar')->end()
             ->defaultValue([])
             ->end()

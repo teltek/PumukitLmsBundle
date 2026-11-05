@@ -45,6 +45,12 @@ services:
        $nakedCustomCssUrl: '%pumukit_lms.naked_custom_css_url%'
        $domainsPatterns: '%pumukit_lms.domains%'
 
+  Pumukit\LmsBundle\Services\FrameAncestorsProvider:
+    arguments:
+      $domains: '%pumukit_lms.domains%'
+    tags:
+      - { name: 'pumukit.frame_ancestors_provider' }
+
   Pumukit\LmsBundle\Services\InboxLmsService:
     class: Pumukit\LmsBundle\Services\InboxLmsService
     arguments:
