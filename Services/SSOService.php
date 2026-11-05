@@ -167,7 +167,7 @@ class SSOService
                 $user->setFullname($fullName);
             }
         } catch (\Exception $exception) {
-            $user->setFullname($username);
+            $user->setFullname($fullName);
         }
 
         $permissionProfile = $this->permissionProfileService->getByName($permissionProfileName ?? self::PERMISSION_PROFILE_AUTO);
@@ -236,7 +236,7 @@ class SSOService
                 $this->promoteUser($user);
             }
         } catch (\RuntimeException $e) {
-            $this->logger->info('TTK Runtime exception');
+            $this->logger->info('TTK Runtime exception: '.$e->getMessage());
         } catch (\Exception $e) {
             if ($this->configurationService->isAllowCreateUsersFromRequest() && $email && $username) {
                 return $this->createUserByUsernameAndEmail($username, $email, $username);
