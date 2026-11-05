@@ -7,6 +7,10 @@ namespace Pumukit\LmsBundle\Tests\Controller;
 use Pumukit\CoreBundle\Services\InboxService;
 use Pumukit\LmsBundle\Services\UploadAuthorization;
 use Pumukit\LmsBundle\Tests\LmsTestCase;
+use Pumukit\SchemaBundle\Document\PermissionProfile;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @internal
@@ -46,6 +50,30 @@ class MoodleServerControllerTest extends LmsTestCase
         $this->client->request('POST', '/moodle/tus/lti/'.$userId.'/'.$expires.'/'.str_repeat('a', 64).'?series='.$series->getId(), server: self::SERVER + ['HTTP_UPLOAD_METADATA' => 'filename '.base64_encode('video.mp4').',filetype '.base64_encode('video/mp4')]);
 
         $this->assertResponseStatusCodeSame(401);
+    }
+
+    public function testTheUploaderOfTheNakedBackofficeDoesNotSendTheHashToTheEndpoint(): void
+    {
+        $teacher = $this->user(PermissionProfile::SCOPE_GLOBAL);
+        $series = $this->ownedSeries($teacher);
+        $container = self::getContainer();
+        $request = Request::create('/');
+        $request->attributes->set('nakedbackoffice', true);
+        $container->get('request_stack')->push($request);
+        $container->get('security.token_storage')->setToken(new UsernamePasswordToken($teacher, 'pumukit', $teacher->getRoles()));
+
+        $page = $container->get('twig')->render('@PumukitCore/Upload/uppy_tus.html.twig', [
+            'series' => $series,
+            'hash' => 'leaked',
+            'username' => 'teacher',
+            'email' => 'teacher@example.com',
+        ]);
+
+        $attribute = (new Crawler($page))->filter('[data-controller="core--uploader"]')->attr('data-core--uploader-options-value');
+        $options = json_decode((string) $attribute, true);
+        $this->assertStringContainsString('/lti/'.$teacher->getId().'/', $options['endpoint']);
+        $this->assertStringEndsWith('?series='.$series->getId(), $options['endpoint']);
+        $this->assertSame('leaked', $options['import']['params']['hash']);
     }
 
     public function testTheImportOfASignedUploadNeedsTheSameUser(): void
