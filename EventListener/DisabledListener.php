@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[AsEventListener]
+#[AsEventListener(priority: 16)]
 final class DisabledListener
 {
-    public function __construct(private readonly bool $enabled) {}
-
-    public function __invoke(ControllerEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
-        $controller = $event->getController();
-        $class = is_array($controller) ? $controller[0]::class : $controller::class;
-        if (!$this->enabled && str_starts_with($class, 'Pumukit\LmsBundle\Controller\\')) {
+        $controller = $event->getRequest()->attributes->get('_controller');
+        if (is_string($controller) && str_starts_with($controller, 'Pumukit\LmsBundle\Controller\\')) {
             throw new NotFoundHttpException();
         }
     }

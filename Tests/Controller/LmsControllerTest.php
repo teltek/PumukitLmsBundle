@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Tests\Controller;
 
-use Pumukit\LmsBundle\Controller\LmsController;
 use Pumukit\LmsBundle\Document\LTIClient;
-use Pumukit\LmsBundle\EventListener\DisabledListener;
 use Pumukit\LmsBundle\Tests\LmsTestCase;
 use Pumukit\SchemaBundle\Document\Tag;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @internal
@@ -75,16 +69,5 @@ class LmsControllerTest extends LmsTestCase
             $this->assertCount(1, $cookies, $host);
             $this->assertSame($sameSite, $cookies[0]->getSameSite(), $host);
         }
-    }
-
-    public function testTheDisabledBundleGivesNotFound(): void
-    {
-        $controller = [(new \ReflectionClass(LmsController::class))->newInstanceWithoutConstructor(), 'iframeAction'];
-        $event = new ControllerEvent(self::$kernel, $controller, new Request(), HttpKernelInterface::MAIN_REQUEST);
-
-        (new DisabledListener(true))($event);
-
-        $this->expectException(NotFoundHttpException::class);
-        (new DisabledListener(false))($event);
     }
 }

@@ -102,6 +102,6 @@ External callers can still use `/moodle/tus` with `username` or `email` and the 
   session works inside the LMS iframe whatever `framework.session.cookie_samesite` says.
 - The search page for the LMS and the LTI pages use Bootstrap 5 and no inline scripts. The `/openedx/openedx/embed`
   and `/openedx/openedx/playlist/embed` requests with an unknown or malformed id give 404 instead of 500.
-- New `enable` option: if false, the LMS routes give 404.
+- New `enable` option: if false, the LMS routes give 404 and nothing else of the bundle is loaded: no voter, listeners, Twig functions, commands or `frame-ancestors`.
 
 See [Resources/doc/MIGRATION.md](Resources/doc/MIGRATION.md) for the upgrade from 2.x.

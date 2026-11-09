@@ -107,10 +107,6 @@ services:
 
   Pumukit\LmsBundle\Twig\LtiRecorderExtension: ~
 
-  Pumukit\LmsBundle\EventListener\DisabledListener:
-    arguments:
-      $enabled: '%pumukit_lms.enable%'
-
   Pumukit\LmsBundle\EventListener\NakedSessionCookieListener:
     arguments:
       $nakedBackofficeDomain: '%pumukit_lms.naked_backoffice_domain%'

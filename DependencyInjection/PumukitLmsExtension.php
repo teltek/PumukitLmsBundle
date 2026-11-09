@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pumukit\LmsBundle\DependencyInjection;
 
 use Pumukit\CoreBundle\DependencyInjection\FrontendAssets;
+use Pumukit\LmsBundle\EventListener\DisabledListener;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -39,10 +40,14 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('pumukit_lms.domains', $config['domains']);
         $container->setParameter('pumukit_lms.lti_learner_profile', $config['lti_learner_profile']);
 
-        if ($config['enable']) {
-            $templates = $container->hasParameter('pumukit.naked_menu_templates') ? $container->getParameter('pumukit.naked_menu_templates') : [];
-            $container->setParameter('pumukit.naked_menu_templates', array_values(array_unique([...$templates, self::NAKED_MENU_TEMPLATE])));
+        if (!$config['enable']) {
+            $container->register(DisabledListener::class)->setAutoconfigured(true);
+
+            return;
         }
+
+        $templates = $container->hasParameter('pumukit.naked_menu_templates') ? $container->getParameter('pumukit.naked_menu_templates') : [];
+        $container->setParameter('pumukit.naked_menu_templates', array_values(array_unique([...$templates, self::NAKED_MENU_TEMPLATE])));
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('pumukit_lms.yaml');

@@ -22,7 +22,7 @@ pumukit_lms:
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `enable` | `true` | If false, the LMS routes give 404 and `password` is not required |
+| `enable` | `true` | If false, the LMS routes give 404, nothing else of the bundle is loaded (voter, listeners, Twig functions, commands, `frame-ancestors`) and `password` is not required |
 | `password` | required if enabled | Secret shared with the LMS plugins to compute the `hash`. The old default `ThisIsASecretPasswordChangeMe` is rejected |
 | `naked_backoffice_domain` | `''` | Domain of the naked back-office. Its session cookie is sent with `SameSite=None; Secure` so that it works inside the LMS iframe. The core `pumukit.naked_backoffice_*` parameters must have the same values |
 | `naked_backoffice_background`, `naked_backoffice_color`, `naked_custom_css_url` | `white`, `#ED6D00`, `null` | Colors and CSS of the naked back-office |

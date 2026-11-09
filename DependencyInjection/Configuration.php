@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->booleanNode('enable')
             ->defaultTrue()
-            ->info('If false, the LMS routes give 404 and the password is not required')
+            ->info('If false, the LMS routes give 404, nothing else of the bundle is loaded and the password is not required')
             ->end()
             ->scalarNode('allow_create_users_from_request')
             ->defaultTrue()
