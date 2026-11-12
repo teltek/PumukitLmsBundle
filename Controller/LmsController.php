@@ -182,7 +182,6 @@ class LmsController extends AbstractController
 
     private function validateAccess(Request $request, array $options)
     {
-        // NOTE: Check TTK-16603
         if ('dev' !== getenv('APP_ENV')) {
             $referer = $request->headers->get('referer');
             if (!$referer) {
