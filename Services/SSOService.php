@@ -210,7 +210,7 @@ class SSOService
             return $this->genError('Invalid Domain!');
         }
 
-        // Valida hash con email o username (plugin Moodle usa username)
+        // Validate the hash with the email or the username (the Moodle plugin uses the username)
         if (!$this->configurationService->isValidHash($hash, $email, $username)) {
             return $this->genError('The hash is not valid.');
         }

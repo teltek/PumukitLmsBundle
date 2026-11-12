@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->scalarNode('check_ldap_info_for_permission_profile')
             ->defaultTrue()
-            ->info('Check group key and PAS/PDI key to update permission profile to auto publisher')
+            ->info('Promote a Viewer to Auto Publisher only if the first value of its LDAP attribute edupersonprimaryaffiliation is PAS or PDI')
             ->end()
             ->scalarNode('password')
             ->defaultNull()

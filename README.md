@@ -70,6 +70,9 @@ The plugins depend on these routes, which keep their parameters:
 | `/lti/register`, `/lti/login`, `/lti/launch`, `/lti/deep_link`, `/.well-known/lti/jwks.json` | LTI 1.3 |
 | `/lti/recorder/{token}` | Personal recorder opened from LTI |
 
+`/openedx/sso/personal_recorder` and `/lti/recorder/{token}` need the PumukitPersonalRecorderBundle; without it they
+give 403.
+
 The `hash` is `md5(value + password + date(d/m/Y) + naked_backoffice_domain)`, where the value is the email or the
 username of the user (or empty for the player), and it is valid the day it is generated and the next one.
 
@@ -80,7 +83,7 @@ one hour, and imports the file with `/moodle/dispatchImport`, which checks that 
 user can only upload to their series or their personal series; the global users, to any series.
 External callers can still use `/moodle/tus` with `username` or `email` and the `hash`.
 
-## Upgrade from 3.x (PuMuKIT 5)
+## Upgrade from 5.x (PuMuKIT 5)
 
 - The bundle requires PHP 8.5 and PuMuKIT 6.0.
 - **`password` is required** when the bundle is enabled, and the old default value is rejected: set the one shared
@@ -94,8 +97,8 @@ External callers can still use `/moodle/tus` with `username` or `email` and the 
   `lti_learner_profile: 'Auto Publisher'` to create them as before. The launch of an embedded video renews its hash,
   so the videos added with deep linking do not stop working after two days.
 - **LTI personal recorder:** the naked back-office opened from LTI shows a "Record" button that opens the personal
-  recorder in a new tab, because the LMS iframes do not allow the screen capture. It needs PuMuKIT 6.0 with the
-  `pumukit.naked_menu_templates` list.
+  recorder in a new tab, because the LMS iframes do not allow the screen capture. It needs the
+  PumukitPersonalRecorderBundle and PuMuKIT 6.0 with the `pumukit.naked_menu_templates` list.
 - **Upload:** the uploads without `hash` are rejected (before, the server computed it, so anybody could upload as any
   user), and the uploads to the series of other users are rejected.
 - **Session in the iframe:** the session cookie of the naked domain is sent with `SameSite=None; Secure`, so the
@@ -108,5 +111,3 @@ External callers can still use `/moodle/tus` with `username` or `email` and the 
   series is no longer used and nobody can upload to it unless they own it. Its videos stay where they are; move them
   to the personal series of their owners with `pumukit:personal-series:move <series id>`.
 - New `enable` option: if false, the LMS routes give 404 and nothing else of the bundle is loaded: no voter, listeners, Twig functions, commands or `frame-ancestors`.
-
-See [Resources/doc/MIGRATION.md](Resources/doc/MIGRATION.md) for the upgrade from 2.x.

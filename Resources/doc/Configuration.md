@@ -30,5 +30,5 @@ pumukit_lms:
 | `lms_upload_url` | `tus` | tus endpoint of the naked back-office wizard, usually `https://{naked domain}/moodle/tus` |
 | `lti_learner_profile` | `null` | Permission profile of the LTI learners. If null, the learners watch the embedded videos without becoming users. `Auto Publisher` restores the behaviour of 5.x |
 | `allow_create_users_from_request` | `true` | Create the users of the plugins that are not in LDAP |
-| `check_ldap_info_for_permission_profile` | `true` | Check the LDAP group (PAS/PDI) before promoting a Viewer to Auto Publisher |
+| `check_ldap_info_for_permission_profile` | `true` | When a `Viewer` user logs in from the LMS, it is promoted to `Auto Publisher` only if the first value of its LDAP attribute `edupersonprimaryaffiliation` is `PAS` or `PDI`. If false, it is promoted without this check. Without the LDAP service, nobody is promoted |
 | `role` | `owner` | Role of the people that own the multimedia objects |

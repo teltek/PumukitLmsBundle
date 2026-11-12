@@ -115,7 +115,7 @@ class ConfigurationService
 
     public function generateHashWithValue(?string $email, ?string $username = null): string
     {
-        // Prioriza email, si está vacío usa username
+        // Use the email, or the username if the email is empty
         $value = !empty($email) ? $email : $username;
 
         if (empty($value)) {
@@ -149,12 +149,12 @@ class ConfigurationService
             return false;
         }
 
-        // Intenta con email
+        // Try with the email
         if ($check($email)) {
             return true;
         }
 
-        // Intenta con username (como lo genera el plugin de Moodle)
+        // Try with the username (as the Moodle plugin generates it)
         if ($check($username)) {
             return true;
         }
