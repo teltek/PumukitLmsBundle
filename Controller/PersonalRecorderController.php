@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
-use Pumukit\LmsBundle\Services\ConfigurationService;
-use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\RequestParameter;
 use Pumukit\LmsBundle\Utils\SeriesUtils;
@@ -22,17 +20,10 @@ class PersonalRecorderController extends AbstractController
     public const ADMIN_PERSONAL_RECORDER_ROUTE = '/admin/personalrecorder';
 
     private $SSOService;
-    private $seriesService;
-    private $configurationService;
 
-    public function __construct(
-        SSOService $SSOService,
-        SeriesService $seriesService,
-        ConfigurationService $configurationService,
-    ) {
+    public function __construct(SSOService $SSOService)
+    {
         $this->SSOService = $SSOService;
-        $this->seriesService = $seriesService;
-        $this->configurationService = $configurationService;
     }
 
     #[Route('/personal_recorder', name: 'pumukit_lms_sso_personalrecorder')]
@@ -56,10 +47,6 @@ class PersonalRecorderController extends AbstractController
             $this->SSOService->login($user, $request);
         }
 
-        $series = $this->seriesService->getSeriesToUpload();
-        $params = '?'.SeriesUtils::buildParams($this->configurationService->getDefaultSeriesTitle(), $series->getId());
-        $params .= '&showButton=false';
-
-        return new RedirectResponse(self::ADMIN_PERSONAL_RECORDER_ROUTE.'/'.$params);
+        return new RedirectResponse(self::ADMIN_PERSONAL_RECORDER_ROUTE.'/?'.SeriesUtils::buildParams().'&showButton=false');
     }
 }

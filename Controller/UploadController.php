@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pumukit\LmsBundle\Controller;
 
-use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\RequestParameter;
+use Pumukit\SchemaBundle\Services\PersonalSeriesService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,16 +17,16 @@ use Symfony\Component\Routing\Attribute\Route;
 class UploadController extends AbstractController
 {
     private $SSOService;
-    private $seriesService;
+    private $personalSeriesService;
     private $defaultUploadProfile;
 
     public function __construct(
         SSOService $SSOService,
-        SeriesService $seriesService,
+        PersonalSeriesService $personalSeriesService,
         string $defaultUploadProfile
     ) {
         $this->SSOService = $SSOService;
-        $this->seriesService = $seriesService;
+        $this->personalSeriesService = $personalSeriesService;
         $this->defaultUploadProfile = $defaultUploadProfile;
     }
 
@@ -52,10 +52,7 @@ class UploadController extends AbstractController
             $this->SSOService->login($user, $request);
         }
 
-        $series = $this->getUser()->getPersonalSeries();
-        if (!$series) {
-            $series = $this->seriesService->getSeriesToUpload()->getId();
-        }
+        $series = $this->personalSeriesService->getOrCreate($this->getUser())->getId();
 
         $request->getSession()->set('tus_sso_email', $email);
         $request->getSession()->set('tus_sso_username', $username);

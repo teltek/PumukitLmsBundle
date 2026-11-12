@@ -7,6 +7,7 @@ namespace Pumukit\LmsBundle\Tests\Controller;
 use Pumukit\LmsBundle\Controller\LTIRecorderController;
 use Pumukit\LmsBundle\Services\SignedToken;
 use Pumukit\LmsBundle\Tests\LmsTestCase;
+use Pumukit\SchemaBundle\Document\Series;
 
 /**
  * @internal
@@ -18,13 +19,14 @@ class LTIRecorderControllerTest extends LmsTestCase
     public function testTheRecorderLinkLogsTheUserInOnce(): void
     {
         $teacher = $this->user();
-        $this->lmsSeries();
         $signedToken = self::getContainer()->get(SignedToken::class);
         $token = $signedToken->issue(LTIRecorderController::TOKEN, ['user' => (string) $teacher->getId()], LTIRecorderController::TTL);
 
         $this->client->request('GET', '/lti/recorder/'.$token);
         $this->assertResponseRedirects();
         $this->assertStringStartsWith('/admin/personalrecorder/?', $this->client->getResponse()->headers->get('Location'));
+        $this->assertStringNotContainsString('series', $this->client->getResponse()->headers->get('Location'));
+        $this->assertSame(0, $this->dm->getRepository(Series::class)->count());
 
         $this->client->request('GET', '/lti/recorder/'.$token);
         $this->assertResponseStatusCodeSame(403);

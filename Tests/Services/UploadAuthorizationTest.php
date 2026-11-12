@@ -40,7 +40,7 @@ class UploadAuthorizationTest extends LmsTestCase
         $this->dm->flush();
 
         $this->assertTrue($authorization->canUploadTo($teacher, $own->getId()));
-        $this->assertTrue($authorization->canUploadTo($teacher, $lms->getId()));
+        $this->assertFalse($authorization->canUploadTo($teacher, $lms->getId()));
         $this->assertTrue($authorization->canUploadTo($teacher, $personal->getId()));
         $this->assertFalse($authorization->canUploadTo($teacher, $others->getId()));
         $this->assertFalse($authorization->canUploadTo($teacher, 'not-an-id'));

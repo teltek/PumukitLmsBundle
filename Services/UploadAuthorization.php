@@ -6,7 +6,6 @@ namespace Pumukit\LmsBundle\Services;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use MongoDB\BSON\ObjectId;
-use Pumukit\LmsBundle\PumukitLmsBundle;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\PermissionProfile;
 use Pumukit\SchemaBundle\Document\Series;
@@ -60,7 +59,6 @@ final class UploadAuthorization
 
         if (in_array(PermissionProfile::SCOPE_GLOBAL, $user->getRoles(), true)
             || (string) $user->getPersonalSeries() === $seriesId
-            || true === $series->getProperty(PumukitLmsBundle::PROPERTY_LMS)
         ) {
             return true;
         }

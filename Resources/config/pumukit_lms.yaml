@@ -6,8 +6,6 @@ services:
     bind:
       $kernelProjectDir: '%kernel.project_dir%'
       $pumukitInfo: "%pumukit.info%"
-      $defaultSeriesTitle: '%pumukit_lms.default_series_title%'
-      $locales: '%pumukit.locales%'
       $checkLDAPInfoToUpdatePermissionProfile: '%pumukit_lms.check_ldap_info_for_permission_profile%'
 
   Pumukit\LmsBundle\Controller\:
@@ -66,9 +64,6 @@ services:
 
   Pumukit\LmsBundle\Services\SSOService:
     class: Pumukit\LmsBundle\Services\SSOService
-
-  Pumukit\LmsBundle\Services\SeriesService:
-    class: Pumukit\LmsBundle\Services\SeriesService
 
   Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener:
     class: Pumukit\LmsBundle\EventListener\PersonalRecorderEventListener

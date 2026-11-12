@@ -13,8 +13,6 @@ class ConfigurationService
     private $nakedBackofficeBackground;
     private $nakedBackofficeColor;
     private $nakedCustomCssUrl;
-
-    private $defaultSeriesTitle;
     private $domainsPatterns;
 
     public function __construct(
@@ -25,7 +23,6 @@ class ConfigurationService
         string $nakedBackofficeBackground,
         string $nakedBackofficeColor,
         ?string $nakedCustomCssUrl,
-        string $defaultSeriesTitle,
         array $domainsPatterns
     ) {
         $this->allowCreateUsersFromRequest = $allowCreateUsersFromRequest;
@@ -35,7 +32,6 @@ class ConfigurationService
         $this->nakedBackofficeBackground = $nakedBackofficeBackground;
         $this->nakedBackofficeColor = $nakedBackofficeColor;
         $this->nakedCustomCssUrl = $nakedCustomCssUrl;
-        $this->defaultSeriesTitle = $defaultSeriesTitle;
         $this->domainsPatterns = $domainsPatterns;
     }
 
@@ -72,11 +68,6 @@ class ConfigurationService
     public function getNakedCustomCssUrl(): ?string
     {
         return $this->nakedCustomCssUrl;
-    }
-
-    public function getDefaultSeriesTitle(): string
-    {
-        return $this->defaultSeriesTitle;
     }
 
     public function getDomainsPatterns(): array

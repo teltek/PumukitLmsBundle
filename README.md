@@ -77,7 +77,7 @@ username of the user (or empty for the player), and it is valid the day it is ge
 
 The wizard of the naked back-office uploads with tus to `/moodle/tus` on a URL signed for the logged in user, valid
 one hour, and imports the file with `/moodle/dispatchImport`, which checks that the same user is logged in. The
-user can only upload to their series, their personal series or the LMS series; the global users, to any series.
+user can only upload to their series or their personal series; the global users, to any series.
 External callers can still use `/moodle/tus` with `username` or `email` and the `hash`.
 
 ## Upgrade from 3.x (PuMuKIT 5)
@@ -102,6 +102,11 @@ External callers can still use `/moodle/tus` with `username` or `email` and the 
   session works inside the LMS iframe whatever `framework.session.cookie_samesite` says.
 - The search page for the LMS and the LTI pages use Bootstrap 5 and no inline scripts. The `/openedx/openedx/embed`
   and `/openedx/openedx/playlist/embed` requests with an unknown or malformed id give 404 instead of 500.
+- **Personal series instead of the LMS series:** the uploads and the recordings from the LMS go to the personal
+  series of the user, created with the first upload or recording; logging in no longer creates it. The
+  `default_series_title` option is removed (delete it from the configuration, it is rejected), the "My LMS Uploads"
+  series is no longer used and nobody can upload to it unless they own it. Its videos stay where they are; move them
+  to the personal series of their owners with `pumukit:personal-series:move <series id>`.
 - New `enable` option: if false, the LMS routes give 404 and nothing else of the bundle is loaded: no voter, listeners, Twig functions, commands or `frame-ancestors`.
 
 See [Resources/doc/MIGRATION.md](Resources/doc/MIGRATION.md) for the upgrade from 2.x.

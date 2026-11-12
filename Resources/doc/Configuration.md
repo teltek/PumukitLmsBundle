@@ -11,7 +11,6 @@ pumukit_lms:
     domains:
         - moodle.example.org
         - '.*\.example\.org'
-    default_series_title: 'My LMS Uploads'
     default_upload_profile: broadcastable
     lms_upload_url: 'https://lms.pumukit.example.org/moodle/tus'
     lti_learner_profile: null
@@ -27,7 +26,6 @@ pumukit_lms:
 | `naked_backoffice_domain` | `''` | Domain of the naked back-office. Its session cookie is sent with `SameSite=None; Secure` so that it works inside the LMS iframe. The core `pumukit.naked_backoffice_*` parameters must have the same values |
 | `naked_backoffice_background`, `naked_backoffice_color`, `naked_custom_css_url` | `white`, `#ED6D00`, `null` | Colors and CSS of the naked back-office |
 | `domains` | `[]` | Regular expressions of the hosts of the LMS platforms allowed to log in, embed and register LTI tools; `*` allows any |
-| `default_series_title` | `My LMS Uploads` | Series of the uploads of the users without personal series |
 | `default_upload_profile` | `broadcastable` | Encoder profile of the uploads: `master_copy`, `master_encoded` or `broadcastable` |
 | `lms_upload_url` | `tus` | tus endpoint of the naked back-office wizard, usually `https://{naked domain}/moodle/tus` |
 | `lti_learner_profile` | `null` | Permission profile of the LTI learners. If null, the learners watch the embedded videos without becoming users. `Auto Publisher` restores the behaviour of 5.x |

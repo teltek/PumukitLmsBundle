@@ -6,8 +6,6 @@ namespace Pumukit\LmsBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use MongoDB\BSON\ObjectId;
-use Pumukit\LmsBundle\Services\ConfigurationService;
-use Pumukit\LmsBundle\Services\SeriesService;
 use Pumukit\LmsBundle\Services\SignedToken;
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\SeriesUtils;
@@ -27,8 +25,6 @@ class LTIRecorderController extends AbstractController
         private readonly SignedToken $signedToken,
         private readonly DocumentManager $documentManager,
         private readonly SSOService $ssoService,
-        private readonly SeriesService $seriesService,
-        private readonly ConfigurationService $configurationService,
     ) {}
 
     #[Route('/lti/recorder/{token}', name: 'pumukit_lms_lti_recorder', methods: ['GET'])]
@@ -45,8 +41,7 @@ class LTIRecorderController extends AbstractController
         }
 
         $this->ssoService->login($user, $request);
-        $series = $this->seriesService->getSeriesToUpload();
 
-        return $this->redirect('/admin/personalrecorder/?'.SeriesUtils::buildParams($this->configurationService->getDefaultSeriesTitle(), $series->getId()).'&showButton=false');
+        return $this->redirect('/admin/personalrecorder/?'.SeriesUtils::buildParams().'&showButton=false');
     }
 }
