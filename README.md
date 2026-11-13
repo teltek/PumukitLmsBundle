@@ -31,7 +31,8 @@ pumukit_lms:
 ```
 
 Configure it as explained in [Resources/doc/Configuration.md](Resources/doc/Configuration.md) and create the LMS
-publication channel:
+publication channel with `php bin/console pumukit:setup` of PuMuKIT, which runs the setup of every enabled bundle, or
+only with:
 
 ```bash
 php bin/console pumukit:lms:init:pubchannel
@@ -111,3 +112,5 @@ External callers can still use `/moodle/tus` with `username` or `email` and the 
   series is no longer used and nobody can upload to it unless they own it. Its videos stay where they are; move them
   to the personal series of their owners with `pumukit:personal-series:move <series id>`.
 - New `enable` option: if false, the LMS routes give 404 and nothing else of the bundle is loaded: no voter, listeners, Twig functions, commands or `frame-ancestors`.
+- `pumukit:lms:init:pubchannel` does nothing if the channel exists, instead of failing, so `pumukit:setup` runs it on
+  every deployment.

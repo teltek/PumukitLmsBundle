@@ -11,62 +11,51 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AsCommand(name: 'pumukit:lms:init:pubchannel', description: 'Loads the LMS pubchannel to your database')]
+#[AsCommand(name: 'pumukit:lms:init:pubchannel', description: 'Create the LMS publication channel if it does not exist')]
+#[AutoconfigureTag('pumukit.setup')]
 class LmsInitPubChannelCommand extends Command
 {
-    private $documentManager;
-
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(private readonly DocumentManager $documentManager)
     {
-        $this->documentManager = $documentManager;
         parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this
-            ->setHelp(
-                <<<'EOT'
-Command to load the PUCHLMS pubchannel to the db. Required to publish objects exclusively on the LMS platform.
-EOT
-            )
-        ;
+        $this->setHelp('Creates the PUCHLMS publication channel, required to publish objects exclusively on the LMS platform.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $lmsPublicationChannelTag = $this->createTagWithCode(PumukitLmsBundle::LMS_TAG_CODE, 'LMS', 'PUBCHANNELS', false);
-        $this->documentManager->persist($lmsPublicationChannelTag);
-        $this->documentManager->flush();
+        $repository = $this->documentManager->getRepository(Tag::class);
+        if ($repository->findOneBy(['cod' => PumukitLmsBundle::LMS_TAG_CODE])) {
+            $output->writeln(sprintf('The tag %s already exists.', PumukitLmsBundle::LMS_TAG_CODE));
 
-        $output->writeln('Tag persisted - new id: '.$lmsPublicationChannelTag->getId().' cod: '.$lmsPublicationChannelTag->getCod());
-
-        return 0;
-    }
-
-    private function createTagWithCode(string $code, string $title, ?string $tagParentCode = null, bool $metatag = false): Tag
-    {
-        if ($tag = $this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => $code])) {
-            throw new \Exception('Nothing done - Tag retrieved from DB id: '.$tag->getId().' cod: '.$tag->getCod());
+            return Command::SUCCESS;
         }
+
+        $parent = $repository->findOneBy(['cod' => 'PUBCHANNELS']);
+        if (!$parent instanceof Tag) {
+            $output->writeln('<error>There is no tag PUBCHANNELS to be the parent of the LMS publication channel: run pumukit:init:repo first.</error>');
+
+            return Command::FAILURE;
+        }
+
         $tag = new Tag();
-        $tag->setCod($code);
-        $tag->setMetatag($metatag);
+        $tag->setCod(PumukitLmsBundle::LMS_TAG_CODE);
+        $tag->setMetatag(false);
         $tag->setDisplay(true);
-        $tag->setTitle($title, 'es');
-        $tag->setTitle($title, 'gl');
-        $tag->setTitle($title, 'en');
-        if ($tagParentCode) {
-            if ($parent = $this->documentManager->getRepository(Tag::class)->findOneBy(['cod' => $tagParentCode])) {
-                $tag->setParent($parent);
-            } else {
-                throw new \Exception('Nothing done - There is no tag in the database with code '.$tagParentCode.' to be the parent tag');
-            }
+        foreach (['es', 'gl', 'en'] as $locale) {
+            $tag->setTitle('LMS', $locale);
         }
+        $tag->setParent($parent);
         $this->documentManager->persist($tag);
         $this->documentManager->flush();
 
-        return $tag;
+        $output->writeln(sprintf('The tag %s is created.', PumukitLmsBundle::LMS_TAG_CODE));
+
+        return Command::SUCCESS;
     }
 }
