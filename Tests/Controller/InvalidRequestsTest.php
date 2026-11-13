@@ -77,7 +77,7 @@ class InvalidRequestsTest extends LmsTestCase
 
     public function testTheKeysOfAnInstallationWithoutThemAreNotFound(): void
     {
-        static::getContainer()->set(LTIKeyConfiguration::class, new LTIKeyConfiguration('/nowhere'));
+        static::getContainer()->set(LTIKeyConfiguration::class, new LTIKeyConfiguration('/nowhere/private.pem'));
 
         $this->client->request('GET', '/.well-known/lti/jwks.json');
 

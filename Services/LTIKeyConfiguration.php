@@ -9,21 +9,16 @@ use Jose\Component\KeyManagement\JWKFactory;
 
 class LTIKeyConfiguration
 {
-    private $kernelProjectDir;
-
-    public function __construct(string $kernelProjectDir)
-    {
-        $this->kernelProjectDir = $kernelProjectDir;
-    }
+    public function __construct(private readonly string $ltiPrivateKey) {}
 
     public function hasKeys(): bool
     {
-        return is_file($this->privateKey());
+        return is_file($this->ltiPrivateKey);
     }
 
     public function privateKeyContent(): string
     {
-        return file_get_contents($this->kernelProjectDir.'/config/lti/keys/private.pem');
+        return file_get_contents($this->ltiPrivateKey);
     }
 
     public function kidFromJwkKey(): string
@@ -52,15 +47,10 @@ class LTIKeyConfiguration
         ];
     }
 
-    private function privateKey(): string
-    {
-        return $this->kernelProjectDir.'/config/lti/keys/private.pem';
-    }
-
     private function createJwkKey(): JWK
     {
         return JWKFactory::createFromKeyFile(
-            $this->privateKey(),
+            $this->ltiPrivateKey,
             null,
             [
                 'use' => 'sig',

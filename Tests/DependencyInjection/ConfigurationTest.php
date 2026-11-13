@@ -30,6 +30,7 @@ class ConfigurationTest extends TestCase
         $config = $this->process(['password' => 'secret']);
         $this->assertTrue($config['enable']);
         $this->assertNull($config['lti_learner_profile']);
+        $this->assertSame('%kernel.project_dir%/config/lti/keys/private.pem', $config['lti_private_key']);
     }
 
     public function testTheDisabledBundleNeedsNoPassword(): void

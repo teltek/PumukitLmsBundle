@@ -13,6 +13,7 @@ pumukit_lms:
         - '.*\.example\.org'
     default_upload_profile: broadcastable
     lms_upload_url: 'https://lms.pumukit.example.org/moodle/tus'
+    lti_private_key: '%kernel.project_dir%/config/lti/keys/private.pem'
     lti_learner_profile: null
     allow_create_users_from_request: true
     check_ldap_info_for_permission_profile: true
@@ -28,6 +29,7 @@ pumukit_lms:
 | `domains` | `[]` | Regular expressions of the hosts of the LMS platforms allowed to log in, embed and register LTI tools; `*` allows any |
 | `default_upload_profile` | `broadcastable` | Encoder profile of the uploads: `master_copy`, `master_encoded` or `broadcastable` |
 | `lms_upload_url` | `tus` | tus endpoint of the naked back-office wizard, usually `https://{naked domain}/moodle/tus` |
+| `lti_private_key` | `%kernel.project_dir%/config/lti/keys/private.pem` | Path of the RSA private key that signs the LTI 1.3 messages, see [LTI](LTI.md) |
 | `lti_learner_profile` | `null` | Permission profile of the LTI learners. If null, the learners watch the embedded videos without becoming users. `Auto Publisher` restores the behaviour of 5.x |
 | `allow_create_users_from_request` | `true` | Create the users of the plugins that are not in LDAP |
 | `check_ldap_info_for_permission_profile` | `true` | When a `Viewer` user logs in from the LMS, it is promoted to `Auto Publisher` only if the first value of its LDAP attribute `edupersonprimaryaffiliation` is `PAS` or `PDI`. If false, it is promoted without this check. Without the LDAP service, nobody is promoted |

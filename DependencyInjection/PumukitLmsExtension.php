@@ -38,6 +38,7 @@ class PumukitLmsExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('pumukit_lms.lms_upload_url', $config['lms_upload_url']);
         $container->setParameter('pumukit_lms.domains', $config['domains']);
         $container->setParameter('pumukit_lms.lti_learner_profile', $config['lti_learner_profile']);
+        $container->setParameter('pumukit_lms.lti_private_key', $config['lti_private_key']);
 
         if (!$config['enable']) {
             $container->register(DisabledListener::class)->setAutoconfigured(true);

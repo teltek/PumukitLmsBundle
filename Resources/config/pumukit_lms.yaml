@@ -4,9 +4,9 @@ services:
     autoconfigure: true
     public:        true
     bind:
-      $kernelProjectDir: '%kernel.project_dir%'
       $pumukitInfo: "%pumukit.info%"
       $checkLDAPInfoToUpdatePermissionProfile: '%pumukit_lms.check_ldap_info_for_permission_profile%'
+      $ltiPrivateKey: '%pumukit_lms.lti_private_key%'
 
   Pumukit\LmsBundle\Controller\:
     resource: '../../Controller/'

@@ -6,12 +6,18 @@ This bundle provides an LTI (Learning Tools Interoperability) integration for Pu
 
 ## Configuration
 
-Generate an RSA private key in `config/lti/keys/private.pem` of the PuMuKIT project. The tool signs its messages
-with it (RS256) and publishes the public key in `/.well-known/lti/jwks.json`:
+Generate an RSA private key for each installation. The tool signs its messages with it (RS256) and publishes the
+public key in `/.well-known/lti/jwks.json`. By default the key is `config/lti/keys/private.pem` of the PuMuKIT
+project; the `lti_private_key` option sets another path, for example a file mounted from a secret:
 
 ```bash
 mkdir -p config/lti/keys
 openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out config/lti/keys/private.pem
+```
+
+```yaml
+pumukit_lms:
+  lti_private_key: '/run/secrets/lti/private.pem'
 ```
 
 ## Registration
