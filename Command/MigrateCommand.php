@@ -20,7 +20,6 @@ class MigrateCommand extends Command
 {
     private $documentManager;
     private $tagService;
-    private $LMSTag;
 
     public function __construct(DocumentManager $documentManager, TagService $tagService)
     {
@@ -83,6 +82,6 @@ EOT
 
     private function changePubChannel(MultimediaObject $multimediaObject): void
     {
-        $this->tagService->addTagToMultimediaObject($multimediaObject, $this->LMSTag);
+        $this->tagService->addTagByCodToMultimediaObject($multimediaObject, PumukitLmsBundle::LMS_TAG_CODE, false);
     }
 }
