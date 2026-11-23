@@ -61,6 +61,7 @@ abstract class LmsTestCase extends PumukitTestCase
         $factory = self::getContainer()->get(FactoryService::class);
         $series = $factory->createSeries(null, ['en' => $title]);
         $prototype = $this->dm->getRepository(MultimediaObject::class)->findPrototype($series);
+        $this->assertInstanceOf(MultimediaObject::class, $prototype);
         $prototype->addPersonWithRole($user->getPerson(), $this->owner);
         $this->dm->flush();
 

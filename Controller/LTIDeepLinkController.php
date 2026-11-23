@@ -17,19 +17,16 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class LTIDeepLinkController extends AbstractController
 {
     private $documentManager;
-    private $httpClient;
     private $configurationService;
     private $LTIKeyConfiguration;
 
-    public function __construct(DocumentManager $documentManager, HttpClientInterface $httpClient, ConfigurationService $configurationService, LTIKeyConfiguration $LTIKeyConfiguration)
+    public function __construct(DocumentManager $documentManager, ConfigurationService $configurationService, LTIKeyConfiguration $LTIKeyConfiguration)
     {
         $this->documentManager = $documentManager;
-        $this->httpClient = $httpClient;
         $this->configurationService = $configurationService;
         $this->LTIKeyConfiguration = $LTIKeyConfiguration;
     }

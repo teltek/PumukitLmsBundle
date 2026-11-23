@@ -174,9 +174,7 @@ class MoodleServerController extends AbstractController
                 }
             }
 
-            if ($seriesPath) {
-                $server->setUploadDir($seriesPath);
-            }
+            $server->setUploadDir($seriesPath);
 
             $response = $server->serve();
 

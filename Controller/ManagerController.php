@@ -6,6 +6,7 @@ namespace Pumukit\LmsBundle\Controller;
 
 use Pumukit\LmsBundle\Services\SSOService;
 use Pumukit\LmsBundle\Utils\RequestParameter;
+use Pumukit\SchemaBundle\Document\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +48,7 @@ class ManagerController extends AbstractController
         $forceReLogin = false;
 
         $user = $this->getUser();
-        if (!$user || $user->getEmail() !== $email || $user->getUsername() !== $username) {
+        if (!$user instanceof User || $user->getEmail() !== $email || $user->getUsername() !== $username) {
             $forceReLogin = true;
         }
 
