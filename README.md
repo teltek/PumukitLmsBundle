@@ -104,6 +104,9 @@ External callers can still use `/moodle/tus` with `username` or `email` and the 
   user), and the uploads to the series of other users are rejected.
 - **Session in the iframe:** the session cookie of the naked domain is sent with `SameSite=None; Secure`, so the
   session works inside the LMS iframe whatever `framework.session.cookie_samesite` says.
+- **Search:** the search of the LMS no longer extends the search of the WebTV, so the WebTV keeps `/searchseries`
+  (before, the bundle moved it to `/openedx/searchseries`, which no longer exists). It only lists the public videos of
+  the WebTV, as before, and the category filter and the searches with `*` no longer fail.
 - The search page for the LMS and the LTI pages use Bootstrap 5 and no inline scripts. The `/openedx/openedx/embed`
   and `/openedx/openedx/playlist/embed` requests with an unknown or malformed id give 404 instead of 500.
 - **Personal series instead of the LMS series:** the uploads and the recordings from the LMS go to the personal
